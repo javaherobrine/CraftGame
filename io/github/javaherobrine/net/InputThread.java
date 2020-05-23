@@ -3,6 +3,10 @@ import java.io.*;
 import java.net.*;
 public class InputThread extends Thread {
 	private InputStream is;
+	public volatile int inputLength=-1;
+	public volatile byte[] data=null;
+	public volatile int off=0;
+	public volatile int mark=0;
 	public volatile ByteArrayOutputStream ais=new ByteArrayOutputStream();
 	public InputThread(InputStream is) {
 		this.is=is;
@@ -11,9 +15,9 @@ public class InputThread extends Thread {
 		this(soc.getInputStream());
 	}
 	private void reset(){
-		NetStatus.mark=0;
-		NetStatus.off=0;
-		NetStatus.inputLength=-1;
+		mark=0;
+		off=0;
+		inputLength=-1;
 		ais.reset();
 	}
 	private int temp;
@@ -23,20 +27,18 @@ public class InputThread extends Thread {
 	@Override
 	public void run() {
 		while(true) {
-			if(NetStatus.isWrite) {
-			}
-			if(NetStatus.inputLength==-1) {
+			if(inputLength==-1) {
 				continue;
 			}
 			try {
-				if(NetStatus.mark>=NetStatus.inputLength){
-					NetStatus.data=getData();
-					if(NetStatus.mark==NetStatus.inputLength) {
+				if(mark>=inputLength){
+					data=getData();
+					if(mark==inputLength) {
 						reset();
 					}
 				}
 				read();
-				NetStatus.mark+=1;
+				mark+=1;
 			}catch(SocketException e) {
 				break;
 			} catch (IOException e) {
@@ -46,20 +48,21 @@ public class InputThread extends Thread {
 	}
 	private byte[] getData() throws IOException {
 		ByteArrayInputStream bis=new ByteArrayInputStream(ais.toByteArray());
-		NetStatus.off+=NetStatus.inputLength;
-		byte[] bs=new byte[NetStatus.off];
+		off+=inputLength;
+		byte[] bs=new byte[off];
 		bis.read(bs);
 		return bs;
 	}
-	public byte[] readNBytes(int length){
-		NetStatus.isWrite=false;
-		NetStatus.inputLength=length;
-		byte[] temp=NetStatus.getData();
-		NetStatus.inputLength=-1;
-		NetStatus.data=null;
+	public synchronized byte[] readNBytes(int length){
+		inputLength=length;
+		byte[] temp=getData0();
+		inputLength=-1;
+		data=null;
 		return temp;
 	}
-	public static void main(String[] args) {
-		int i=1/0;
+	public synchronized byte[] getData0() {
+		while(data==null) {}
+		inputLength=-1;
+		return data;
 	}
 }

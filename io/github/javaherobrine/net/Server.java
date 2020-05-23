@@ -49,25 +49,11 @@ public class Server extends ServerClientInterface implements Closeable {
 		socket0=server.accept();
 		socket0.setKeepAlive(true);
 		System.out.println("someone is linking this server");
-		new InputThread(socket0).start();
+		InputThread it=new InputThread(socket0);
+		it.start();
 		System.out.println("Get InputStream Object");
-		new OutputThread(socket0).start();
-		System.out.println("Get OutputStream Object");
-		NetStatus.inputLength=4;
-		int temp=IOUtils.byte4ToInt(NetStatus.getData(),0);
-		System.out.println("Length:"+temp);
-		NetStatus.data=null;
-		NetStatus.inputLength=temp;
-		byte[] datas=NetStatus.getData();
-		System.out.println("data"+new String(datas));		
-		System.out.println(new String(datas));
-		System.out.println("EOF");
-		//File ff=new File("README.md");
-		//FileInputStream fis=new FileInputStream(ff);
-		byte[] b=IOUtils.intToByte4("jARO".length());
-		NetStatus.isWrite=true;
-		NetStatus.outputData=b;
-		System.out.println("Sent packet");
+		OutputThread ot=new OutputThread(socket0);
+		ot.start();
 	}
 	public void linkToUDP(InetAddress ip, int port) throws IOException {
 		byte[] data = new byte[4];

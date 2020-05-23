@@ -72,17 +72,9 @@ public class Client extends ServerClientInterface{
 		Client c=new Client();
 		c.linkServer("localhost",8888);
 		c.client.setKeepAlive(true);
-		new OutputThread(c.client).start();
-		new InputThread(c.client).start();
-		NetStatus.isWrite=true;
-		NetStatus.outputData="Jaro".getBytes();
-		NetStatus.isWrite=false;
-		NetStatus.inputLength=4;
-		int temp=IOUtils.byte4ToInt(NetStatus.getData(),0);
-		NetStatus.data=null;
-		NetStatus.inputLength=temp;
-		byte[] bs=NetStatus.getData();
-		System.out.println("Get OutputStream Object");
-		System.out.println("Get InputStream Object");
+		OutputThread ot=new OutputThread(c.client);
+		ot.start();
+		InputThread it=new InputThread(c.client);
+		it.start();
 	}
 }
