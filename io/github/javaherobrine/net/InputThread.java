@@ -28,7 +28,11 @@ public class InputThread extends Thread {
 	public void run() {
 		while(true) {
 			if(inputLength==-1) {
-				continue;
+				try {
+					sleep(Long.MAX_VALUE);
+				} catch (InterruptedException e) {
+					continue;
+				}
 			}
 			try {
 				if(mark>=inputLength){
@@ -55,12 +59,13 @@ public class InputThread extends Thread {
 	}
 	public synchronized byte[] readNBytes(int length){
 		inputLength=length;
+		data=null;
+		interrupt();
 		byte[] temp=getData0();
 		inputLength=-1;
-		data=null;
 		return temp;
 	}
-	public synchronized byte[] getData0() {
+	private synchronized byte[] getData0() {
 		while(data==null) {}
 		inputLength=-1;
 		return data;

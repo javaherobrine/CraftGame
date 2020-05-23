@@ -13,10 +13,16 @@ public class OutputThread extends Thread {
 					os.flush();
 					os.write(outputData);
 					os.flush();
+					outputData=null;
 				}catch(SocketException e) {
 					break;
 				} catch (IOException e) {
 					e.printStackTrace();
+				}
+			}else {
+				try {
+					sleep(Long.MAX_VALUE);
+				} catch (InterruptedException e) {
 				}
 			}
 		}
@@ -29,5 +35,6 @@ public class OutputThread extends Thread {
 	}
 	public synchronized void write(byte[] data) {
 		outputData=data;
+		interrupt();
 	}
 }

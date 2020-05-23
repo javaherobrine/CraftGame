@@ -2,7 +2,6 @@ package io.github.javaherobrine.net;
 import java.io.*;
 import java.net.*;
 import java.util.*;
-//import io.github.javaherobrine.JarMod;
 import io.github.javaherobrine.ioStream.IOUtils;
 public class Client extends ServerClientInterface{
 	DatagramSocket socket;
@@ -48,13 +47,6 @@ public class Client extends ServerClientInterface{
 		this.client=new Socket(url,port);
 		this.client.setKeepAlive(true);
 	}
-	//public static boolean sort(ArrayList<String> a) {
-		//Object[] s=a.toArray();
-		//Object[] s2=JarMod.temp.toArray();
-		//Arrays.sort(s);
-		//Arrays.sort(s2);
-		//return Arrays.equals(s,s2);
-	//}
 	public void disconnect() throws IOException {
 		this.client.close();
 	}
@@ -62,12 +54,6 @@ public class Client extends ServerClientInterface{
 		socket=new DatagramSocket(port);
 		dp=new DatagramPacket(null, 0, InetAddress.getByName(url), serverPort);
 	}
-	/**
-	 * 发数据的方式：修改NetStatus.outputData为数据<br />
-	 * 接收数据的方式：修改NetStatus.inputLength为接收长度，然后NetStatus.getData();，接收完成后NetStatus.inputLength设为-1，NetStatus.data设为null
-	 * @param args 2333
-	 * @throws IOException 2333
-	 */
 	public static void main(String[] args) throws IOException {
 		Client c=new Client();
 		c.linkServer("localhost",8888);
@@ -76,5 +62,7 @@ public class Client extends ServerClientInterface{
 		ot.start();
 		InputThread it=new InputThread(c.client);
 		it.start();
+		ot.write("asduhfsdfosfvdjfsd".getBytes());
+		System.out.println(new String(it.readNBytes(IOUtils.byte4ToInt(it.readNBytes(4),0))));
 	}
 }
