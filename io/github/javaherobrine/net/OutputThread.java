@@ -2,7 +2,11 @@ package io.github.javaherobrine.net;
 import java.io.*;
 import java.net.*;
 import io.github.javaherobrine.ioStream.*;
-public class OutputThread extends Thread {
+/**
+ * 输出线程
+ * @author Java_Herobrine
+ */
+public class OutputThread extends Thread implements ServerClientInterface {
 	OutputStream os;
 	public volatile byte[] outputData=null;
 	public void run() {
@@ -33,6 +37,10 @@ public class OutputThread extends Thread {
 	public OutputThread(OutputStream os) {
 		this.os=os;
 	}
+	/**
+	 * 向该线程的输出流写数据
+	 * @param data 写的数据
+	 */
 	public synchronized void write(byte[] data) {
 		outputData=data;
 		interrupt();

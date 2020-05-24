@@ -1,68 +1,31 @@
 package io.github.javaherobrine.net;
 import java.io.*;
 import java.net.*;
-import java.util.*;
-import io.github.javaherobrine.ioStream.IOUtils;
-public class Client extends ServerClientInterface{
-	DatagramSocket socket;
+public class Client {
 	Socket client;
-	DatagramPacket dp;
-	DatagramPacket dp2;
 	public Client() {
 	}
-	public static String getIP0(){  
-        try {
-            String localip = null;  
-            String netip = null;  
-            Enumeration<NetworkInterface> netInterfaces = NetworkInterface.getNetworkInterfaces();  
-            InetAddress ip = null;  
-            boolean finded = false;  
-            while (netInterfaces.hasMoreElements() && !finded) {  
-                NetworkInterface ni = netInterfaces.nextElement();  
-                Enumeration<InetAddress> address = ni.getInetAddresses();  
-                while (address.hasMoreElements()) {  
-                   ip = address.nextElement();  
-                   if(!ip.isSiteLocalAddress() && !ip.isLoopbackAddress()) {  
-                        netip = ip.getHostAddress();  
-                        finded = true;  
-                        break;  
-                    }else if(ip.isSiteLocalAddress() && !ip.isLoopbackAddress()) {  
-                        localip = ip.getHostAddress();  
-                    }  
-                }  
-            }  
-            if (netip != null && !"".equals(netip)) {  
-                return netip;  
-            } else {  
-                return localip;  
-            }  
-        } catch (Exception e) {
-            return "";
-        }
-    }
-	public static InetAddress getIP() throws UnknownHostException {
-		return InetAddress.getByName(getIP0());
-	}
+	/**
+	 * 连接指定的服务器
+	 * @param url 服务器的域名或者ip地址，用字符串表示
+	 * @param port 服务器端口
+	 * @throws UnknownHostException
+	 * @throws IOException
+	 */
 	public void linkServer(String url,int port) throws UnknownHostException, IOException {
 		this.client=new Socket(url,port);
 		this.client.setKeepAlive(true);
 	}
-	public void disconnect() throws IOException {
+	/**
+	 * 断开对服务器的连接
+	 * @throws IOException
+	 */
+	public void disconnection() throws IOException {
+		this.client.shutdownOutput();
+		this.client.shutdownInput();
 		this.client.close();
 	}
-	public void linkServerByUDP(int port,String url,int serverPort) throws SocketException, UnknownHostException {
-		socket=new DatagramSocket(port);
-		dp=new DatagramPacket(null, 0, InetAddress.getByName(url), serverPort);
-	}
-	public static void main(String[] args) throws IOException {
-		Client c=new Client();
-		c.linkServer("localhost",8888);
-		c.client.setKeepAlive(true);
-		OutputThread ot=new OutputThread(c.client);
-		ot.start();
-		InputThread it=new InputThread(c.client);
-		it.start();
-		ot.write("asduhfsdfosfvdjfsd".getBytes());
-		System.out.println(new String(it.readNBytes(IOUtils.byte4ToInt(it.readNBytes(4),0))));
-	}
+	/**
+	 * https://raw.githubusercontent.com/SpinyOwl/repo/snapshots/org/liquidengine/legui/2.1.0/legui-2.1.0.pom
+	 */
 }

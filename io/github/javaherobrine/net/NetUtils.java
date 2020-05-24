@@ -2,8 +2,18 @@ package io.github.javaherobrine.net;
 import io.github.javaherobrine.ioStream.*;
 import java.io.*;
 import java.net.*;
-import javax.net.ssl.HttpsURLConnection;
+/**
+ * 网络工具
+ * @author Java_Herobrine
+ */
 public final class NetUtils extends IOUtils {
+	/**
+	 * 检测地址是否存在，网络是否连通
+	 * @param host 地址
+	 * @return 是否存在
+	 * @throws UnknownHostException
+	 * @throws IOException
+	 */
 	public static boolean icmp(String host) throws UnknownHostException, IOException {
 		String[] temps = host.split("//");
 		if (temps.length == 2) {
@@ -14,8 +24,18 @@ public final class NetUtils extends IOUtils {
 	}
 	private NetUtils() {
 	}
+	/**
+	 * 一个邮件接口
+	 * @param smtp smtp服务器地址
+	 * @param reciver 接收方地址
+	 * @param sender 发送方地址
+	 * @param cc 标题
+	 * @param uname 发送方邮箱名
+	 * @param pwd 发送方邮箱密码
+	 * @param data 正文
+	 */
 	public synchronized static void smtp(String smtp, String reciver, String sender, String cc, String uname,
-			String pwd) {
+			String pwd,String data) {
 		uname = encode(uname);
 		pwd = encode(pwd);
 		Client c = new Client();
@@ -31,18 +51,18 @@ public final class NetUtils extends IOUtils {
 			System.out.println(br.readLine());
 			bw.println(pwd);
 			System.out.println(br.readLine());
-			bw.println("mail from:<javaherobrine@qq.com>");
+			bw.println("mail from:<"+sender+">");
 			System.out.println(br.readLine());
-			bw.println("rcpt to:<c620009897@163.com>");
+			bw.println("rcpt to:<"+reciver+">");
 			System.out.println(br.readLine());
 			bw.println("data");
 			System.out.println(br.readLine());
-			bw.println("subject:测试邮件");
-			bw.println("from:javaherobrine@qq.com");
-			bw.println("to:c620009897@163.com");
+			bw.println("subject:"+cc);
+			bw.println("from:"+sender);
+			bw.println("to:"+reciver);
 			bw.println("Content-Type: text/plain;charset=\"gb2312\"");
 			bw.println();
-			bw.println("Hi，这是测试Java SMTP的邮件，删掉即可");
+			bw.println(data);
 			bw.println(".");
 			bw.println("");
 			System.out.println(br.readLine());
@@ -55,13 +75,18 @@ public final class NetUtils extends IOUtils {
 			System.out.println("网络错误");
 		}
 	}
+	/**
+	 * 根据指定的域名解析ip
+	 */
 	public static String dns(String host) throws UnknownHostException {
 		return InetAddress.getByName(host).toString();
 	}
-	public static void main(String[] args) throws UnknownHostException, IOException {
-		// smtp("smtp.qq.com",null,null,null,"javaherobrine@qq.com","fkvnchacfdkubffc");
-		// System.out.println(dns("sss.i0x0.cn"));
-	}
+	/**
+	 * 用post请求向服务器发送数据
+	 * @param url 服务器地址
+	 * @param param post的内容，键值对格式
+	 * @return 服务器返回的内容
+	 */
 	public static String post(String url, String param) {
 		String result = "";
 		try {
@@ -85,28 +110,5 @@ public final class NetUtils extends IOUtils {
 		}catch(IOException e) {
 		}
 		return result;
-	}
-	public void UDPSObjectOutputStream(Object obj,Client c) throws IOException {
-		byte[] temp=objectToByteArray(obj);
-		byte[] temp2=intToByte4(temp.length);
-		c.dp.setLength(4);
-		c.dp.setData(temp2);
-		c.socket.send(c.dp);
-		c.dp.setLength(temp.length);
-		c.dp.setData(temp);
-		c.socket.send(c.dp);
-	}
-	public Object UDPObjectInputStream(Client c) throws IOException{	
-		DatagramPacket dp=new DatagramPacket(new byte[4],4);
-		c.socket.receive(dp);
-		int i=byte4ToInt(dp.getData(),0);
-		dp.setLength(i);
-		dp.setData(new byte[i]);
-		c.socket.receive(dp);
-		try {
-			return byteArrayToObject(dp.getData());
-		} catch (ClassNotFoundException e) {
-			throw new IOException(e.getException());
-		}
 	}
 }

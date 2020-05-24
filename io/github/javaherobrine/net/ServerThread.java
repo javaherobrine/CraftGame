@@ -1,38 +1,27 @@
 package io.github.javaherobrine.net;
 import java.net.*;
+import io.github.javaherobrine.ioStream.*;
 import java.io.*;
-import java.util.*;
-import io.github.javaherobrine.*;
+/**
+ * 服务自动接收客户端连接请求线程
+ * @author Java_Herobrine
+ */
 public class ServerThread extends Thread{
-	public boolean isConnet=true;
-	public Socket s;
-	public InputStream is;
-	public OutputStream os;
-	@Override
+	Server s;
 	public void run() {
-		try {
-			InputStream is=s.getInputStream();
-			OutputStream os=s.getOutputStream();
-			while(isConnet) {
+		Socket temp;
+		while(true) {
+			try {
+				temp=s.s.accept();
+				InputThread it=new InputThread(temp);
+				it.start();
+				OutputThread ot=new OutputThread(temp);
+				ot.start();
+				Server.sockets.put(new String(it.readNBytes((IOUtils.byte4ToInt(it.readNBytes(4),0)))),temp);
+				Server.threads.put(temp,new ServerClientInterface[]{it,ot});
+			} catch (IOException e) {
+				e.printStackTrace();
 			}
-		}catch(EOFException e) {
-			String ss=null;
-			Set<Map.Entry<String,Socket>> s=Server.sockets.entrySet();
-			for(Map.Entry<String,Socket> entry:s) {
-				if(entry.getValue().equals(s)) {
-					ss=entry.getKey();
-				}
-			}
-			System.out.println(ss+"断开了连接");
-			Server.sockets.remove(ss,this.s);
-		} catch (IOException e) {
 		}
-	}
-	public ServerThread(String name,InputStream is,OutputStream os) {
-		super();
-		this.s=Server.sockets.get(name);
-	}
-	public void close() {
-		isConnet=false;
 	}
 }

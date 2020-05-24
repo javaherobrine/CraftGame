@@ -1,7 +1,11 @@
 package io.github.javaherobrine.net;
 import java.io.*;
 import java.net.*;
-public class InputThread extends Thread {
+/**
+ * 创建输入线程
+ * @author Java_Herobrine
+ */
+public class InputThread extends Thread implements ServerClientInterface{
 	private InputStream is;
 	public volatile int inputLength=-1;
 	public volatile byte[] data=null;
@@ -31,7 +35,9 @@ public class InputThread extends Thread {
 				try {
 					sleep(Long.MAX_VALUE);
 				} catch (InterruptedException e) {
-					continue;
+					if(inputLength==-1) {
+						continue;
+					}
 				}
 			}
 			try {
@@ -57,6 +63,11 @@ public class InputThread extends Thread {
 		bis.read(bs);
 		return bs;
 	}
+	/**
+	 * 通过该线程的输入流读指定长度的数据
+	 * @param length 输入长度
+	 * @return 读到的数据
+	 */
 	public synchronized byte[] readNBytes(int length){
 		inputLength=length;
 		data=null;
