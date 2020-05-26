@@ -10,10 +10,6 @@ public class Server implements Closeable {
 	 */
 	public static HashMap<Socket,ServerClientInterface[]> threads=new HashMap<>();
 	public int serverPort;
-	/**
-	 * 为UDP预留
-	 */
-	public DatagramSocket socket;
 	public ServerSocket s;
 	/**
 	 * 妈妈快看，服务器开了！
@@ -22,11 +18,12 @@ public class Server implements Closeable {
 	public void open() throws IOException {
 		this.s = new ServerSocket(this.serverPort);
 	}
-	public Server(int port, boolean isTCP) {
+	/**
+	 * 根据指定的端口创建服务器
+	 * @param port 端口号
+	 */
+	public Server(int port) {
 		this.serverPort = port;
-	}
-	public synchronized void linkClient() {
-		
 	}
 	/**
 	 * 哦不，服务器关了

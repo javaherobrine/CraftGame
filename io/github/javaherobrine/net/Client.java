@@ -25,7 +25,4 @@ public class Client {
 		this.client.shutdownInput();
 		this.client.close();
 	}
-	/**
-	 * https://raw.githubusercontent.com/SpinyOwl/repo/snapshots/org/liquidengine/legui/2.1.0/legui-2.1.0.pom
-	 */
 }

@@ -1,6 +1,8 @@
 package io.github.javaherobrine;
 import java.io.*;
 import java.net.*;
+
+import io.github.javaherobrine.ioStream.IOUtils;
 /**
  * Í¨¹ýInputStream¶ÁÈ¡CGMS
  * @author Java_Herobrine
