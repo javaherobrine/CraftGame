@@ -1,8 +1,6 @@
 package io.github.javaherobrine;
 import java.io.*;
-import java.net.*;
-
-import io.github.javaherobrine.ioStream.IOUtils;
+import java.util.stream.*;
 /**
  * Í¨¹ýInputStream¶ÁÈ¡CGMS
  * @author Java_Herobrine
@@ -11,7 +9,6 @@ public class CGMSInputStream extends InputStream{
 	private CGMSFile thisFile;
 	public String pack;
 	private BufferedReader br;
-	private URL u;
 	private InputStream is;
 	@Override
 	@Deprecated
@@ -27,17 +24,6 @@ public class CGMSInputStream extends InputStream{
 	}
 	public CGMSInputStream(InputStream cgmsis) {
 		is=cgmsis;
-	}
-	public CGMSInputStream(URL u) {
-		this.u=u;
-	}
-	public void openStreamByUrl() throws IOException {
-		if(u==null) {
-			return;
-		}
-		HttpURLConnection conn=(HttpURLConnection) u.openConnection();
-		conn.setRequestProperty("user-agent","Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36Name");
-		is=conn.getInputStream();
 	}
 	public void openStreamByCGMSFile() throws FileNotFoundException {
 		is=new FileInputStream(thisFile);
@@ -82,6 +68,10 @@ public class CGMSInputStream extends InputStream{
 					CGMSCompiler.code("public class "+thisFile.getName().split(".")[0]+"extends "+temp+"{");
 					continue;	
 				}
+			}
+			if(temp.endsWith(";")) {
+				String[] tempss=temp.split(";");
+				Stream<String> stream=Stream.of(temps);
 			}
 		}
 	}

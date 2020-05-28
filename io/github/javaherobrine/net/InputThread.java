@@ -8,7 +8,7 @@ import io.github.javaherobrine.ioStream.IOUtils;
  * @author Java_Herobrine
  */
 public class InputThread extends Thread implements ServerClientInterface,Closeable,AutoCloseable{
-	private InputStream is;
+	InputStream is;
 	public StreamType type;
 	public boolean flag=true;
 	public volatile int inputLength=-1;

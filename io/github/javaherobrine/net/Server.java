@@ -37,7 +37,20 @@ public class Server implements Closeable {
 	 * @param playerName
 	 * @throws IOException
 	 */
-	public static void disconnection(String playerName) throws IOException {
+	public synchronized static void disconnection(String playerName) throws IOException {
 		sockets.remove(playerName);
+	}
+	public static void main(String[] args) throws IOException {
+		Server s=new Server(80);
+		s.open();
+		Socket soc=s.s.accept();
+		System.out.println("accepted HTTP protocol link");
+		InputThread it=new InputThread(soc);
+		it.start();
+		System.out.println(it.is.readAllBytes());
+		OutputThread ot=new OutputThread(soc);
+		ot.start();
+		ot.write("Hello <br /> user".getBytes());
+		System.out.println("write");
 	}
 }
