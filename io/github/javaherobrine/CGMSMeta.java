@@ -2,7 +2,6 @@ package io.github.javaherobrine;
 public class CGMSMeta {
 	String meta;
 	public CGMSMeta(String meta) throws CGMSException{
-		CGMSGrammerCheck.check(meta);
 		if(meta.startsWith("#")) {
 			this.meta=meta.split("#")[1];
 		}else {

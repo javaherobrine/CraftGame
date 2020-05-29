@@ -1,2 +1,5 @@
 package io.github.javaherobrine.net;
-public interface ServerClientInterface {}
+import java.io.IOException;
+public interface ServerClientInterface {
+	void close() throws IOException;
+}

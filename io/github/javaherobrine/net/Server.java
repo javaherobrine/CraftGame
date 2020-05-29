@@ -33,24 +33,11 @@ public class Server implements Closeable {
 		this.s.close();
 	}
 	/**
-	 * 仅限craftgame使用
-	 * @param playerName
-	 * @throws IOException
+	 * 使用ServerThread创建的套接字才可以使用此方法
 	 */
 	public synchronized static void disconnection(String playerName) throws IOException {
-		sockets.remove(playerName);
-	}
-	public static void main(String[] args) throws IOException {
-		Server s=new Server(80);
-		s.open();
-		Socket soc=s.s.accept();
-		System.out.println("accepted HTTP protocol link");
-		InputThread it=new InputThread(soc);
-		it.start();
-		System.out.println(it.is.readAllBytes());
-		OutputThread ot=new OutputThread(soc);
-		ot.start();
-		ot.write("Hello <br /> user".getBytes());
-		System.out.println("write");
+		ServerClientInterface[] ss=threads.remove(sockets.remove(playerName));
+		ss[0].close();
+		ss[1].close();
 	}
 }

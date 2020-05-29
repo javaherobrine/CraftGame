@@ -3,8 +3,18 @@ import java.io.*;
 import javax.tools.*;
 public class CGMSCompiler {
 	private static StringBuilder code;
+	private static StringBuilder temp;
+	public static void temp(String function) {
+		temp.append(function);
+	}
+	public static void crlfInTemp() {
+		temp(Constants.CRLF);
+	}
 	public static void code(String code) {
-		CGMSCompiler.code.append(code).append(Constants.CRLF);
+		CGMSCompiler.code.append(code);
+	}
+	public static void crlf() {
+		code(Constants.CRLF);
 	}
 	public static void compile(File bin,File src,CGMSFile cf) throws IOException, CGMSException {
 		CGMSInputStream cis=new CGMSInputStream(cf);
