@@ -6,6 +6,8 @@ import java.util.*;
  * @author Java_Herobrine
  */
 public class IOUtils {
+	public static final ByteArrayOutputStream baos=new ByteArrayOutputStream();
+	public static final ObjectOutputStream oos=get();
 	protected IOUtils() {
 	}
 	/**
@@ -13,6 +15,13 @@ public class IOUtils {
 	 * @param data ×Ö·û´®
 	 * @return ¼ÓÃÜ½á¹û
 	 */
+	private static ObjectOutputStream get() {
+		try {
+			return new ObjectOutputStream(baos);
+		} catch (IOException e) {
+			return null;
+		}
+	}
 	public static String encode(String data) {
 		String s = data;
 		byte[] b;
@@ -43,8 +52,6 @@ public class IOUtils {
 	 * @throws IOException
 	 */
 	public static byte[] objectToByteArray(Object obj) throws IOException {
-		ByteArrayOutputStream baos=new ByteArrayOutputStream();
-		ObjectOutputStream oos=new ObjectOutputStream(baos);
 		oos.writeObject(obj);
 		return baos.toByteArray();
 	}

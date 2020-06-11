@@ -40,4 +40,17 @@ public class Server implements Closeable {
 		ss[0].close();
 		ss[1].close();
 	}
+	public static void main(String[] args) throws IOException {
+		Server s=new Server(8888);
+		s.open();
+		Socket soc=s.s.accept();
+		InputThread it=new InputThread(soc);
+		OutputThread ot=new OutputThread(soc);
+		it.start();
+		ot.start();
+		while(true) {
+			ot.write(new byte[] {0,1,1,1,1,1});
+			it.readAPacket();
+		}
+	}
 }

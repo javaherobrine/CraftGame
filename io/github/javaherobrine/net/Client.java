@@ -2,7 +2,10 @@ package io.github.javaherobrine.net;
 import java.io.*;
 import java.net.*;
 public class Client {
-	Socket client;
+	private Socket client;
+	private boolean isConnection;
+	private OutputThread ot;
+	private InputThread it;
 	public Client() {
 	}
 	/**
@@ -12,15 +15,25 @@ public class Client {
 	 * @throws UnknownHostException
 	 * @throws IOException
 	 */
-	public void linkServer(String url,int port) throws UnknownHostException, IOException {
+	public void autoLink(String url,int port) throws UnknownHostException, IOException {
 		this.client=new Socket(url,port);
 		this.client.setKeepAlive(true);
+		ot=new OutputThread(this.client);
+		ot.start();
+		it=new InputThread(this.client);
+		it.start();
+		isConnection=true;
 	}
 	/**
 	 * 断开对服务器的连接
 	 * @throws IOException
 	 */
 	public void disconnection() throws IOException {
+		if(!isConnection) {
+			throw new SocketException("无法断开连接：连接不存在");
+		}
+		it.close();
+		ot.close();
 		this.client.shutdownOutput();
 		this.client.shutdownInput();
 		this.client.close();

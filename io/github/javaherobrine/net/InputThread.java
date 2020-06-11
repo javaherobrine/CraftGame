@@ -1,14 +1,16 @@
 package io.github.javaherobrine.net;
 import java.io.*;
 import java.net.*;
-
-import io.github.javaherobrine.ioStream.IOUtils;
+import java.util.zip.*;
+import io.github.javaherobrine.ioStream.*;
 /**
  * 创建输入线程
  * @author Java_Herobrine
  */
 public class InputThread extends Thread implements ServerClientInterface,Closeable,AutoCloseable{
 	InputStream is;
+	ObjectOutputStream oos;
+	PipedOutputStream piped=new PipedOutputStream();
 	public StreamType type;
 	public boolean flag=true;
 	public volatile int inputLength=-1;
@@ -19,10 +21,11 @@ public class InputThread extends Thread implements ServerClientInterface,Closeab
 	/**
 	 * 根据指定的输入流创建线程
 	 * @param is 源输入流
+	 * @throws IOException 
 	 */
-	public InputThread(InputStream is,StreamType type) {
+	public InputThread(InputStream is,StreamType type) throws IOException {
 		this.type=type;
-		this.is=is;
+		this.is=new GZIPInputStream(is);
 	}
 	/**
 	 * 根据指定的套接字的输入流创建线程
@@ -49,11 +52,19 @@ public class InputThread extends Thread implements ServerClientInterface,Closeab
 		ais.write(is.read());
 		mark++;
 	}
+	public void init() {
+		try {
+			oos=new ObjectOutputStream(piped);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 	@Override
 	/**
 	 * 线程主体，IO都在这里了
 	 */
 	public void run() {
+		
 		while(flag) {
 			if(inputLength==-1) {
 				try {
@@ -127,10 +138,6 @@ public class InputThread extends Thread implements ServerClientInterface,Closeab
 		switch(type) {
 		case SOCKET:
 			break;
-		case BYTE_ARRAY:
-			ByteArrayInputStream bais=(ByteArrayInputStream)is;
-			bais.reset();
-			is=bais;
 		case FILE:
 			is.close();
 			break;

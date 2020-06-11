@@ -2,12 +2,14 @@ package io.github.javaherobrine.net;
 import java.io.*;
 import java.net.*;
 import io.github.javaherobrine.ioStream.*;
+import java.util.zip.*;
 /**
  * 输出线程
  * @author Java_Herobrine
  */
 public class OutputThread extends Thread implements ServerClientInterface,Closeable,AutoCloseable{
-	OutputStream os;
+	GZIPOutputStream os;
+	private volatile boolean canWrite=true;
 	StreamType type;
 	public boolean flag=true;
 	public volatile byte[] outputData=null;
@@ -15,11 +17,13 @@ public class OutputThread extends Thread implements ServerClientInterface,Closea
 		while(flag) {
 			if(outputData!=null) {
 				try {
+					System.out.println("stream locked");
 					os.write(IOUtils.intToByte4(outputData.length));
 					os.flush();
 					os.write(outputData);
 					os.flush();
 					outputData=null;
+					canWrite=true;
 				}catch(SocketException e) {
 					break;
 				} catch (IOException e) {
@@ -44,9 +48,11 @@ public class OutputThread extends Thread implements ServerClientInterface,Closea
 	/**
 	 * 根据指定的输出流创建线程
 	 * @param os 输出流
+	 * @throws IOException 
 	 */
-	public OutputThread(OutputStream os,StreamType type) {
-		this.os=os;
+	public OutputThread(OutputStream os,StreamType type) throws IOException {
+		this.type=type;
+		this.os=new GZIPOutputStream(os);
 	}
 	/**
 	 * 向该线程的输出流按照预设的TCP格式写数据
@@ -57,6 +63,9 @@ public class OutputThread extends Thread implements ServerClientInterface,Closea
 		if(type!=StreamType.SOCKET) {
 			write0(data);
 		}
+		while(!canWrite) {}
+		canWrite=false;
+		System.out.println("data locked");
 		outputData=data;
 		interrupt();
 	}
@@ -75,10 +84,6 @@ public class OutputThread extends Thread implements ServerClientInterface,Closea
 		switch(type) {
 		case SOCKET:
 			break;
-		case BYTE_ARRAY:
-			ByteArrayOutputStream baos=(ByteArrayOutputStream)os;
-			baos.reset();
-			os=baos;
 		case FILE:
 			os.close();
 			break;

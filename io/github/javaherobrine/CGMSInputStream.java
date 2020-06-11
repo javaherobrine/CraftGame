@@ -82,9 +82,11 @@ public class CGMSInputStream extends InputStream{
 				String functionName=temp.split(" ")[1];
 				String[] args=temp.split("(")[1].split(")")[0].split(",");
 				if(!isOnClass) {
-					CGMSCompiler.temp("public static "+type+functionName+getMethodArgs(args));
+					CGMSCompiler.temp("public static "+type+functionName+getMethodArgs(args)+"{");
+					CGMSCompiler.crlfInTemp();
 				}else {
-					CGMSCompiler.code("public "+type+functionName+getMethodArgs(args));
+					CGMSCompiler.code("public "+type+functionName+getMethodArgs(args)+"{");
+					CGMSCompiler.crlf();
 				}
 				isOnFunction=true;
 			}
@@ -94,6 +96,10 @@ public class CGMSInputStream extends InputStream{
 				stream.forEach(s->{
 					
 				});
+			}
+			if(CGMSCompiler.temp!=null&&isOnClass) {
+				CGMSCompiler.code(CGMSCompiler.temp.toString());
+				CGMSCompiler.temp=null;
 			}
 		}
 		if(isAnnotate) {

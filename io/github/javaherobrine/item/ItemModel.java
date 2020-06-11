@@ -5,10 +5,9 @@ import java.awt.event.*;
  * @author Java_Herobrine
  */
 public abstract class ItemModel {
-	public static final String MODLOADER_VERSION="0.1";
-	public ItemType type;
-	public AbstractName name;
-	public long maxValue;
+	public ItemType type;//物品类型
+	public AbstractName name;//显示物品的名称和
+	public long maxValue;//最大堆叠数
 	public ItemModel(ItemType type,AbstractName name,long maxValue) {
 		this.type=type;
 		this.name=name;

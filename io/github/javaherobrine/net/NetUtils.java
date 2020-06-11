@@ -33,17 +33,18 @@ public final class NetUtils extends IOUtils {
 	 * @param uname 发送方邮箱名
 	 * @param pwd 发送方邮箱密码
 	 * @param data 正文
+	 * @throws IOException 
+	 * @throws UnknownHostException 
 	 */
-	public synchronized static void smtp(String smtp, String reciver, String sender, String cc, String uname,
-			String pwd,String data) {
+	public synchronized static void smtp(String smtp, String reciver, String sender,String fakeSender, String cc, String uname,
+			String pwd,String data) throws UnknownHostException, IOException {
 		uname = encode(uname);
 		pwd = encode(pwd);
-		Client c = new Client();
+		Socket client=new Socket(smtp,25);
 		try {
-			c.linkServer(smtp, 25);
-			BufferedReader br = new BufferedReader(new InputStreamReader(c.client.getInputStream()));
-			PrintWriter bw = new PrintWriter(c.client.getOutputStream(), true);
-			bw.println("helo javaherobrine");
+			BufferedReader br = new BufferedReader(new InputStreamReader(client.getInputStream()));
+			PrintWriter bw = new PrintWriter(client.getOutputStream(), true);
+			bw.println("helo jaro");
 			System.out.println(br.readLine());
 			bw.println("auth login");
 			System.out.println(br.readLine());
@@ -58,7 +59,7 @@ public final class NetUtils extends IOUtils {
 			bw.println("data");
 			System.out.println(br.readLine());
 			bw.println("subject:"+cc);
-			bw.println("from:"+sender);
+			bw.println("from:"+fakeSender);
 			bw.println("to:"+reciver);
 			bw.println("Content-Type: text/plain;charset=\"gb2312\"");
 			bw.println();

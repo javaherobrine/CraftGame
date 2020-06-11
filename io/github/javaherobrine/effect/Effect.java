@@ -3,7 +3,7 @@ import java.util.*;
 public class Effect {
 	public EffectModel thisEffect;
 	public static ArrayList<EffectModel> effects;
-	public static void regdit(EffectModel e) {
+	public static void regedit(EffectModel e) {
 		effects.add(e);
 	}
 	public Effect(EffectModel e) {

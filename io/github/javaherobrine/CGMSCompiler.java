@@ -3,7 +3,7 @@ import java.io.*;
 import javax.tools.*;
 public class CGMSCompiler {
 	private static StringBuilder code;
-	private static StringBuilder temp;
+	static StringBuilder temp;
 	public static void temp(String function) {
 		temp.append(function);
 	}
