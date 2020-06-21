@@ -1,5 +1,9 @@
 package io.github.javaherobrine.net;
 import java.io.*;
+import java.net.http.*;
+import java.net.http.HttpResponse.*;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 import java.net.*;
 public class Client {
 	private Socket client;
@@ -37,5 +41,9 @@ public class Client {
 		this.client.shutdownOutput();
 		this.client.shutdownInput();
 		this.client.close();
+	}
+	public static void main(String[] args) throws URISyntaxException, IOException, InterruptedException, ExecutionException {
+		Socket soc=new Socket("localhost",8888);
+		soc.close();
 	}
 }

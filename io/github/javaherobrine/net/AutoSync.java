@@ -1,28 +1,19 @@
 package io.github.javaherobrine.net;
 import java.io.*;
+import java.util.*;
 public class AutoSync<T> extends Thread{
-	PipedInputStream piped=new PipedInputStream();
-	private volatile boolean online=true;
+	ArrayList<PipedInputStream> list=new ArrayList<>();
+	HashMap<PipedInputStream,Boolean> map=new HashMap<>();
 	public void run() {
-		try {
-			ObjectInputStream ois=new ObjectInputStream(piped);
-			while(true) {
-				if(online) {
-					ois.readObject();
-				}else {
-					try {
-						Thread.sleep(Long.MAX_VALUE);
-					} catch (InterruptedException e) {}
-				}
+		while(true) {
+				
 			}
-		} catch (IOException | ClassNotFoundException e) {}
 		}
 	public AutoSync() {}
-	public void online() {
-		online=true;
-		interrupt();
+	public void online(int pipedNo) {
+		map.put(list.get(pipedNo),true);
 	}
-	public void offline() {
-		online=false;
+	public void offline(int pipedNo) {
+		map.put(list.get(pipedNo),false);
 	}
 }

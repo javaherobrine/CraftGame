@@ -18,6 +18,9 @@ public class InputThread extends Thread implements ServerClientInterface,Closeab
 	public volatile int off=0;
 	public volatile int mark=0;
 	public volatile ByteArrayOutputStream ais=new ByteArrayOutputStream();
+	public static void main(String[] args) {
+		System.out.println(Long.MAX_VALUE);
+	}
 	/**
 	 * 根据指定的输入流创建线程
 	 * @param is 源输入流
@@ -56,7 +59,6 @@ public class InputThread extends Thread implements ServerClientInterface,Closeab
 		try {
 			oos=new ObjectOutputStream(piped);
 		} catch (IOException e) {
-			e.printStackTrace();
 		}
 	}
 	@Override
@@ -64,7 +66,6 @@ public class InputThread extends Thread implements ServerClientInterface,Closeab
 	 * 线程主体，IO都在这里了
 	 */
 	public void run() {
-		
 		while(flag) {
 			if(inputLength==-1) {
 				try {
