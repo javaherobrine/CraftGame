@@ -38,7 +38,4 @@ public class Client {
 		this.client.shutdownInput();
 		this.client.close();
 	}
-	public static void main(String[] args) throws URISyntaxException, IOException, InterruptedException, ExecutionException {
-		NetUtils.smtp("smtp.qq.com", "javaherobrine@qq.com", "javaherobrine@qq.com", "CraftGame工作室", "这是伪造发件人", "javaherobrine@qq.com","wvecgijiwyutbfbj", "2333");
-	}
 }
