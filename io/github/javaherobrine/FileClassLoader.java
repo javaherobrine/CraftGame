@@ -1,5 +1,6 @@
 package io.github.javaherobrine;
 import java.io.*;
+import io.github.javaherobrine.net.*;
 public class FileClassLoader extends ClassLoader {
 	@Override
 	public Class<?> loadClass(String path){
@@ -20,5 +21,8 @@ public class FileClassLoader extends ClassLoader {
 	}
 	public Class<?> loadClass(InputStream is) throws IOException{
 		return loadClass(is.readAllBytes());
+	}
+	public Class<?> loadClass(InputThread it) throws IOException{
+		return loadClass(it.readAPacket());
 	}
 }

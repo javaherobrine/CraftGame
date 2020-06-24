@@ -8,7 +8,7 @@ import java.util.zip.*;
  * @author Java_Herobrine
  */
 public class OutputThread extends Thread implements ServerClientInterface,Closeable,AutoCloseable{
-	GZIPOutputStream os;
+	OutputStream os;
 	private volatile boolean canWrite=true;
 	StreamType type;
 	public boolean flag=true;
@@ -52,7 +52,7 @@ public class OutputThread extends Thread implements ServerClientInterface,Closea
 	 */
 	public OutputThread(OutputStream os,StreamType type) throws IOException {
 		this.type=type;
-		this.os=new GZIPOutputStream(os);
+		this.os=os;
 	}
 	/**
 	 * 向该线程的输出流按照预设的TCP格式写数据

@@ -40,11 +40,6 @@ public class IOUtils {
 		ObjectInputStream ois=new ObjectInputStream(bais);
 		return ois.readObject();
 	}
-	public static byte[] readAllBytesInJava8(InputStream is) throws IOException {
-		byte[] data=new byte[is.available()];
-		is.read(data);
-		return data;
-	}
 	public static int byte4ToInt(byte[] bytes, int off) {
 		int b0 = bytes[off] & 0xFF;
 		int b1 = bytes[off + 1] & 0xFF;

@@ -10,6 +10,10 @@ import io.github.javaherobrine.ioStream.*;
 public class InputThread extends Thread implements ServerClientInterface,Closeable,AutoCloseable{
 	InputStream is;
 	ObjectOutputStream oos;
+	private ObjectInputStream socketOis;
+	private boolean init;
+	private GZIPInputStream socketGZ;
+	private ObjectInputStream socketGZIPOis;
 	PipedOutputStream piped=new PipedOutputStream();
 	public StreamType type;
 	public boolean flag=true;
@@ -28,7 +32,7 @@ public class InputThread extends Thread implements ServerClientInterface,Closeab
 	 */
 	public InputThread(InputStream is,StreamType type) throws IOException {
 		this.type=type;
-		this.is=new GZIPInputStream(is);
+		this.is=is;
 	}
 	/**
 	 * 根据指定的套接字的输入流创建线程
@@ -56,6 +60,16 @@ public class InputThread extends Thread implements ServerClientInterface,Closeab
 		mark++;
 	}
 	public void init() {
+		try {
+			socketOis=new ObjectInputStream(is);
+			socketGZ=new GZIPInputStream(is);
+			socketGZIPOis=new ObjectInputStream(socketGZ);
+			init=true;
+		} catch (IOException e) {
+			init=false;
+		}
+	}
+	public void initPiped() {
 		try {
 			oos=new ObjectOutputStream(piped);
 		} catch (IOException e) {

@@ -2,11 +2,13 @@ package io.github.javaherobrine.net;
 import io.github.javaherobrine.ioStream.*;
 import java.io.*;
 import java.net.*;
+import java.net.http.*;
 /**
  * 网络工具
  * @author Java_Herobrine
  */
 public final class NetUtils extends IOUtils {
+	public static final HttpClient DEFAULT_CLIENT=HttpClient.newHttpClient();
 	/**
 	 * 检测地址是否存在，网络是否连通
 	 * @param host 地址
@@ -75,6 +77,7 @@ public final class NetUtils extends IOUtils {
 		} catch (IOException e) {
 			System.out.println("网络错误");
 		}
+		client.close();
 	}
 	/**
 	 * 根据指定的域名解析ip
@@ -88,28 +91,13 @@ public final class NetUtils extends IOUtils {
 	 * @param param post的内容，键值对格式
 	 * @return 服务器返回的内容
 	 */
-	public static String post(String url, String param) {
-		String result = "";
+	public static byte[] post(String url, String param) {
+		byte[] response=null;
 		try {
-			URL realUrl = new URL(url);
-			HttpURLConnection conn=(HttpURLConnection) realUrl.openConnection();
-			conn.setDoOutput(true);
-			conn.setDoInput(true);
-			conn.setRequestMethod("POST");
-			conn.setRequestProperty("accept", "*/*");
-			conn.setRequestProperty("connection", "Keep-Alive");
-			conn.setRequestProperty("user-agent", "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1;SV1)");
-			conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-			OutputStreamWriter out=new OutputStreamWriter(conn.getOutputStream(), "UTF-8");
-			out.write(param);
-			out.flush();
-			BufferedReader in=new BufferedReader(new InputStreamReader(conn.getInputStream()));
-			String line;
-			while ((line = in.readLine()) != null) {
-				result += line;
-			}
-		}catch(IOException e) {
+			HttpRequest req=HttpRequest.newBuilder().uri(new URI(url)).POST(HttpRequest.BodyPublishers.ofString(param)).build();
+			response=DEFAULT_CLIENT.send(req, HttpResponse.BodyHandlers.ofByteArray()).body();
+		}catch(IOException | URISyntaxException | InterruptedException e) {
 		}
-		return result;
+		return response;
 	}
 }
