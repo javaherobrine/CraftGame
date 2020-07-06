@@ -1,4 +1,5 @@
 package io.github.javaherobrine;
+@Deprecated
 public class CGMSComplex extends CGMSImag {
 	public CGMSImag i;
 	public Number n;

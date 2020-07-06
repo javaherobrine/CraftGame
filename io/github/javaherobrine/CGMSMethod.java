@@ -1,11 +1,9 @@
 package io.github.javaherobrine;
+@Deprecated
 public class CGMSMethod {
 	CGMSFile cf;
 	String methodName;
-	Class<CGMSField>[] fields;
-	public CGMSMethod(CGMSFile cf,String methodName,Class<CGMSField>... fields) {
-		this.cf=cf;
-		this.methodName=methodName;
-		this.fields=fields;
+	CGMSMethod(CGMSClass c,String name,Class<?>...values){
+		
 	}
 }

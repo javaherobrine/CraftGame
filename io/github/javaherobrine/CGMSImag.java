@@ -1,5 +1,6 @@
 package io.github.javaherobrine;
 import java.math.*;
+@Deprecated
 public class CGMSImag extends Number{
 	BigInteger bi;
 	volatile BigDecimal bd;

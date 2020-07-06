@@ -8,20 +8,26 @@ import java.util.zip.*;
  * @author Java_Herobrine
  */
 public class OutputThread extends Thread implements ServerClientInterface,Closeable,AutoCloseable{
-	OutputStream os;
-	private volatile boolean canWrite=true;
+	BufferedOutputStream os;
+	private ObjectOutputStream thisOos;
+	private OutputStream now;
+	public volatile boolean canWrite=true;
 	StreamType type;
+	private GZIPOutputStream thisGZ;
+	private ObjectOutputStream oosWithGZ;
+	private Socket thisSoc=null;
 	public boolean flag=true;
 	public volatile byte[] outputData=null;
 	public void run() {
 		while(flag) {
 			if(outputData!=null) {
 				try {
-					System.out.println("stream locked");
-					os.write(IOUtils.intToByte4(outputData.length));
-					os.flush();
-					os.write(outputData);
-					os.flush();
+					synchronized(now) {
+						now.write(IOUtils.intToByte4(outputData.length));
+						now.flush();
+						now.write(outputData);
+						now.flush();
+					}
 					outputData=null;
 					canWrite=true;
 				}catch(SocketException e) {
@@ -37,6 +43,10 @@ public class OutputThread extends Thread implements ServerClientInterface,Closea
 			}
 		}
 	}
+	public void init() throws IOException {
+		thisOos=new ObjectOutputStream(os);
+		thisGZ=new GZIPOutputStream(os);
+	}
 	/**
 	 * 根据指定的套接字的输出流创建输出线程
 	 * @param soc 套接字
@@ -44,6 +54,7 @@ public class OutputThread extends Thread implements ServerClientInterface,Closea
 	 */
 	public OutputThread(Socket soc) throws IOException {
 		this(soc.getOutputStream(),StreamType.SOCKET);
+		thisSoc=soc;
 	}
 	/**
 	 * 根据指定的输出流创建线程
@@ -52,7 +63,23 @@ public class OutputThread extends Thread implements ServerClientInterface,Closea
 	 */
 	public OutputThread(OutputStream os,StreamType type) throws IOException {
 		this.type=type;
-		this.os=os;
+		this.os=new BufferedOutputStream(os);
+	}
+	public void object(Object obj) throws IOException {
+		thisOos.writeObject(obj);
+	}
+	public void gzip(byte[] data) throws IOException {
+		thisOos.writeObject(TypeList.GZIP);
+		ByteArrayOutputStream temp=new ByteArrayOutputStream();
+		GZIPOutputStream gos=new GZIPOutputStream(temp);
+		gos.write(data);
+		gos.finish();
+		data=temp.toByteArray();
+		gos.close();
+		write(IOUtils.intToByte4(data.length));
+		setOutputStream(thisGZ);
+		write(data);
+		defaultOutputStream();
 	}
 	/**
 	 * 向该线程的输出流按照预设的TCP格式写数据
@@ -65,7 +92,6 @@ public class OutputThread extends Thread implements ServerClientInterface,Closea
 		}
 		while(!canWrite) {}
 		canWrite=false;
-		System.out.println("data locked");
 		outputData=data;
 		interrupt();
 	}
@@ -75,14 +101,25 @@ public class OutputThread extends Thread implements ServerClientInterface,Closea
 	 * @throws IOException 如果写入错误
 	 */
 	public synchronized void write0(byte[] data) throws IOException {
-		os.write(data);
-		os.flush();
+		synchronized(now) {
+			now.write(data);
+			now.flush();
+		}
+	}
+	public void setOutputStream(OutputStream os) {
+		synchronized(now) {
+			now=os;
+		}
+	}
+	public void defaultOutputStream() {
+		setOutputStream(os);
 	}
 	@Override
 	public void close() throws IOException {
 		flag=false;
 		switch(type) {
 		case SOCKET:
+			thisSoc.shutdownOutput();
 			break;
 		case FILE:
 			os.close();

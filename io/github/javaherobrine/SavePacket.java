@@ -1,6 +1,7 @@
 package io.github.javaherobrine;
 import java.io.*;
-import java.lang.reflect.InvocationTargetException;
+import java.net.*;
+import java.lang.reflect.*;
 import java.util.stream.*;
 public class SavePacket {
 	private File packFileDir;
@@ -8,7 +9,7 @@ public class SavePacket {
 	private String cp;
 	private BufferedReader br;
 	private String[] str;
-	public static final FileClassLoader LOAD_CLASS_FROM_FILE=new FileClassLoader();
+	URLClassLoader loader;
 	public SavePacket(File packFileDir) {
 		this.packFileDir=packFileDir;
 	}
@@ -17,16 +18,17 @@ public class SavePacket {
 			return;
 		}
 		File[] savepacks=packFileDir.listFiles();
-		Stream.of(savepacks).filter(f->{
-			return (!packFileDir.exists()|packFileDir.isFile()|packFileDir.listFiles().length==0);
-		}).forEach(f->{
+		Stream<File> stream=Stream.of(savepacks).filter(f->{
+			return (!f.exists()||f.isFile()||f.listFiles().length==0);
+		});
+		URL[] urls=new URL[stream.toArray().length];
+		stream.forEach(f->{
 			Stream.of(f.listFiles()).forEach(ff->{
 				if(ff.getName().equals("options.txt")) {
 					try {
 						br=new BufferedReader(new FileReader(ff));
 						str=br.readLine().split(":");
-						cp=str[1].strip().replace('.','/');
-						c=LOAD_CLASS_FROM_FILE.loadClass(ff.getParentFile().getAbsolutePath()+cp);
+						
 						str=br.readLine().split(":");
 						new Thread(()-> {
 							try {

@@ -1,6 +1,7 @@
 package io.github.javaherobrine;
 import java.io.*;
 import javax.tools.*;
+@Deprecated
 public class CGMSCompiler {
 	private static StringBuilder code;
 	static StringBuilder temp;

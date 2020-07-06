@@ -8,10 +8,11 @@ import io.github.javaherobrine.ioStream.*;
  * @author Java_Herobrine
  */
 public class InputThread extends Thread implements ServerClientInterface,Closeable,AutoCloseable{
-	InputStream is;
-	ObjectOutputStream oos;
+	BufferedInputStream is;
 	private ObjectInputStream socketOis;
 	private boolean init;
+	ObjectOutputStream oos;
+	private InputStream now=is;
 	private GZIPInputStream socketGZ;
 	private ObjectInputStream socketGZIPOis;
 	PipedOutputStream piped=new PipedOutputStream();
@@ -32,7 +33,7 @@ public class InputThread extends Thread implements ServerClientInterface,Closeab
 	 */
 	public InputThread(InputStream is,StreamType type) throws IOException {
 		this.type=type;
-		this.is=is;
+		this.is=new BufferedInputStream(is);
 	}
 	/**
 	 * 根据指定的套接字的输入流创建线程
@@ -152,10 +153,21 @@ public class InputThread extends Thread implements ServerClientInterface,Closeab
 		flag=false;
 		switch(type) {
 		case SOCKET:
+			
 			break;
 		case FILE:
 			is.close();
 			break;
 		}
+	}
+	public Object object() throws ClassNotFoundException, IOException {
+		return socketOis.readObject();
+	}
+	public byte[] gzip() throws ClassNotFoundException, IOException {
+		if((TypeList)object()!=TypeList.GZIP) {
+			return null;
+		}
+		GZIPInputStream unzip=new GZIPInputStream(new ByteArrayInputStream(readAPacket()));
+		return unzip.readAllBytes();
 	}
 }

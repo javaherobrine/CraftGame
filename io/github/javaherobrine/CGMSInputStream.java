@@ -5,11 +5,12 @@ import java.util.stream.*;
  * 通过InputStream读取CGMS
  * @author Java_Herobrine
  */
+@Deprecated
 public class CGMSInputStream extends InputStream{
 	private CGMSFile thisFile;
 	public String pack;
 	private BufferedReader br;
-	private InputStream is;
+	private FileInputStream is;
 	@Override
 	@Deprecated
 	public int read() throws IOException {
@@ -22,7 +23,7 @@ public class CGMSInputStream extends InputStream{
 	private void getSourceReader() {
 		br=new BufferedReader(new InputStreamReader(is));
 	}
-	public CGMSInputStream(InputStream cgmsis) {
+	public CGMSInputStream(FileInputStream cgmsis) {
 		is=cgmsis;
 	}
 	public void openStreamByCGMSFile() throws FileNotFoundException {
@@ -105,14 +106,6 @@ public class CGMSInputStream extends InputStream{
 		if(isAnnotate) {
 			throw new CGMSException("意外结束的注释");
 		}
-	}
-	@Deprecated
-	public static CGMSInputStream nullCGMSInputStream() {
-		return new CGMSInputStream(nullInputStream()) {
-			public int read() throws EOFException{
-				throw new EOFException("EOF");
-			}
-		};
 	}
 	public static String getClassName(String cgmsClass) throws CGMSException{
 		if(cgmsClass.startsWith("Mod")) {

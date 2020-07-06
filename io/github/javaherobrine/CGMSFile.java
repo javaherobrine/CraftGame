@@ -1,5 +1,6 @@
 package io.github.javaherobrine;
 import java.io.*;
+@Deprecated
 public class CGMSFile extends File implements Serializable{
 	public CGMSFile(String pathname) throws CGMSException {
 		super(pathname);

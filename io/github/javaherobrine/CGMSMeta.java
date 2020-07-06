@@ -1,4 +1,5 @@
 package io.github.javaherobrine;
+@Deprecated
 public class CGMSMeta {
 	String meta;
 	public CGMSMeta(String meta) throws CGMSException{
