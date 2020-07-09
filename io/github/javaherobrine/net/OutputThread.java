@@ -13,8 +13,6 @@ public class OutputThread extends Thread implements ServerClientInterface,Closea
 	private OutputStream now;
 	public volatile boolean canWrite=true;
 	StreamType type;
-	private GZIPOutputStream thisGZ;
-	private ObjectOutputStream oosWithGZ;
 	private Socket thisSoc=null;
 	public boolean flag=true;
 	public volatile byte[] outputData=null;
@@ -45,7 +43,6 @@ public class OutputThread extends Thread implements ServerClientInterface,Closea
 	}
 	public void init() throws IOException {
 		thisOos=new ObjectOutputStream(os);
-		thisGZ=new GZIPOutputStream(os);
 	}
 	/**
 	 * 根据指定的套接字的输出流创建输出线程
@@ -67,19 +64,6 @@ public class OutputThread extends Thread implements ServerClientInterface,Closea
 	}
 	public void object(Object obj) throws IOException {
 		thisOos.writeObject(obj);
-	}
-	public void gzip(byte[] data) throws IOException {
-		thisOos.writeObject(TypeList.GZIP);
-		ByteArrayOutputStream temp=new ByteArrayOutputStream();
-		GZIPOutputStream gos=new GZIPOutputStream(temp);
-		gos.write(data);
-		gos.finish();
-		data=temp.toByteArray();
-		gos.close();
-		write(IOUtils.intToByte4(data.length));
-		setOutputStream(thisGZ);
-		write(data);
-		defaultOutputStream();
 	}
 	/**
 	 * 向该线程的输出流按照预设的TCP格式写数据

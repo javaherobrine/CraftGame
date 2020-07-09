@@ -12,9 +12,6 @@ public class InputThread extends Thread implements ServerClientInterface,Closeab
 	private ObjectInputStream socketOis;
 	private boolean init;
 	ObjectOutputStream oos;
-	private InputStream now=is;
-	private GZIPInputStream socketGZ;
-	private ObjectInputStream socketGZIPOis;
 	PipedOutputStream piped=new PipedOutputStream();
 	public StreamType type;
 	public boolean flag=true;
@@ -63,8 +60,6 @@ public class InputThread extends Thread implements ServerClientInterface,Closeab
 	public void init() {
 		try {
 			socketOis=new ObjectInputStream(is);
-			socketGZ=new GZIPInputStream(is);
-			socketGZIPOis=new ObjectInputStream(socketGZ);
 			init=true;
 		} catch (IOException e) {
 			init=false;
@@ -152,8 +147,7 @@ public class InputThread extends Thread implements ServerClientInterface,Closeab
 	public void close() throws IOException {
 		flag=false;
 		switch(type) {
-		case SOCKET:
-			
+		case SOCKET:	
 			break;
 		case FILE:
 			is.close();
@@ -162,12 +156,5 @@ public class InputThread extends Thread implements ServerClientInterface,Closeab
 	}
 	public Object object() throws ClassNotFoundException, IOException {
 		return socketOis.readObject();
-	}
-	public byte[] gzip() throws ClassNotFoundException, IOException {
-		if((TypeList)object()!=TypeList.GZIP) {
-			return null;
-		}
-		GZIPInputStream unzip=new GZIPInputStream(new ByteArrayInputStream(readAPacket()));
-		return unzip.readAllBytes();
 	}
 }
