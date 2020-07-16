@@ -20,12 +20,10 @@ public class OutputThread extends Thread implements ServerClientInterface,Closea
 		while(flag) {
 			if(outputData!=null) {
 				try {
-					synchronized(now) {
-						now.write(IOUtils.intToByte4(outputData.length));
-						now.flush();
-						now.write(outputData);
-						now.flush();
-					}
+					os.write(IOUtils.intToByte4(outputData.length));
+					os.flush();
+					os.write(outputData);
+					os.flush();
 					outputData=null;
 					canWrite=true;
 				}catch(SocketException e) {
@@ -73,6 +71,7 @@ public class OutputThread extends Thread implements ServerClientInterface,Closea
 	public synchronized void write(byte[] data) throws IOException {
 		if(type!=StreamType.SOCKET) {
 			write0(data);
+			return;
 		}
 		while(!canWrite) {}
 		canWrite=false;
@@ -85,18 +84,8 @@ public class OutputThread extends Thread implements ServerClientInterface,Closea
 	 * @throws IOException Èç¹ûÐ´Èë´íÎó
 	 */
 	public synchronized void write0(byte[] data) throws IOException {
-		synchronized(now) {
-			now.write(data);
-			now.flush();
-		}
-	}
-	public void setOutputStream(OutputStream os) {
-		synchronized(now) {
-			now=os;
-		}
-	}
-	public void defaultOutputStream() {
-		setOutputStream(os);
+		os.write(data);
+		os.flush();
 	}
 	@Override
 	public void close() throws IOException {
