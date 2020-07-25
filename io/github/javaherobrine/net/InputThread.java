@@ -12,6 +12,7 @@ public class InputThread extends Thread implements ServerClientInterface,Closeab
 	private ObjectInputStream socketOis;
 	private boolean init;
 	ObjectOutputStream oos;
+	Socket soc=null;
 	PipedOutputStream piped=new PipedOutputStream();
 	public StreamType type;
 	public boolean flag=true;
@@ -32,6 +33,12 @@ public class InputThread extends Thread implements ServerClientInterface,Closeab
 		this.type=type;
 		this.is=new BufferedInputStream(is);
 	}
+	public OutputThread getOutput() throws IOException {
+		if(soc!=null) {
+			return new OutputThread(soc);
+		}
+		return null;
+	}
 	/**
 	 * 根据指定的套接字的输入流创建线程
 	 * @param soc 套接字
@@ -39,6 +46,7 @@ public class InputThread extends Thread implements ServerClientInterface,Closeab
 	 */
 	public InputThread(Socket soc) throws IOException {
 		this(soc.getInputStream(),StreamType.SOCKET);
+		this.soc=soc;
 	}
 	/**
 	 * 重置所有状态

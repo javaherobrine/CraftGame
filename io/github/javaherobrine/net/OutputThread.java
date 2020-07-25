@@ -11,6 +11,7 @@ public class OutputThread extends Thread implements ServerClientInterface,Closea
 	BufferedOutputStream os;
 	private ObjectOutputStream thisOos;
 	private OutputStream now;
+	Socket soc=null;
 	public volatile boolean canWrite=true;
 	StreamType type;
 	private Socket thisSoc=null;
@@ -38,6 +39,12 @@ public class OutputThread extends Thread implements ServerClientInterface,Closea
 				}
 			}
 		}
+	}
+	public InputThread getInput() throws IOException {
+		if(soc!=null) {
+			return new InputThread(soc);
+		}
+		return null;
 	}
 	public void init() throws IOException {
 		thisOos=new ObjectOutputStream(os);
