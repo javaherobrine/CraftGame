@@ -33,8 +33,10 @@ public class AutoSync<T> extends Thread{
 	}
 	public void online(int pipedNo) {
 		map.put(list.get(pipedNo),true);
+		processor.online();
 	}
 	public void offline(int pipedNo) {
 		map.put(list.get(pipedNo),false);
+		processor.offline();
 	}
 }

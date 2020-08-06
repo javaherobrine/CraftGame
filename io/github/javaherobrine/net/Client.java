@@ -40,6 +40,9 @@ public class Client {
 		this.client.close();
 	}
 	public void bind(Socket soc) throws IOException {
+		if(soc.isInputShutdown()||soc.isOutputShutdown()||soc.isClosed()) {
+			throw new SocketException("Can't create client:I/O is closed or socket is closed");
+		}
 		if(soc.isConnected()) {
 			client=soc;
 			if(!soc.getKeepAlive()) {
@@ -47,6 +50,8 @@ public class Client {
 			}
 			ios();
 			isConnection=true;
+		}else {
+			throw new SocketException("Can't create client:connection is not init");
 		}
 	}
 	private void ios() throws IOException {
