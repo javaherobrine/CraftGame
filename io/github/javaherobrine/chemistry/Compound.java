@@ -1,8 +1,7 @@
 package io.github.javaherobrine.chemistry;
-public abstract class Compound {
-	public boolean needIon;
+public class Compound {
 	public Element[] elements;
-	public Ion[] ions;
+	public Ion[] ions=null;
 	public Compound(boolean canElectrolysis,Element...elements) {
 		this.elements=elements;
 		if(canElectrolysis) {
@@ -38,13 +37,14 @@ public abstract class Compound {
 					}
 				}else {
 					ptrs[pointer]++;
-					for(int i=length;i>pointer;i++) {
+					for(int i=length-1;i>pointer;i--) {
 						if(ptrs[i]==elements[i].valence.length) {
 							ptrs[i]=0;
-							ptrs[i+1]++;
+							ptrs[i-1]++;
 						}
 					}
 				}
+				flag=ptrs[0]<elements[0].valence.length;
 			}
 		}
 	}
@@ -54,5 +54,9 @@ public abstract class Compound {
 	public Compound(Ion...ions) {
 		this.ions=ions;
 		this.elements=Ion.parse(ions);
+	}
+	public static boolean createable(Element...elements) {
+		Compound comp=new Compound(true,elements);
+		return comp.ions!=null;
 	}
 }

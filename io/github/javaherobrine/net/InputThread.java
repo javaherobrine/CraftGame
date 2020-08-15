@@ -8,19 +8,16 @@ import io.github.javaherobrine.ioStream.*;
  * @author Java_Herobrine
  */
 public class InputThread extends Thread implements ServerClientInterface,Closeable,AutoCloseable{
-	BufferedInputStream is;
+	TCPInputStream is;
 	private ObjectInputStream socketOis;
 	private boolean init;
+	public volatile boolean ready=false;
 	ObjectOutputStream oos;
 	Socket soc=null;
 	PipedOutputStream piped=new PipedOutputStream();
-	public StreamType type;
 	public boolean flag=true;
-	public volatile int inputLength=-1;
 	public volatile byte[] data=null;
 	public volatile int off=0;
-	public volatile int mark=0;
-	public volatile ByteArrayOutputStream ais=new ByteArrayOutputStream();
 	public static void main(String[] args) {
 		System.out.println(Long.MAX_VALUE);
 	}
@@ -29,9 +26,9 @@ public class InputThread extends Thread implements ServerClientInterface,Closeab
 	 * @param is 源输入流
 	 * @throws IOException 
 	 */
-	public InputThread(InputStream is,StreamType type) throws IOException {
-		this.type=type;
-		this.is=new BufferedInputStream(is);
+	
+	public InputThread(InputStream is) throws IOException {
+		this.is=new TCPInputStream(new BufferedInputStream(is));
 	}
 	public OutputThread getOutput() throws IOException {
 		if(soc!=null) {
@@ -45,25 +42,18 @@ public class InputThread extends Thread implements ServerClientInterface,Closeab
 	 * @throws IOException 如果getInputStream发生异常
 	 */
 	public InputThread(Socket soc) throws IOException {
-		this(soc.getInputStream(),StreamType.SOCKET);
+		this(soc.getInputStream());
 		this.soc=soc;
 	}
 	/**
 	 * 重置所有状态
 	 */
-	private void reset(){
-		mark=0;
-		off=0;
-		inputLength=-1;
-		ais.reset();
-	}
 	/**
 	 * 读一个字节到缓冲区
 	 * @throws IOException
 	 */
 	private void read() throws IOException {
-		ais.write(is.read());
-		mark++;
+		
 	}
 	public void init() {
 		try {
@@ -85,22 +75,17 @@ public class InputThread extends Thread implements ServerClientInterface,Closeab
 	 */
 	public void run() {
 		while(flag) {
-			if(inputLength==-1) {
+			if(!ready) {
 				try {
 					sleep(Long.MAX_VALUE);
 				} catch (InterruptedException e) {
-					if(inputLength==-1) {
+					if(!ready) {
 						continue;
 					}
 				}
 			}
 			try {
-				if(mark>=inputLength){
-					data=getData();
-					if(mark==inputLength) {
-						reset();
-					}
-				}
+				data=getData();
 				read();
 			}catch(SocketException e) {
 				break;
@@ -115,11 +100,8 @@ public class InputThread extends Thread implements ServerClientInterface,Closeab
 	 * @throws IOException
 	 */
 	private byte[] getData() throws IOException {
-		ByteArrayInputStream bis=new ByteArrayInputStream(ais.toByteArray());
-		off+=inputLength;
-		byte[] bs=new byte[off];
-		bis.read(bs);
-		return bs;
+		while(data==null);
+		return data;
 	}
 	/**
 	 * 通过该线程的输入流读指定长度的数据
@@ -127,11 +109,10 @@ public class InputThread extends Thread implements ServerClientInterface,Closeab
 	 * @return 读到的数据
 	 */
 	public synchronized byte[] readNBytes(int length){
-		inputLength=length;
+		ready=true;
 		data=null;
 		interrupt();
 		byte[] temp=getData0();
-		inputLength=-1;
 		return temp;
 	}
 	/**
@@ -140,7 +121,6 @@ public class InputThread extends Thread implements ServerClientInterface,Closeab
 	 */
 	private synchronized byte[] getData0() {
 		while(data==null) {}
-		inputLength=-1;
 		return data;
 	}
 	/**
@@ -151,18 +131,11 @@ public class InputThread extends Thread implements ServerClientInterface,Closeab
 	public byte[] readAPacket() throws IOException{
 		return readNBytes(IOUtils.byte4ToInt(readNBytes(4),0));
 	}
-	@Override
-	public void close() throws IOException {
-		flag=false;
-		switch(type) {
-		case SOCKET:	
-			break;
-		case FILE:
-			is.close();
-			break;
-		}
-	}
 	public Object object() throws ClassNotFoundException, IOException {
 		return socketOis.readObject();
+	}
+	@Override
+	public void close() throws IOException {
+		is.close();
 	}
 }
