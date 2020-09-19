@@ -7,13 +7,13 @@ import io.github.javaherobrine.ioStream.*;
  * 创建输入线程
  * @author Java_Herobrine
  */
-public class InputThread extends Thread implements ServerClientInterface,Closeable,AutoCloseable{
+public class InputThread extends Thread implements Closeable,AutoCloseable{
 	TCPInputStream is;
 	private ObjectInputStream socketOis;
-	private boolean init;
 	public volatile boolean ready=false;
 	ObjectOutputStream oos;
 	Socket soc=null;
+	private int il;
 	PipedOutputStream piped=new PipedOutputStream();
 	public boolean flag=true;
 	public volatile byte[] data=null;
@@ -53,14 +53,12 @@ public class InputThread extends Thread implements ServerClientInterface,Closeab
 	 * @throws IOException
 	 */
 	private void read() throws IOException {
-		
+		data=readNBytes(il);
 	}
 	public void init() {
 		try {
 			socketOis=new ObjectInputStream(is);
-			init=true;
 		} catch (IOException e) {
-			init=false;
 		}
 	}
 	public void initPiped() {
@@ -85,7 +83,6 @@ public class InputThread extends Thread implements ServerClientInterface,Closeab
 				}
 			}
 			try {
-				data=getData();
 				read();
 			}catch(SocketException e) {
 				break;
@@ -99,10 +96,6 @@ public class InputThread extends Thread implements ServerClientInterface,Closeab
 	 * @return 数据
 	 * @throws IOException
 	 */
-	private byte[] getData() throws IOException {
-		while(data==null);
-		return data;
-	}
 	/**
 	 * 通过该线程的输入流读指定长度的数据
 	 * @param length 输入长度
@@ -119,7 +112,7 @@ public class InputThread extends Thread implements ServerClientInterface,Closeab
 	 * 读取所有数据
 	 * @return 数据
 	 */
-	private synchronized byte[] getData0() {
+	public byte[] getData0() {
 		while(data==null) {}
 		return data;
 	}
@@ -128,7 +121,7 @@ public class InputThread extends Thread implements ServerClientInterface,Closeab
 	 * @return
 	 * @throws IOException
 	 */
-	public byte[] readAPacket() throws IOException{
+	public byte[] readPacket() throws IOException{
 		return readNBytes(IOUtils.byte4ToInt(readNBytes(4),0));
 	}
 	public Object object() throws ClassNotFoundException, IOException {

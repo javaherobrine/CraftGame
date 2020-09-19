@@ -2,55 +2,66 @@ package io.github.javaherobrine.net;
 import java.io.*;
 import java.net.*;
 import java.util.*;
-import io.github.javaherobrine.ioStream.IOUtils;
 public class Server implements Closeable {
 	public static HashMap<String,Socket> sockets=new HashMap<>();
-	/**
-	 * ServerClientInterface[0]为输入流，ServerClientInterface[1]为输出流
-	 */
-	public static HashMap<Socket,ServerClientInterface[]> threads=new HashMap<>();
 	public int serverPort;
 	public ServerSocket s;
-	/**
-	 * 妈妈快看，服务器开了！
-	 * @throws IOException
-	 */
+	public ArrayList<Client> clients=new ArrayList<>();
 	public void open() throws IOException {
 		this.s = new ServerSocket(this.serverPort);
 	}
-	/**
-	 * 根据指定的端口创建服务器
-	 * @param port 端口号
-	 */
 	public Server(int port) {
 		this.serverPort = port;
 	}
-	/**
-	 * 哦不，服务器关了
-	 * @throws IOException
-	 */
 	public void close() throws IOException {
 		this.s.close();
 	}
-	/**
-	 * 使用ServerThread创建的套接字才可以使用此方法
-	 */
-	public synchronized static void disconnection(String playerName) throws IOException {
-		ServerClientInterface[] ss=threads.remove(sockets.remove(playerName));
-		ss[0].close();
-		ss[1].close();
+	public static void disconnection(String playerName) throws IOException {
+		sockets.get(playerName).close();
 	}
-	public static void main(String[] args) throws IOException {
-		Server s=new Server(8888);
-		s.open();
-		Socket soc=s.s.accept();
-		InputThread it=new InputThread(soc);
-		OutputThread ot=new OutputThread(soc);
-		it.start();
-		ot.start();
+	public Client accept() throws IOException {
+		return shakeHands(Client.initClientFromSocket(s.accept()));
+	}
+	public static Client shakeHands(Client c,int id) throws IOException{
+		BufferedReader br=new BufferedReader(new InputStreamReader(c.tis,"UTF-8"));
+		BufferedWriter bw=new BufferedWriter(new OutputStreamWriter(c.tos,"UTF-8"));
+		DataOutputStream dos=new DataOutputStream(c.tos);
+		TransmissionFormat[] allFormats=TransmissionFormat.values();
 		while(true) {
-			ot.write(new byte[] {0,1,1,1,1,1});
-			it.readAPacket();
+			try {
+				TransmissionFormat f=TransmissionFormat.valueOf(br.readLine());
+				if(f==TransmissionFormat.FINISH) {
+					c.msg.connected=false;
+				}
+				if(Arrays.binarySearch(allFormats, f)>0) {
+					c.msg.format=f;
+					bw.write(TransmissionStatus.ACCEPTED.toString());
+					bw.newLine();
+					bw.flush();
+					break;
+				}else {
+					bw.write(TransmissionStatus.CONTINUE.toString());
+					bw.newLine();
+					bw.flush();
+				}
+			}catch(Exception e) {}
 		}
+		c.msg.id=id;
+		dos.writeInt(id);
+		return c;
+	}
+	public Client shakeHands(Client c) throws IOException {
+		DataInputStream dis=new DataInputStream(c.tis);
+		int id=dis.readInt();
+		if(id!=-1) {
+			Client temp=clients.get(id);
+			c.msg=temp.msg;
+			c.msg.connected=true;
+			clients.remove(id);
+			clients.add(id,c);
+			return c;
+		}
+		clients.add(c);
+		return shakeHands(c,clients.indexOf(c));
 	}
 }

@@ -18,7 +18,6 @@ public class ServerThread extends Thread{
 				OutputThread ot=new OutputThread(temp);
 				ot.start();
 				Server.sockets.put(new String(it.readNBytes((IOUtils.byte4ToInt(it.readNBytes(4),0)))),temp);
-				Server.threads.put(temp,new ServerClientInterface[]{it,ot});
 			} catch (IOException e) {
 				e.printStackTrace();
 			}

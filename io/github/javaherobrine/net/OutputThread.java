@@ -7,14 +7,12 @@ import java.util.zip.*;
  * 输出线程
  * @author Java_Herobrine
  */
-public class OutputThread extends Thread implements ServerClientInterface,Closeable,AutoCloseable{
+public class OutputThread extends Thread implements Closeable,AutoCloseable{
 	BufferedOutputStream os;
 	private ObjectOutputStream thisOos;
-	private OutputStream now;
 	Socket soc=null;
+	public TCPOutputStream tos;
 	public volatile boolean canWrite=true;
-	StreamType type;
-	private Socket thisSoc=null;
 	public boolean flag=true;
 	public volatile byte[] outputData=null;
 	public void run() {
@@ -55,17 +53,16 @@ public class OutputThread extends Thread implements ServerClientInterface,Closea
 	 * @throws IOException 如果getOutputStream出错
 	 */
 	public OutputThread(Socket soc) throws IOException {
-		this(soc.getOutputStream(),StreamType.SOCKET);
-		thisSoc=soc;
+		this(soc.getOutputStream());
 	}
 	/**
 	 * 根据指定的输出流创建线程
 	 * @param os 输出流
 	 * @throws IOException 
 	 */
-	public OutputThread(OutputStream os,StreamType type) throws IOException {
-		this.type=type;
+	public OutputThread(OutputStream os) throws IOException {
 		this.os=new BufferedOutputStream(os);
+		tos=new TCPOutputStream(os);
 	}
 	public void object(Object obj) throws IOException {
 		thisOos.writeObject(obj);
@@ -76,10 +73,6 @@ public class OutputThread extends Thread implements ServerClientInterface,Closea
 	 * @throws IOException 
 	 */
 	public synchronized void write(byte[] data) throws IOException {
-		if(type!=StreamType.SOCKET) {
-			write0(data);
-			return;
-		}
 		while(!canWrite) {}
 		canWrite=false;
 		outputData=data;
@@ -96,14 +89,6 @@ public class OutputThread extends Thread implements ServerClientInterface,Closea
 	}
 	@Override
 	public void close() throws IOException {
-		flag=false;
-		switch(type) {
-		case SOCKET:
-			thisSoc.shutdownOutput();
-			break;
-		case FILE:
-			os.close();
-			break;
-		}
+		os.close();
 	}
 }
