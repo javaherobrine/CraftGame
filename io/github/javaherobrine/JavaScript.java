@@ -3,13 +3,10 @@ import javax.script.*;
 import java.util.*;
 import java.util.stream.*;
 import java.lang.reflect.*;
-import jdk.nashorn.api.scripting.*;
 public class JavaScript {
 	public static final ScriptEngine engine=new ScriptEngineManager().getEngineByName("javascript");
-	public static HashMap<Object,Object> parse(String json) throws ScriptException {
-		HashMap<Object, Object> map=new HashMap<>();
-		processJavaScriptObjectMirror((ScriptObjectMirror)engine.eval("json("+json+")"),map);
-		return map;
+	public static Map parse(String json) throws ScriptException {
+		return (Map)engine.eval("json("+json+")");
 	}
 	static {
 		try {
@@ -17,54 +14,11 @@ public class JavaScript {
 		} catch (ScriptException e) {
 		}
 	}
-	public static void processJavaScriptObjectMirror(ScriptObjectMirror object,Map<Object,Object> output) throws ScriptException {
-		if(object.isEmpty()) return;
-		Iterator<?> iter=object.keySet().iterator();
-		Iterator<?> valueIter=object.values().iterator();
-		LinkedList<Object> keys=new LinkedList<>();
-		LinkedList<Object> values=new LinkedList<>();
-		iter.forEachRemaining(key->{
-			if(key instanceof ScriptObjectMirror) {
-				ScriptObjectMirror mirror=(ScriptObjectMirror)key;
-				if(mirror.isArray()) {
-					keys.add(mirror.values().toArray());
-					return;
-				}
-				HashMap<Object,Object>map=new HashMap<>();
-				try {
-					processJavaScriptObjectMirror(mirror,map);
-				} catch (ScriptException e) {}
-				keys.add(map);
-				return;
-			}
-		});
-		valueIter.forEachRemaining(value->{		
-			if(value instanceof ScriptObjectMirror) {
-				ScriptObjectMirror mirror=(ScriptObjectMirror)value;
-				if(mirror.isArray()) {
-					values.add(mirror.values().toArray());
-					return;
-				}
-				HashMap<Object,Object>map=new HashMap<>();
-				try {
-					processJavaScriptObjectMirror(mirror,map);
-				} catch (ScriptException e) {}
-				values.add(map);
-				return;
-			}
-			values.add(value);
-		});
-		if(keys.size()!=values.size()) {
-			throw new ScriptException("´íÎóµÄJSON");
-		}
-		int i=keys.size();
-		for(int ii=0;ii<i;ii++) {
-			output.put(keys.get(ii), values.get(ii));
-		}
-	}
 	public static String json(Object object) {
 		final StringBuilder sb=new StringBuilder("{\n");
-		Stream.of(object.getClass().getFields()).forEach(field->{
+		Stream.of(object.getClass().getFields()).filter(field->{
+			return field.canAccess(object)||Modifier.isTransient(field.getModifiers());
+		}).forEach(field->{
 			try {
 				sb.append("\""+field.getName()+"\""+":");
 				Object thisFie=field.get(object);
