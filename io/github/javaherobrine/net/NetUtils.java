@@ -3,7 +3,6 @@ import io.github.javaherobrine.ioStream.*;
 import java.io.*;
 import java.net.*;
 import java.net.http.*;
-
 public final class NetUtils extends IOUtils {
 	public static final HttpClient DEFAULT_CLIENT=HttpClient.newHttpClient();
 	public static boolean icmp(String host) throws UnknownHostException, IOException {

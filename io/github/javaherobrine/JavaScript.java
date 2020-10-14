@@ -17,13 +17,13 @@ public class JavaScript {
 	public static String json(Object object) {
 		final StringBuilder sb=new StringBuilder("{\n");
 		Stream.of(object.getClass().getFields()).filter(field->{
-			return field.canAccess(object)||Modifier.isTransient(field.getModifiers());
+			return !Modifier.isFinal(field.getModifiers())&&(Modifier.isStatic(field.getModifiers())||field.canAccess(object)||Modifier.isTransient(field.getModifiers()));
 		}).forEach(field->{
 			try {
 				sb.append("\""+field.getName()+"\""+":");
 				Object thisFie=field.get(object);
 				if(thisFie instanceof Number) {
-					sb.append("\""+thisFie.toString()+"\",\n");
+					sb.append(thisFie.toString()+",\n");
 				}else if(thisFie instanceof String) {
 					sb.append("\""+thisFie+",\"");
 				}else {

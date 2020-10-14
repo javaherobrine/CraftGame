@@ -14,9 +14,6 @@ public class JSONInputStream implements ObjectInput{
 		if(str.trim().isEmpty()) {
 			return readObject();
 		}
-		if(str.indexOf('{')!=0) {
-			throw new IOException("ÎÞÐ§µÄJSON");
-		}
 		if(str.indexOf('}')==str.length()-1) {
 			try {
 				return JavaScript.parse(str);

@@ -1,6 +1,5 @@
 package io.github.javaherobrine.net;
 import java.io.*;
-import io.github.javaherobrine.*;
 import java.net.*;
 public class Client {
 	private Socket client;
