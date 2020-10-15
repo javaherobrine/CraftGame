@@ -2,6 +2,7 @@ package io.github.javaherobrine.net;
 import java.io.*;
 public class InputThread extends Thread implements Closeable,AutoCloseable{
 	TCPInputStream in;
+	private byte[] now=null;
 	boolean live=true;
 	@Override
 	public void close() throws IOException {
@@ -13,6 +14,12 @@ public class InputThread extends Thread implements Closeable,AutoCloseable{
 		while(live) {
 			try {
 				sleep(Long.MAX_VALUE);
+				try {
+					synchronized(now) {
+						now=in.readData();
+					}
+				} catch (IOException e) {
+				}
 			} catch (InterruptedException e) {
 			}
 		}
@@ -22,6 +29,10 @@ public class InputThread extends Thread implements Closeable,AutoCloseable{
 	}
 	public InputThread(TCPInputStream in) {
 		this.in=in;
-		start();
+	}
+	public byte[] get() {
+		synchronized(now){
+			return now;
+		}
 	}
 }

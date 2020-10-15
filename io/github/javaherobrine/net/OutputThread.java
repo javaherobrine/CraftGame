@@ -3,11 +3,34 @@ import java.io.*;
 import java.net.*;
 import io.github.javaherobrine.ioStream.*;
 public class OutputThread extends Thread implements Closeable,AutoCloseable{
-	Socket soc;
+	TCPOutputStream out;
+	byte[] data=null;
+	boolean live;
 	@Override
 	public void close() throws IOException {
+		out.close();
+		live=false;
 	}
-	public OutputThread(Socket soc) {
-		this.soc=soc;
+	public OutputThread(TCPOutputStream out) {
+		this.out=out;
+	}
+	@Override
+	public void run() {
+		while(live) {
+			try {
+				sleep(Long.MAX_VALUE);
+				try {
+					while(data==null);
+					out.writeData(data);
+					data=null;
+				} catch (IOException e) {
+				}
+			} catch (InterruptedException e) {
+			}
+		}
+	}
+	public void write(byte[] bs) {
+		data=bs;
+		interrupt();
 	}
 }
