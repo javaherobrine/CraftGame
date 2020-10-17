@@ -5,6 +5,9 @@ public class InputThread extends Thread implements Closeable,AutoCloseable{
 	private byte[] now=null;
 	boolean live=true;
 	@Override
+	/**
+	 * 结束线程并关闭流
+	 */
 	public void close() throws IOException {
 		in.close();
 		live=false;
@@ -14,22 +17,29 @@ public class InputThread extends Thread implements Closeable,AutoCloseable{
 		while(live) {
 			try {
 				sleep(Long.MAX_VALUE);
+			} catch (InterruptedException e) {
 				try {
 					synchronized(now) {
 						now=in.readData();
 					}
-				} catch (IOException e) {
+				} catch (IOException ee) {
 				}
-			} catch (InterruptedException e) {
 			}
 		}
 	}
+	/**
+	 * 命令输入线程开始一次输入操作
+	 */
 	public void ready() {
 		interrupt();
 	}
 	public InputThread(TCPInputStream in) {
 		this.in=in;
 	}
+	/**
+	 * 读取数据的时候会给数据加锁，此操作会在读取数据之后返回（也有加锁）
+	 * @return 数据
+	 */
 	public byte[] get() {
 		synchronized(now){
 			return now;

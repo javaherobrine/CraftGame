@@ -1,11 +1,9 @@
 package io.github.javaherobrine.net;
 import java.io.*;
-import java.net.*;
-import io.github.javaherobrine.ioStream.*;
 public class OutputThread extends Thread implements Closeable,AutoCloseable{
 	TCPOutputStream out;
 	byte[] data=null;
-	boolean live;
+	boolean live=true;
 	@Override
 	public void close() throws IOException {
 		out.close();
