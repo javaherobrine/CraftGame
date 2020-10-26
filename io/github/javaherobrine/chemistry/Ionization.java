@@ -1,8 +1,8 @@
 package io.github.javaherobrine.chemistry;
 public abstract class Ionization {
-	Compound electrolyte;
-	public Ionization(Compound electrolyte) {
+	DefaultCompound electrolyte;
+	public Ionization(DefaultCompound electrolyte) {
 		this.electrolyte=electrolyte;
 	}
-	public abstract Ions[] electrolysis(Compound comp);
+	public abstract Ions[] electrolysis(DefaultCompound comp);
 }

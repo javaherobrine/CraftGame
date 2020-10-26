@@ -1,12 +1,12 @@
 package io.github.javaherobrine.chemistry;
 public class Ions {
-	public Compound comp;
+	public DefaultCompound comp;
 	public Ion ion;
-	public Ions(Compound comp,Ion ion) {
+	public Ions(DefaultCompound comp,Ion ion) {
 		this.ion=ion;
 		this.comp=comp;
 	}
-	public Ions(Compound comp,Element element,int valence) {
+	public Ions(DefaultCompound comp,Element element,int valence) {
 		this(comp,new Ion(valence,element));
 	}
 }
