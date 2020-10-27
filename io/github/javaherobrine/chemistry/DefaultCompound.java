@@ -1,9 +1,9 @@
 package io.github.javaherobrine.chemistry;
 public class DefaultCompound extends Compound{
-	public Element[] elements;
+	public DefaultElement[] defaultElements;
 	public Ion[] ions=null;
-	public DefaultCompound(boolean canElectrolysis,Element...elements) {
-		this.elements=elements;
+	public DefaultCompound(boolean canElectrolysis,DefaultElement...elements) {
+		this.defaultElements=elements;
 		if(canElectrolysis) {
 			int length=elements.length;
 			int[] temp=new int[length];
@@ -48,14 +48,14 @@ public class DefaultCompound extends Compound{
 			}
 		}
 	}
-	public DefaultCompound(Element...elements) {
+	public DefaultCompound(DefaultElement...elements) {
 		this(true,elements);
 	}
 	public DefaultCompound(Ion...ions) {
 		this.ions=ions;
-		this.elements=Ion.parse(ions);
+		this.defaultElements=Ion.parse(ions);
 	}
-	public static boolean createable(Element...elements) {
+	public static boolean createable(DefaultElement...elements) {
 		DefaultCompound comp=new DefaultCompound(true,elements);
 		return comp.ions!=null;
 	}
