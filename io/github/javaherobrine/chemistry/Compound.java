@@ -1,4 +1,4 @@
 package io.github.javaherobrine.chemistry;
-public abstract class Compound {
-	public Compound(DefaultElement...elements) {}
+public abstract class Compound extends Chemical{
+	public Compound(Element...elements) {}
 }

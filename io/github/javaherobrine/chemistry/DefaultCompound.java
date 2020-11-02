@@ -51,10 +51,6 @@ public class DefaultCompound extends Compound{
 	public DefaultCompound(DefaultElement...elements) {
 		this(true,elements);
 	}
-	public DefaultCompound(Ion...ions) {
-		this.ions=ions;
-		this.defaultElements=Ion.parse(ions);
-	}
 	public static boolean createable(DefaultElement...elements) {
 		DefaultCompound comp=new DefaultCompound(true,elements);
 		return comp.ions!=null;

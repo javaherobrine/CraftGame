@@ -1,18 +1,7 @@
 package io.github.javaherobrine.ioStream;
 import java.io.*;
 import java.util.*;
-public class IOUtils {
-	public static final ByteArrayOutputStream baos=new ByteArrayOutputStream();
-	public static final ObjectOutputStream oos=get();
-	protected IOUtils() {
-	}
-	private static ObjectOutputStream get() {
-		try {
-			return new ObjectOutputStream(baos);
-		} catch (IOException e) {
-			return null;
-		}
-	}
+public abstract class IOUtils {
 	public static String encode(String data) {
 		String s = data;
 		byte[] b;
@@ -30,15 +19,6 @@ public class IOUtils {
 		} catch (UnsupportedEncodingException e) {
 			return src;
 		}
-	}
-	public static byte[] objectToByteArray(Object obj) throws IOException {
-		oos.writeObject(obj);
-		return baos.toByteArray();
-	}
-	public static Object byteArrayToObject(byte[] data) throws IOException, ClassNotFoundException {
-		ByteArrayInputStream bais=new ByteArrayInputStream(data);
-		ObjectInputStream ois=new ObjectInputStream(bais);
-		return ois.readObject();
 	}
 	public static int byte4ToInt(byte[] bytes, int off) {
 		int b0 = bytes[off] & 0xFF;

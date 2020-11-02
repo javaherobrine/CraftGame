@@ -1,5 +1,5 @@
 package io.github.javaherobrine.chemistry;
-public abstract class Ionization {
+public abstract class Ionization implements Reaction{
 	Compound electrolyte;
 	public Ionization(Compound electrolyte) {
 		this.electrolyte=electrolyte;
