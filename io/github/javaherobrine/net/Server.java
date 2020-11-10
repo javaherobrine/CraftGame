@@ -1,9 +1,11 @@
 package io.github.javaherobrine.net;
 import java.io.*;
+import io.github.javaherobrine.*;
 import java.net.*;
 import java.util.*;
 import io.github.javaherobrine.ioStream.*;
 public class Server implements Closeable {
+	private static final StringPrintStream STDOUT=new StringPrintStream(System.out,(str)-> {return "[Server]"+str;});
 	ServerSocket server;
 	LinkedList<Client> clients=new LinkedList<>();
 	@Override
@@ -31,6 +33,7 @@ public class Server implements Closeable {
 				c.msg.status=TransmissionStatus.CONTINUE;
 				c.msg.id=-1;
 				c.close();
+				STDOUT.print("Client Transmission Format Not Support\r\n");
 				break;
 			}else {
 				clients.add(c);
@@ -41,6 +44,7 @@ public class Server implements Closeable {
 				c.os.write(IOUtils.intToByte4(clients.indexOf(c)));
 				c.msg.id=clients.indexOf(c);
 				accepted=true;
+				STDOUT.print("A client connected\r\n");
 			}
 		}
 		return c;
