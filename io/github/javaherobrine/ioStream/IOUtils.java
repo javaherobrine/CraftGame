@@ -1,25 +1,5 @@
 package io.github.javaherobrine.ioStream;
-import java.io.*;
-import java.util.*;
 public abstract class IOUtils {
-	public static String encode(String data) {
-		String s = data;
-		byte[] b;
-		try {
-			b = s.getBytes("UTF-8");
-			Base64.Encoder e = Base64.getEncoder();
-			return e.encodeToString(b);
-		} catch (UnsupportedEncodingException e1) {
-			return s;
-		}
-	}
-	public static String decode(String src) {
-		try {
-			return new String(Base64.getDecoder().decode(src), "UTF-8");
-		} catch (UnsupportedEncodingException e) {
-			return src;
-		}
-	}
 	public static int byte4ToInt(byte[] bytes, int off) {
 		int b0 = bytes[off] & 0xFF;
 		int b1 = bytes[off + 1] & 0xFF;

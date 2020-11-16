@@ -14,50 +14,6 @@ public final class NetUtils extends IOUtils {
 		}
 	}
 	private NetUtils() {}
-	public synchronized static void smtp(String smtp, String reciver, String sender,String fakeSender, String cc, String uname,
-			String pwd,String data) throws UnknownHostException, IOException {
-		uname = encode(uname);
-		pwd = encode(pwd);
-		Socket client=new Socket(smtp,25);
-		try {
-			BufferedReader br = new BufferedReader(new InputStreamReader(client.getInputStream()));
-			PrintWriter bw = new PrintWriter(client.getOutputStream(), true);
-			bw.println("helo jaro");
-			System.out.println(br.readLine());
-			bw.println("auth login");
-			System.out.println(br.readLine());
-			bw.println(uname);
-			System.out.println(br.readLine());
-			bw.println(pwd);
-			System.out.println(br.readLine());
-			bw.println("mail from:<"+sender+">");
-			System.out.println(br.readLine());
-			bw.println("rcpt to:<"+reciver+">");
-			System.out.println(br.readLine());
-			bw.println("data");
-			System.out.println(br.readLine());
-			bw.println("subject:"+cc);
-			bw.println("from:"+fakeSender);
-			bw.println("to:"+reciver);
-			bw.println("Content-Type: text/plain;charset=\"gb2312\"");
-			bw.println();
-			bw.println(data);
-			bw.println(".");
-			bw.println("");
-			System.out.println(br.readLine());
-			bw.println("rest");
-			bw.println("quit");
-			bw.flush();
-			System.out.println(br.readLine());
-		} catch (UnknownHostException e) {
-		} catch (IOException e) {
-			System.out.println("ÍøÂç´íÎó");
-		}
-		client.close();
-	}
-	public static String dns(String host) throws UnknownHostException {
-		return InetAddress.getByName(host).toString();
-	}
 	public static byte[] post(String url, String param) {
 		byte[] response=null;
 		try {
