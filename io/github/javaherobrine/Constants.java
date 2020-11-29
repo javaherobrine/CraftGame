@@ -15,4 +15,6 @@ public interface Constants {
 		map.put(TransmissionFormat.OBJECT, ObjectInputStream.class);
 		return map;
 	}
+	String RENDERING_FEEDBACK_ADDR="lmqhlmx@163.com";
+	String SORTING_FEEDBACK_ADDR="javaherobrine@qq.com";
 }
