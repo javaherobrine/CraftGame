@@ -2,7 +2,7 @@ package io.github.javaherobrine;
 import java.awt.*;
 import java.io.*;
 import java.net.*;
-public class URIProcessor {
+public final class URIProcessor {
 	public static final Desktop UTIL=Desktop.getDesktop();
 	private URIProcessor() {}
 	public static final boolean isURL(URI uri) {

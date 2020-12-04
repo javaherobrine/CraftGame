@@ -1,8 +1,12 @@
 package io.github.javaherobrine.chemistry;
-public class DefaultCompound extends Compound{
+import io.github.javaherobrine.*;
+public class DefaultCompound extends Compound implements ElementSortAccess<DefaultCompound>{
+	public static ReplacableMethod method=(s,elements)->{
+		return new DefaultCompound(true,(DefaultElement[])elements);
+	};
 	public DefaultElement[] defaultElements;
 	public Ion[] ions=null;
-	public DefaultCompound(boolean canElectrolysis,DefaultElement...elements) {
+	private DefaultCompound(boolean canElectrolysis,DefaultElement...elements) {
 		this.defaultElements=elements;
 		if(canElectrolysis) {
 			int length=elements.length;
@@ -52,7 +56,17 @@ public class DefaultCompound extends Compound{
 		this(true,elements);
 	}
 	public static boolean createable(DefaultElement...elements) {
-		DefaultCompound comp=new DefaultCompound(true,elements);
+		DefaultCompound comp=create(elements);
 		return comp.ions!=null;
+	}
+	public DefaultCompound warp(DefaultElement[]elements) {
+		return (DefaultCompound)method.method(null, elements);
+	}
+	@Override
+	public void replace(ReplacableMethod method) {
+		DefaultCompound.method=method;	
+	}
+	public static DefaultCompound create(DefaultElement...elements) {
+		return (DefaultCompound)method.method(null, elements);
 	}
 }
