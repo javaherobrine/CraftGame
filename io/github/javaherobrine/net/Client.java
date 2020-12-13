@@ -1,6 +1,7 @@
 package io.github.javaherobrine.net;
 import java.io.*;
 import java.net.*;
+import io.github.javaherobrine.net.event.*;
 import io.github.javaherobrine.ioStream.*;
 public class Client implements Closeable{
 	Socket soc;
@@ -15,24 +16,36 @@ public class Client implements Closeable{
 		this.os=soc.getOutputStream();
 	}
 	public void shakeHands() throws IOException {
-		boolean accepted=false;
 		TransmissionFormat[] allFormats=TransmissionFormat.values();
 		for(int i=0;i<allFormats.length;i++) {
 			os.write((allFormats[i].toString()+"\n").getBytes("UTF-8"));
 			os.flush();
 			int code=IOUtils.byte4ToInt(is.readNBytes(4), 0);
 			if(code==0) {
-				accepted=true;
 				msg.connected=true;
 				msg.format=allFormats[i];
 				msg.status=TransmissionStatus.ACCEPTED;
 				msg.id=IOUtils.byte4ToInt(is.readNBytes(4), 0);
-				break;
+				return;
 			}
 		}
+		msg.connected=false;
+		msg.format=TransmissionFormat.FINISH;
+		msg.status=TransmissionStatus.CONTINUE;
+		msg.id=-1;
 	}
 	@Override
 	public void close() throws IOException {
 		soc.close();
+	}
+	public void sendEvent(EventObject event) throws IOException {
+		out.writeObject(event);
+	}
+	public EventObject recevieEvent() throws IOException{
+		try {
+			return (EventObject)in.readObject();
+		} catch (ClassNotFoundException e) {
+			return null;
+		}
 	}
 }
