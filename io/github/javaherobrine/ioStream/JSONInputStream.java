@@ -4,7 +4,7 @@ import io.github.javaherobrine.*;
 import javax.script.*;
 public class JSONInputStream implements ObjectInput{
 	private BufferedReader source;
-	public JSONInputStream(Reader source) throws IOException, SecurityException {
+	public JSONInputStream(Reader source) {
 		this.source=new BufferedReader(source);
 	}
 	@Override
@@ -89,5 +89,6 @@ public class JSONInputStream implements ObjectInput{
 		return 0;
 	}
 	public void close() throws IOException {
+		source.close();
 	}
 }

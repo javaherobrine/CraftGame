@@ -1,6 +1,9 @@
 package io.github.javaherobrine.net.event;
 import java.io.*;
-public abstract class EventObject implements Serializable{
-	EventType type;
+public class EventObject implements Serializable{
+	public EventContent content;
 	private static final long serialVersionUID = 1L;
+	public EventObject(EventContent content) {
+		this.content=content;
+	}
 }

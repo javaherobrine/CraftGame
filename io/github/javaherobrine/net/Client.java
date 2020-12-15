@@ -9,7 +9,7 @@ public class Client implements Closeable{
 	OutputStream os;
 	ObjectInput in;
 	ObjectOutput out;
-	ShakeHandsMessage msg=new ShakeHandsMessage();
+	public ShakeHandsMessage msg=new ShakeHandsMessage();
 	public Client(Socket soc) throws IOException{
 		this.soc=soc;
 		this.is=soc.getInputStream();
@@ -39,11 +39,15 @@ public class Client implements Closeable{
 		soc.close();
 	}
 	public void sendEvent(EventObject event) throws IOException {
+		event.content.index=msg.id;
+		event.content.sendExec(this);
 		out.writeObject(event);
 	}
 	public EventObject recevieEvent() throws IOException{
 		try {
-			return (EventObject)in.readObject();
+			EventObject obj=(EventObject)in.readObject();
+			obj.content.recvExec();
+			return obj;
 		} catch (ClassNotFoundException e) {
 			return null;
 		}

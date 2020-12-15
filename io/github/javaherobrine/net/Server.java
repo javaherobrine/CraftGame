@@ -4,10 +4,12 @@ import io.github.javaherobrine.*;
 import java.net.*;
 import java.util.*;
 import io.github.javaherobrine.ioStream.*;
+import io.github.javaherobrine.net.sync.*;
 public class Server implements Closeable {
 	private static final StringPrintStream STDOUT=new StringPrintStream(System.out,(str)-> {return "[Server]"+str;});
 	ServerSocket server;
-	LinkedList<Client> clients=new LinkedList<>();
+	public static Server thisServer;
+	public LinkedList<Client> clients=new LinkedList<>();
 	@Override
 	public void close() throws IOException {
 		server.close();
@@ -48,5 +50,8 @@ public class Server implements Closeable {
 			}
 		}
 		return c;
+	}
+	public ClientSideSynchronizeImpl.ServertSideSynchronizeImpl getImpl() throws IOException{
+		return new ClientSideSynchronizeImpl(accept()).new ServertSideSynchronizeImpl();
 	}
 }
