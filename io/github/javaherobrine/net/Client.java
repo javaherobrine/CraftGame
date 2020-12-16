@@ -43,6 +43,12 @@ public class Client implements Closeable{
 		event.content.sendExec(this);
 		out.writeObject(event);
 	}
+	public static Client reconnectToServer(String host,int port) throws IOException{
+		Client c=new Client(new Socket(host,port));
+		BufferedWriter bw=new BufferedWriter(new OutputStreamWriter(c.os,"UTF-8"));
+		bw.write(TransmissionFormat.RECONNECT.toString());
+		return c;
+	}
 	public EventObject recevieEvent() throws IOException{
 		try {
 			EventObject obj=(EventObject)in.readObject();

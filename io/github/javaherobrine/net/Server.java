@@ -29,6 +29,12 @@ public class Server implements Closeable {
 				c.os.write(IOUtils.intToByte4(1));
 				continue;
 			}
+			if(format==TransmissionFormat.RECONNECT) {
+				int id=Integer.parseInt(br.readLine());
+				Client oldClient=clients.remove(id);
+				c.msg=oldClient.msg;
+				clients.add(id,c);
+			}
 			if(format==TransmissionFormat.FINISH) {
 				c.msg.connected=false;
 				c.msg.format=null;
@@ -48,6 +54,7 @@ public class Server implements Closeable {
 				accepted=true;
 				STDOUT.print("A client connected\r\n");
 			}
+			c.os.write(IOUtils.intToByte4(1));
 		}
 		return c;
 	}
