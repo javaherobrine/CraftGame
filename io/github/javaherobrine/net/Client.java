@@ -2,6 +2,8 @@ package io.github.javaherobrine.net;
 import java.io.*;
 import java.net.*;
 import io.github.javaherobrine.net.event.*;
+import io.github.javaherobrine.*;
+import io.github.javaherobrine.net.sync.*;
 import io.github.javaherobrine.ioStream.*;
 public class Client implements Closeable{
 	Socket soc;
@@ -22,11 +24,19 @@ public class Client implements Closeable{
 			os.flush();
 			int code=IOUtils.byte4ToInt(is.readNBytes(4), 0);
 			if(code==0) {
-				msg.connected=true;
-				msg.format=allFormats[i];
-				msg.status=TransmissionStatus.ACCEPTED;
-				msg.id=IOUtils.byte4ToInt(is.readNBytes(4), 0);
-				return;
+				os.write((ModLoader.loader.toString()+"\n").getBytes("UTF-8"));
+				code=IOUtils.byte4ToInt(is.readNBytes(4), 0);
+				if(code==1) {
+					msg.connected=true;
+					msg.format=allFormats[i];
+					msg.status=TransmissionStatus.ACCEPTED;
+					msg.id=IOUtils.byte4ToInt(is.readNBytes(4), 0);
+					return;
+				}else if(code==-1) {
+					break;
+				}
+			}else if(code==-10) {
+				break;
 			}
 		}
 		msg.connected=false;
@@ -57,5 +67,8 @@ public class Client implements Closeable{
 		} catch (ClassNotFoundException e) {
 			return null;
 		}
+	}
+	public ClientSideSynchronizeImpl getImpl() {
+		return new ClientSideSynchronizeImpl(this, false);
 	}
 }

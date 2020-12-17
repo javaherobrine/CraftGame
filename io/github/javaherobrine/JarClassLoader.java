@@ -17,4 +17,22 @@ public class JarClassLoader extends URLClassLoader {
 			return null;
 		}
 	}
+	public boolean getSync() {
+		try {
+			URL newURL=new URL("jar:"+url+"!/");
+			JarURLConnection juc=(JarURLConnection)newURL.openConnection();
+			return juc.getMainAttributes()==null?true:Boolean.parseBoolean(juc.getMainAttributes().getValue("resource"));
+		} catch (IOException e) {
+			return true;
+		}
+	}
+	public String getID() {
+		try {
+			URL newURL=new URL("jar:"+url+"!/");
+			JarURLConnection juc=(JarURLConnection)newURL.openConnection();
+			return juc.getMainAttributes()==null?null:juc.getMainAttributes().getValue("mod-id");
+		} catch (IOException e) {
+			return null;
+		}
+	}
 }

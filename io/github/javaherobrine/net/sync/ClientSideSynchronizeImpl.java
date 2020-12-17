@@ -4,6 +4,7 @@ import io.github.javaherobrine.net.*;
 import io.github.javaherobrine.net.event.*;
 public class ClientSideSynchronizeImpl extends SynchronizeImpl implements Runnable{
 	Client c;
+	boolean server;
 	@Override
 	public void offline() throws IOException {
 		c.sendEvent(OfflineEvent.OFFLINE_EVENT);
@@ -12,13 +13,19 @@ public class ClientSideSynchronizeImpl extends SynchronizeImpl implements Runnab
 	public void online() throws IOException {
 		c.sendEvent(OnlineEvent.ONLINE_EVENT);
 	}
-	public ClientSideSynchronizeImpl(Client c){
+	public ClientSideSynchronizeImpl(Client c,boolean server){
 		if(c.msg.status==TransmissionStatus.CONTINUE) {
 			throw new IllegalArgumentException("Client connects failed or not support");
 		}
 		this.c=c;
+		this.server=server;
 	}
 	public class ServertSideSynchronizeImpl extends Thread{
+		public ServertSideSynchronizeImpl(){
+			if(!server) {
+				throw new RuntimeException("Cannnot create an impl",new IllegalAccessException("This impl isn't a server"));
+			}
+		}
 		@Override
 		public void run() {
 			while(true) {

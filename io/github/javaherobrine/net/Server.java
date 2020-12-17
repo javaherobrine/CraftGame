@@ -36,6 +36,7 @@ public class Server implements Closeable {
 				clients.add(id,c);
 			}
 			if(format==TransmissionFormat.FINISH) {
+				c.os.write(IOUtils.intToByte4(-10));
 				c.msg.connected=false;
 				c.msg.format=null;
 				c.msg.status=TransmissionStatus.CONTINUE;
@@ -44,21 +45,29 @@ public class Server implements Closeable {
 				STDOUT.print("Client Transmission Format Not Support\r\n");
 				break;
 			}else {
-				clients.add(c);
-				c.msg.connected=true;
-				c.msg.format=format;
-				c.msg.status=TransmissionStatus.ACCEPTED;
 				c.os.write(IOUtils.intToByte4(0));
-				c.os.write(IOUtils.intToByte4(clients.indexOf(c)));
-				c.msg.id=clients.indexOf(c);
-				accepted=true;
-				STDOUT.print("A client connected\r\n");
+				String[] cmods=br.readLine().split(",");
+				Arrays.sort(cmods);
+				String[] smods=ModLoader.loader.toString().split(",");
+				Arrays.sort(smods);
+				if(Arrays.equals(cmods, smods)) {
+					c.os.write(IOUtils.intToByte4(1));
+					clients.add(c);
+					c.msg.connected=true;
+					c.msg.format=format;
+					c.msg.status=TransmissionStatus.ACCEPTED;
+					c.os.write(IOUtils.intToByte4(clients.indexOf(c)));
+					c.msg.id=clients.indexOf(c);
+					accepted=true;
+					STDOUT.print("A client connected\r\n");
+				}else {
+					c.os.write(IOUtils.intToByte4(-1));
+				}
 			}
-			c.os.write(IOUtils.intToByte4(1));
 		}
 		return c;
 	}
 	public ClientSideSynchronizeImpl.ServertSideSynchronizeImpl getImpl() throws IOException{
-		return new ClientSideSynchronizeImpl(accept()).new ServertSideSynchronizeImpl();
+		return new ClientSideSynchronizeImpl(accept(),true).new ServertSideSynchronizeImpl();
 	}
 }

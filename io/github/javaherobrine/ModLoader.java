@@ -6,6 +6,8 @@ import java.util.stream.*;
 import java.util.*;
 public class ModLoader {
 	public HashMap<String,JarClassLoader> MODS_LOADERS=new HashMap<>();
+	public static ModLoader loader;
+	public StringBuilder SC_SYNC=new StringBuilder();
 	public ModLoader(File src,String[] args) {
 		File[] mods=src.listFiles(f->{
 			return f.toString().endsWith(".jar");
@@ -18,8 +20,16 @@ public class ModLoader {
 		MODS_LOADERS.values().stream().forEach(loader->{
 			try {
 				Class<?> main=loader.loadClass(loader.getMainClassName());
+				if(loader.getSync()) {
+					SC_SYNC.append(loader.getID());
+					SC_SYNC.append(",");
+				}
 				main.getMethod("main", String[].class).invoke(null, args);
 			} catch (ClassNotFoundException | NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {}
 		});
+	}
+	@Override
+	public String toString() {
+		return SC_SYNC.toString();
 	}
 }
