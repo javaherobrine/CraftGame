@@ -58,6 +58,7 @@ public class Server implements Closeable {
 					c.msg.status=TransmissionStatus.ACCEPTED;
 					c.os.write(IOUtils.intToByte4(clients.indexOf(c)));
 					c.msg.id=clients.indexOf(c);
+					c.msg.mods=cmods;
 					accepted=true;
 					STDOUT.print("A client connected\r\n");
 				}else {

@@ -31,6 +31,7 @@ public class Client implements Closeable{
 					msg.format=allFormats[i];
 					msg.status=TransmissionStatus.ACCEPTED;
 					msg.id=IOUtils.byte4ToInt(is.readNBytes(4), 0);
+					msg.mods=ModLoader.loader.toString().split(",");
 					return;
 				}else if(code==-1) {
 					break;

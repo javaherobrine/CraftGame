@@ -7,8 +7,12 @@ import java.util.*;
 public class ModLoader {
 	public HashMap<String,JarClassLoader> MODS_LOADERS=new HashMap<>();
 	public static ModLoader loader;
+	private String[] args;
+	private File src;
 	public StringBuilder SC_SYNC=new StringBuilder();
 	public ModLoader(File src,String[] args) {
+		this.src=src;
+		this.args=args;
 		File[] mods=src.listFiles(f->{
 			return f.toString().endsWith(".jar");
 		});
@@ -31,5 +35,8 @@ public class ModLoader {
 	@Override
 	public String toString() {
 		return SC_SYNC.toString();
+	}
+	public void reload() {
+		loader=new ModLoader(src,args);
 	}
 }
