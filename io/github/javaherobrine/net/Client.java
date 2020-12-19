@@ -1,7 +1,9 @@
 package io.github.javaherobrine.net;
 import java.io.*;
+import java.util.*;
 import java.net.*;
 import io.github.javaherobrine.net.event.*;
+import io.github.javaherobrine.net.event.EventObject;
 import io.github.javaherobrine.*;
 import io.github.javaherobrine.net.sync.*;
 import io.github.javaherobrine.ioStream.*;
@@ -60,13 +62,18 @@ public class Client implements Closeable{
 		bw.write(TransmissionFormat.RECONNECT.toString());
 		return c;
 	}
-	public EventObject recevieEvent() throws IOException{
+	public EventObject recevieEvent() throws IOException {
 		try {
-			EventObject obj=(EventObject)in.readObject();
+			EventObject obj=null;
+			if(in instanceof ObjectInputStream) {
+				obj=(EventObject)in.readObject();
+			}else {
+				obj=new EventObject(Events.EVENTS_BEAN.list.get((int)((Map)in.readObject()).get("eid")).newInstance());
+			}
 			obj.content.recvExec();
 			return obj;
-		} catch (ClassNotFoundException e) {
-			return null;
+		} catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
+			throw new IOException(e);
 		}
 	}
 	public ClientSideSynchronizeImpl getImpl() {
