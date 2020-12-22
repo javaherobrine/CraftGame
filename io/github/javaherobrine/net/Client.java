@@ -13,9 +13,20 @@ public class Client implements Closeable{
 	OutputStream os;
 	ObjectInput in;
 	ObjectOutput out;
+	boolean client;
+	Thread hook=new Thread(()->{
+		try {
+			if(client) sendEvent(new EventObject(DisconnectEvent.DISCONNECT));
+			soc.close();
+		} catch (IOException e) {}
+	}) ;
+	{
+		Runtime.getRuntime().addShutdownHook(hook);
+	}
 	public ShakeHandsMessage msg=new ShakeHandsMessage();
-	public Client(Socket soc) throws IOException{
+	public Client(Socket soc,boolean client) throws IOException{
 		this.soc=soc;
+		this.client=client;
 		this.is=soc.getInputStream();
 		this.os=soc.getOutputStream();
 	}
@@ -57,7 +68,7 @@ public class Client implements Closeable{
 		out.writeObject(event);
 	}
 	public static Client reconnectToServer(String host,int port) throws IOException{
-		Client c=new Client(new Socket(host,port));
+		Client c=new Client(new Socket(host,port),true);
 		BufferedWriter bw=new BufferedWriter(new OutputStreamWriter(c.os,"UTF-8"));
 		bw.write(TransmissionFormat.RECONNECT.toString());
 		return c;
@@ -78,5 +89,10 @@ public class Client implements Closeable{
 	}
 	public ClientSideSynchronizeImpl getImpl() {
 		return new ClientSideSynchronizeImpl(this, false);
+	}
+	@Override
+	public void finalize() throws IOException{
+		Runtime.getRuntime().removeShutdownHook(hook);
+		soc.close();
 	}
 }

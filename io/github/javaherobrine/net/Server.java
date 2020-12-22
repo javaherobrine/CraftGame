@@ -9,6 +9,14 @@ public class Server implements Closeable {
 	private static final StringPrintStream STDOUT=new StringPrintStream(System.out,(str)-> {return "[Server]"+str;});
 	ServerSocket server;
 	public static Server thisServer;
+	Thread hook=new Thread(()->{
+		try {
+			server.close();
+		} catch (IOException e) {}
+	});
+	{
+		Runtime.getRuntime().addShutdownHook(hook);
+	}
 	public LinkedList<Client> clients=new LinkedList<>();
 	@Override
 	public void close() throws IOException {
@@ -18,7 +26,7 @@ public class Server implements Closeable {
 		this.server=server;
 	}
 	public Client accept() throws IOException{
-		Client c=new Client(server.accept());
+		Client c=new Client(server.accept(),false);
 		BufferedReader br=new BufferedReader(new InputStreamReader(c.is,"UTF-8"));
 		boolean accepted=false;
 		while(!accepted) {
