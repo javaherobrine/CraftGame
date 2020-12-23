@@ -20,6 +20,7 @@ public class Server implements Closeable {
 	public LinkedList<Client> clients=new LinkedList<>();
 	@Override
 	public void close() throws IOException {
+		Runtime.getRuntime().removeShutdownHook(hook);
 		server.close();
 	}
 	public Server(ServerSocket server) {
