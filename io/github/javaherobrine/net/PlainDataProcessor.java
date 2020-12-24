@@ -20,7 +20,7 @@ public class PlainDataProcessor implements DataProcessor{
 		os.write(source);
 	}
 	@Override
-	public byte[] read(InputStream is) throws IOException {
+	public byte[] read(InputStream is) throws IOException,InterruptedException{
 		return is.readNBytes(IOUtils.byte4ToInt(is.readNBytes(4),0));
 	}
 }

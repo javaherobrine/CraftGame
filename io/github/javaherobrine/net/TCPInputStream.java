@@ -9,7 +9,7 @@ public class TCPInputStream extends FilterInputStream{
 		super(in);
 		dataproc=proc;
 	}
-	public byte[] readData() throws IOException {
+	public byte[] readData() throws IOException, InterruptedException {
 		return dataproc.read(this);
 	}
 }

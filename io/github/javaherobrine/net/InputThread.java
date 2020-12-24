@@ -22,7 +22,7 @@ public class InputThread extends Thread implements Closeable,AutoCloseable{
 				synchronized(now) {
 					now=in.readData();
 				}
-			} catch (IOException ee) {
+			} catch (IOException | InterruptedException ee) {
 			}
 		}
 	}
