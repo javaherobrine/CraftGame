@@ -9,7 +9,7 @@ public class TCPOutputStream extends FilterOutputStream{
         super(in);
         dataproc=proc;
     }
-    public void writeData(byte[] bs) throws IOException {
+    public void writeData(byte[] bs) throws IOException, InterruptedException {
         dataproc.write(this,bs);
     }
 }
