@@ -6,4 +6,16 @@ public class EventObject implements Serializable{
 	public EventObject(EventContent content) {
 		this.content=content;
 	}
+	@Override
+	public int hashCode() {
+		return content.hashCode();
+	}
+	@Override
+	public boolean equals(Object obj) {
+		try {
+			return ((EventObject)obj).content.equals(content);
+		}catch(Exception e) {
+			return false;
+		}
+	}
 }

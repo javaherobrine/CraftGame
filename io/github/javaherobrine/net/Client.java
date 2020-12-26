@@ -95,4 +95,7 @@ public class Client implements Closeable{
 		Runtime.getRuntime().removeShutdownHook(hook);
 		soc.close();
 	}
+	public int hashCode() {
+		return soc.hashCode();
+	}
 }

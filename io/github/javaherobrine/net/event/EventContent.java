@@ -12,4 +12,16 @@ public abstract class EventContent {
 	public abstract void sendExec(Client c);
 	public abstract void recvExec();
 	public abstract EventContent initFromMaps(Map map);
+	@Override
+	public int hashCode() {
+		return content.hashCode()*index*eid/type.hashCode();
+	}
+	@Override
+	public boolean equals(Object obj) {
+		try {
+			return ((EventContent)obj).content.equals(content)&&((EventContent)obj).eid==eid&&((EventContent)obj).index==index;
+		}catch(Exception e) {
+			return false;
+		}
+	}
 }
