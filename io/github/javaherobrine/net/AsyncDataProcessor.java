@@ -1,5 +1,6 @@
 package io.github.javaherobrine.net;
 import java.io.*;
+import java.util.function.*;
 import java.util.concurrent.*;
 public class AsyncDataProcessor implements DataProcessor{
 	DataProcessor dp;
@@ -14,7 +15,18 @@ public class AsyncDataProcessor implements DataProcessor{
 	@Override
 	@Deprecated
 	public byte[] read(InputStream is) throws IOException, InterruptedException {
-		//TODO 
-		return null;
-	}	
+		return dp.read(is);
+	}
+	public CompletableFuture<byte[]> readAsync(InputStream is){
+		return CompletableFuture.supplyAsync(new Supplier<byte[]>(){
+			@Override
+			public byte[] get() {	
+				try {
+					return dp.read(is);
+				} catch (IOException | InterruptedException e) {
+					return null;
+				}
+			} 
+		 });
+	}
 }
