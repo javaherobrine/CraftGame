@@ -20,7 +20,7 @@ public class ClientSideSynchronizeImpl extends SynchronizeImpl implements Runnab
 		this.c=c;
 		this.server=server;
 	}
-	public class ServertSideSynchronizeImpl extends Thread{
+	public class ServertSideSynchronizeImpl extends SynchronizeImpl implements Runnable{
 		public ServertSideSynchronizeImpl(){
 			if(!server) {
 				throw new RuntimeException("Cannnot create an impl",new IllegalAccessException("This impl isn't a server"));
@@ -35,6 +35,14 @@ public class ClientSideSynchronizeImpl extends SynchronizeImpl implements Runnab
 				} catch (IOException e) {}
 			}
 		}
+		@Override
+		public void offline() throws Exception {
+			ClientSideSynchronizeImpl.this.offline();
+		}
+		@Override
+		public void online() throws Exception {
+			ClientSideSynchronizeImpl.this.online();
+		}
 	}
 	@Override
 	public void run() {
@@ -46,5 +54,8 @@ public class ClientSideSynchronizeImpl extends SynchronizeImpl implements Runnab
 				}
 			} catch (IOException e) {}
 		}
+	}
+	public Client getClient() {
+		return c;
 	}
 }

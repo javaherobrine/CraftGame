@@ -5,6 +5,6 @@ public class ShakeHandsMessage {
 	public int id;
 	public String[] mods;
 	public TransmissionStatus status;
-	TransmissionFormat format;
-	boolean connected;
+	public TransmissionFormat format;
+	public boolean connected;
 }
