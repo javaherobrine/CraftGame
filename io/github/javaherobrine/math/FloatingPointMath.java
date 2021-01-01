@@ -18,4 +18,19 @@ public final class FloatingPointMath {
 	public static double divide(double d1,double d2,int scale) {
 		return BigDecimal.valueOf(d1).divide(BigDecimal.valueOf(d2),scale,RoundingMode.HALF_UP).doubleValue();
 	}
+	public static double divideWithoutScale(double d1,double d2) throws ArithmeticException{
+		return BigDecimal.valueOf(d1).divide(BigDecimal.valueOf(d2)).doubleValue();
+	}
+	public static double sqrtUnlimited(double d) {
+		return BigDecimal.valueOf(d).sqrt(MathContext.UNLIMITED).doubleValue();
+	}
+	public static double sqrtDecimal128(double d) {
+		return new BigDecimal(Double.toString(d),MathContext.DECIMAL128).sqrt(MathContext.DECIMAL128).doubleValue();
+	}
+	public static double sqrtDecimal64(double d) {
+		return Math.sqrt(d);
+	}
+	public static double sqrtDecimal32(double d) {
+		return (float)Math.sqrt((float)d);
+	}
 }
