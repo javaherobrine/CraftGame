@@ -9,6 +9,7 @@ public final class HotReloader {
 		if(modF.isFile()) {
 			JarClassLoader jcl=new JarClassLoader(modF.toURI().toURL());
 			Class.forName(jcl.getMainClassName()).getMethod("main", String[].class).invoke(null, null);
+			ml.MODS_LOADERS.put(modF.getName(), jcl);
 		}else {
 			Stream.of(modF.listFiles()).forEach(f->{
 				try {
