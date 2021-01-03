@@ -20,6 +20,9 @@ public final class HotReloader {
 	}
 	@Deprecated
 	public static final void tryToUnload(String modid,ModLoader ml) {
+		try {
+			Class.forName(ml.MODS_LOADERS.get(modid).getMainClassName()).getMethod("unload", null).invoke(null, null);
+		} catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException | ClassNotFoundException e) {}
 		ml.MODS_LOADERS.remove(modid);
 		System.gc();
 	}
