@@ -18,4 +18,9 @@ public final class HotReloader {
 			});
 		}
 	}
+	@Deprecated
+	public static final void tryToUnload(String modid,ModLoader ml) {
+		ml.MODS_LOADERS.remove(modid);
+		System.gc();
+	}
 }
