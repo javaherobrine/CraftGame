@@ -15,7 +15,13 @@ public class JavaScript {
 		}
 	}
 	public static String json(Object object) {
-		final StringBuilder sb=new StringBuilder("{\n");
+		StringBuilder sb=new StringBuilder("{\n");
+		return json(object,sb,object.getClass());
+	}
+	private static String json(Object object,StringBuilder sb,Class clazz) {
+		if(clazz.getSuperclass()!=null) {
+			sb.append(json(object,sb,clazz.getSuperclass()));
+		}
 		Stream.of(object.getClass().getFields()).filter(field->{
 			return !Modifier.isFinal(field.getModifiers())&&(Modifier.isStatic(field.getModifiers())||field.canAccess(object)||Modifier.isTransient(field.getModifiers()));
 		}).forEach(field->{
