@@ -15,8 +15,4 @@ public class OfflineEvent extends EventContent {
 	public void recvExec() {
 		sendExec(getSourceClient());	
 	}
-	@Override
-	public EventContent initFromMaps(Map map) {
-		return OFFLINE_EVENT.content;
-	}
 }

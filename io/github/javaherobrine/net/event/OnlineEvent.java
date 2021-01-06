@@ -16,8 +16,4 @@ public class OnlineEvent extends EventContent {
 	public void recvExec() {
 		sendExec(getSourceClient());
 	}
-	@Override
-	public EventContent initFromMaps(Map map) {
-		return ONLINE_EVENT.content;
-	}
 }

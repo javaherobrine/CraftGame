@@ -22,4 +22,7 @@ public class Events implements ElementAccess<Integer, Class<? extends EventConte
 		list.add(1, OnlineEvent.class);
 		list.add(2,OfflineEvent.class);
 	}
+	public void reg(Class<? extends OtherEvent> val) {
+		list.add((val.getPackageName()+val.getSimpleName()).hashCode(),val);
+	}
 }

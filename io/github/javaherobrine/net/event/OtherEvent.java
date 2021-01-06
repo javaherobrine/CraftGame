@@ -1,5 +1,7 @@
 package io.github.javaherobrine.net.event;
-
-public class OtherEvent {
-
+public abstract class OtherEvent extends EventContent{
+	public Object content;
+	{
+		eid=3;
+	}
 }

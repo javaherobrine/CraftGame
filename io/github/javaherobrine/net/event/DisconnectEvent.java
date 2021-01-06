@@ -15,8 +15,4 @@ public class DisconnectEvent extends EventContent{
 	public void recvExec() {
 		Server.thisServer.clients.remove(getSourceClient().msg.id);
 	}
-	@Override
-	public EventContent initFromMaps(Map map) {
-		return DISCONNECT;
-	}
 }
