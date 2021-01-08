@@ -5,7 +5,12 @@ public class InterruptiblyDataProcessor implements DataProcessor{
 	@Override
 	public void write(OutputStream os, byte[] source) throws IOException ,InterruptedException{
 		int length=0;
+		boolean writed=false;
+		byte[] length1=IOUtils.intToByte4(source.length);
 		while(length<source.length) {
+			if(!writed) {
+				os.write(length1[0]);
+			}
 			if(Thread.interrupted()) {
 				throw new InterruptedException();
 			}
