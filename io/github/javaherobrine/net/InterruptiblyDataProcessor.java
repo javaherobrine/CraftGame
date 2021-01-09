@@ -1,6 +1,7 @@
 package io.github.javaherobrine.net;
 import java.io.*;
 import io.github.javaherobrine.ioStream.*;
+@Deprecated
 public class InterruptiblyDataProcessor implements DataProcessor{
 	@Override
 	public void write(OutputStream os, byte[] source) throws IOException ,InterruptedException{
@@ -9,12 +10,21 @@ public class InterruptiblyDataProcessor implements DataProcessor{
 		byte[] length1=IOUtils.intToByte4(source.length);
 		while(length<source.length) {
 			if(!writed) {
+				if(Thread.interrupted()) {
+					throw new InterruptedException();
+				}
 				os.write(length1[0]);
+				if(Thread.interrupted()) {
+					throw new InterruptedException();
+				}
 			}
 			if(Thread.interrupted()) {
 				throw new InterruptedException();
 			}
 			os.write(source[length]);
+			if(Thread.interrupted()) {
+				throw new InterruptedException();
+			}
 			length++;
 		}
 	}
