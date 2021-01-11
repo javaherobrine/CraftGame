@@ -11,7 +11,9 @@ public class Blacklist implements Serializable{
 	}
 	public Blacklist(String...init) {
 		this();
-		list.addAll(init);
+		for(int i=0;i<init.length;i++) {
+			list.add(init[i]);
+		}
 	}
 	public void add(String name) {
 		list.add(name);
