@@ -1,7 +1,7 @@
 package io.github.javaherobrine.net.event;
 import io.github.javaherobrine.net.*;
-import java.util.*;
-public abstract class EventContent {
+import java.io.*;
+public abstract class EventContent implements Serializable{
 	public static EventType type;
 	public int index;
 	public static int eid;
