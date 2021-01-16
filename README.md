@@ -1,17 +1,21 @@
-<h1>CraftGame</h1>
-<p>Used Java</p>
-<ul><p>How to play?</p>
-<li><p>Download and install Java 11,You can't use Java 8</p></li>
-<li><p>You can't add some mods and savepacks when the game is open</p></li>
-<li><p>Then use java.exe or javaw.exe to open this file</p></li>
-<li><p>If the game is a server,please use java.exe,you can see some console messages</p></li>
-<li><a href="https://github.com/LovelyZeeiam/CraftGame">Lib</a>
-</ul>
-<h1>CraftGame</h1>
-<p>使用Java</p>
-<ul><p>怎么打开？</p>
-<li>下载Java 11，不能使用Java 8</li>
-<li>然后使用java.exe或者javaw.exe</li>
-<li>如果你的CraftGame是作为服务器端，那么建议使用java.exe，因为你可以看控制台的信息</li>
-<li><a href="https://github.com/LovelyZeeiam/CraftGame">库</a>
-</ul>
+# CraftGame
+## Tasks
+### Finished
+- Network(craftgame-tcp library on io.github.javaherobrine.net and child packages)
+- JSON Engine(a simple json engine based on Nashorn JavaScript api,it provides JSON to Map and Object to JSON for many apis)
+- Mods loader(you can't mix mc mods and craftgame mods)
+
+### Doing
+- Chemistry Engine(chemicals and reactions,I think it's hardly to finish because I never learn chemistry and I'm only a chemistry lover now,however,I will try my best to do it.If you don't like it,you can close it,but if you play as a client,you can't open or close it)
+- Physics Engine(it's easier to finish physics engine than finish the chemistry engine because I start studying physics when I was in Grade 8) 
+
+### Plan to do
+- Program libraries for awa's project and help awa to change jawascript(one of awa's projects) into Java
+- Use lovelyzeeiam's library to finish this project
+- release it
+
+## Libraries what I used for this project
+- LovelyZeeiam/CraftGame(My project is the subproject of this)
+
+## Develop logs
+There is nothing now.
