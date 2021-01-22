@@ -31,6 +31,7 @@ public class ModLoader {
 				main.getMethod("main", String[].class).invoke(null, args);
 			} catch (ClassNotFoundException | NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {}
 		});
+		loader=this;
 	}
 	@Override
 	public String toString() {

@@ -1,4 +1,5 @@
 package io.github.javaherobrine.chemistry;
+import io.github.javaherobrine.utils.*;
 public class Ions extends Chemical{
 	public Compound comp;
 	public Ion ion;
@@ -8,5 +9,13 @@ public class Ions extends Chemical{
 	}
 	public Ions(Compound comp,Element element,int valence) {
 		this(comp,new Ion(valence,element));
+	}
+	public Ions(Ion[] ions) {
+		Element[] elements=Ion.parse(ions);
+		Element[] newElements;
+		for(int i=0;i<elements.length;i++) {
+			newElements=ArrayUtils.except(elements, i, i);
+			
+		}
 	}
 }

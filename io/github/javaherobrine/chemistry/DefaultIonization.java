@@ -4,7 +4,10 @@ public class DefaultIonization extends Ionization{
 		super(electrolyte);
 	}
 	@Override
+	@ReactionMethod
 	public Ions[] electrolysis(DefaultCompound comp) {
+		Ion[] i=comp.ions;
+		Ion[] i0=((DefaultCompound)(electrolyte)).ions;
 		return null;
 	}
 }

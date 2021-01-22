@@ -125,4 +125,5 @@ public class DefaultElement extends Element{
 		this.valence=valence;
 		name=element.toString();
 	}
+	protected DefaultElement() {}
 }

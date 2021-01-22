@@ -55,7 +55,7 @@ public class DefaultCompound extends Compound implements ElementSortAccess<Defau
 	public DefaultCompound(DefaultElement...elements) {
 		this(true,elements);
 	}
-	public static boolean createable(DefaultElement...elements) {
+	public static boolean creatable(DefaultElement...elements) {
 		DefaultCompound comp=create(elements);
 		return comp.ions!=null;
 	}

@@ -6,7 +6,7 @@
 - Mods loader(you can't mix mc mods and craftgame mods)
 
 ### Doing
-- Chemistry Engine(chemicals and reactions,I think it's hardly to finish because I never learn chemistry and I'm only a chemistry lover now,however,I will try my best to do it.If you don't like it,you can close it,but if you play as a client,you can't open or close it)
+- Chemistry Engine(making array utils for it now because of chemistry engine's feature)
 - Physics Engine(it's easier to finish physics engine than finish the chemistry engine because I start studying physics when I was in Grade 8) 
 
 ### Plan to do
@@ -16,6 +16,3 @@
 
 ## Libraries what I used for this project
 - LovelyZeeiam/CraftGame(My project is the subproject of this)
-
-## Develop logs
-There is nothing now.
