@@ -23,7 +23,9 @@ public class Events implements ElementAccess<Integer, Class<? extends EventConte
 		list.add(2,OfflineEvent.class);
 	}
 	public void reg(Class<? extends OtherEvent> val) {
-		int id=(val.getPackageName()+val.getSimpleName()).hashCode();
+		reg(val,(val.getPackageName()+val.getSimpleName()).hashCode());
+	}
+	public void reg(Class<? extends OtherEvent> val,int id) {
 		try {
 			val.getField("eid").setInt(null, id);
 		} catch (IllegalAccessException | NoSuchFieldException e) {}
