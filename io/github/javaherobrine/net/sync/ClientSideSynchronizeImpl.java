@@ -30,8 +30,7 @@ public class ClientSideSynchronizeImpl extends SynchronizeImpl implements Runnab
 		public void run() {
 			while(true) {
 				try {
-					EventContent content=c.recevieEvent().content;
-					content.recvExec();
+					c.recevieEvent();
 				} catch (IOException e) {}
 			}
 		}

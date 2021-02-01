@@ -1,5 +1,6 @@
 package io.github.javaherobrine.net;
 import java.io.*;
+@Deprecated
 public class OutputThread extends Thread implements Closeable,AutoCloseable{
 	TCPOutputStream out;
 	byte[] data=null;

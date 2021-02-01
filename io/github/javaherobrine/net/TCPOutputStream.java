@@ -1,5 +1,6 @@
 package io.github.javaherobrine.net;
 import java.io.*;
+@Deprecated
 public class TCPOutputStream extends FilterOutputStream{
     public DataProcessor dataproc;
     public TCPOutputStream(OutputStream in) {

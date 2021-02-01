@@ -1,6 +1,7 @@
 package io.github.javaherobrine.net;
 import java.io.*;
 import io.github.javaherobrine.ioStream.*;
+@Deprecated
 public class PlainDataProcessor implements DataProcessor{
 	private PlainDataProcessor() {}
 	public static final PlainDataProcessor DEFAULT_PROCESSOR=new PlainDataProcessor();

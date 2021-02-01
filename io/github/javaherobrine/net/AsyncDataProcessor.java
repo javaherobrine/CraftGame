@@ -2,6 +2,7 @@ package io.github.javaherobrine.net;
 import java.io.*;
 import java.util.function.*;
 import java.util.concurrent.*;
+@Deprecated
 public class AsyncDataProcessor implements DataProcessor{
 	DataProcessor dp;
 	@Override

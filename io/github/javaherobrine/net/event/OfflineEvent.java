@@ -1,9 +1,8 @@
 package io.github.javaherobrine.net.event;
-import java.util.*;
 import io.github.javaherobrine.net.*;
 public class OfflineEvent extends EventContent {
 	public static final EventObject OFFLINE_EVENT=new EventObject(new OfflineEvent());
-	static{
+	{
 		type=EventType.NETWORK_EVENT;
 		eid=2;
 	}

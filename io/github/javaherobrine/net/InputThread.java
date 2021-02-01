@@ -1,5 +1,6 @@
 package io.github.javaherobrine.net;
 import java.io.*;
+@Deprecated
 public class InputThread extends Thread implements Closeable,AutoCloseable{
 	TCPInputStream in;
 	boolean keep=true;

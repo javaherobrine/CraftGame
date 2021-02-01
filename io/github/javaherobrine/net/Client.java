@@ -25,6 +25,9 @@ public class Client implements Closeable{
 	}
 	public ShakeHandsMessage msg=new ShakeHandsMessage();
 	public Client(Socket soc,boolean client) throws IOException{
+		if(client) {
+			Server.nullServer(this);
+		}
 		this.soc=soc;
 		this.client=client;
 		this.is=soc.getInputStream();
@@ -79,7 +82,11 @@ public class Client implements Closeable{
 			if(in instanceof ObjectInputStream) {
 				obj=(EventObject)in.readObject();
 			}else {
-				obj=new EventObject(Events.EVENTS_BEAN.list.get((int)((Map)in.readObject()).get("eid")).newInstance());
+				Map m=(Map)in.readObject();
+				obj=new EventObject(Events.EVENTS_BEAN.list.get((int)m.get("eid")).newInstance());
+				if(obj.content instanceof OtherEvent) {
+					((OtherEvent)obj.content).content=((OtherEvent)obj.content).initContent((Map)m.get("content"));
+				}
 			}
 			obj.content.recvExec();
 			return obj;
