@@ -26,9 +26,6 @@ public class Events implements ElementAccess<Integer, Class<? extends EventConte
 		reg(val,(val.getPackageName()+val.getSimpleName()).hashCode());
 	}
 	public void reg(Class<? extends OtherEvent> val,int id) {
-		try {
-			val.getField("eid").setInt(null, id);
-		} catch (IllegalAccessException | NoSuchFieldException e) {}
 		list.add(id,val);
 	}
 }
