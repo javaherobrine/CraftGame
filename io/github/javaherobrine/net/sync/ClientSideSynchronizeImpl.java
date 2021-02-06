@@ -14,7 +14,7 @@ public class ClientSideSynchronizeImpl extends SynchronizeImpl implements Runnab
 		c.sendEvent(OnlineEvent.ONLINE_EVENT);
 	}
 	public ClientSideSynchronizeImpl(Client c,boolean server){
-		if(c.msg.status==TransmissionStatus.CONTINUE) {
+		if(c.msg.id==-1) {
 			throw new IllegalArgumentException("Client connects failed or not support");
 		}
 		this.c=c;
@@ -31,7 +31,10 @@ public class ClientSideSynchronizeImpl extends SynchronizeImpl implements Runnab
 			while(true) {
 				try {
 					c.recevieEvent();
-				} catch (IOException e) {}
+				} catch (IOException e) {
+					//TODO Connection reset or pipe broken and so on.You must do something to process this error
+					break;
+				}
 			}
 		}
 		@Override
@@ -51,7 +54,10 @@ public class ClientSideSynchronizeImpl extends SynchronizeImpl implements Runnab
 				if(!(content instanceof DisconnectEvent)) {
 					content.recvExec();
 				}
-			} catch (IOException e) {}
+			} catch (IOException e) {
+				//TODO Connection reset or pipe broken and so on.You must do something to process this error
+				break;
+			}
 		}
 	}
 	public Client getClient() {

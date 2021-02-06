@@ -1,6 +1,6 @@
 package io.github.javaherobrine.math;
 import java.math.*;
-public final class FloatingPointMath {
+public strictfp final class FloatingPointMath {
 	public static final int DEFAULT_DIVIDE_SCALE=10;
 	private FloatingPointMath() {}
 	public static double plus(double d1,double d2) {

@@ -91,7 +91,7 @@ public class Client implements Closeable{
 			obj.content.recvExec();
 			return obj;
 		} catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
-			throw new IOException(e);
+			return null;
 		}
 	}
 	public ClientSideSynchronizeImpl getImpl() {
