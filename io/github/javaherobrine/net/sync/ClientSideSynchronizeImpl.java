@@ -19,6 +19,7 @@ public class ClientSideSynchronizeImpl extends SynchronizeImpl implements Runnab
 		}
 		this.c=c;
 		this.server=server;
+		ClientManager.add(c);
 	}
 	public class ServertSideSynchronizeImpl extends SynchronizeImpl implements Runnable{
 		public ServertSideSynchronizeImpl(){

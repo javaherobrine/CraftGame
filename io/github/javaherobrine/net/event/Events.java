@@ -28,4 +28,7 @@ public class Events implements ElementAccess<Integer, Class<? extends EventConte
 	public void reg(Class<? extends EventContent> val,int id) {
 		list.add(id,val);
 	}
+	public int nextEID() {
+		return list.size();
+	}
 }

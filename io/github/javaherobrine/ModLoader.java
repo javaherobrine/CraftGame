@@ -6,10 +6,11 @@ import java.util.stream.*;
 import java.util.*;
 public class ModLoader {
 	public HashMap<String,JarClassLoader> MODS_LOADERS=new HashMap<>();
-	public static ModLoader loader;
+	public static ModLoader loader=new ModLoader();
 	private String[] args;
 	private File src;
 	public StringBuilder SC_SYNC=new StringBuilder();
+	private ModLoader() {}
 	public ModLoader(File src,String[] args) {
 		this.src=src;
 		this.args=args;

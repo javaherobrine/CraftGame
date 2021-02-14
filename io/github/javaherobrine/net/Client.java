@@ -13,6 +13,7 @@ public class Client implements Closeable{
 	OutputStream os;
 	ObjectInput in;
 	ObjectOutput out;
+	ClientSideSynchronizeImpl impl=null;
 	boolean client;
 	Thread hook=new Thread(()->{
 		try {
@@ -25,9 +26,6 @@ public class Client implements Closeable{
 	}
 	public ShakeHandsMessage msg=new ShakeHandsMessage();
 	public Client(Socket soc,boolean client) throws IOException{
-		if(client) {
-			Server.nullServer(this);
-		}
 		this.soc=soc;
 		this.client=client;
 		this.is=soc.getInputStream();
@@ -48,6 +46,13 @@ public class Client implements Closeable{
 					msg.status=TransmissionStatus.ACCEPTED;
 					msg.id=IOUtils.byte4ToInt(is.readNBytes(4), 0);
 					msg.mods=ModLoader.loader.toString().split(",");
+					if(msg.format==TransmissionFormat.OBJECT) {
+						out=new ObjectOutputStream(os);
+						in=new ObjectInputStream(is);
+					}else if(msg.format==TransmissionFormat.JSON){
+						out=new JSONOutputStream(new OutputStreamWriter(os,"UTF-8"));
+						in=new JSONInputStream(new InputStreamReader(is,"UTF-8"));
+					}
 					return;
 				}else if(code==-1) {
 					break;
@@ -95,7 +100,9 @@ public class Client implements Closeable{
 		}
 	}
 	public ClientSideSynchronizeImpl getImpl() {
-		return new ClientSideSynchronizeImpl(this, false);
+		if(impl==null)
+			impl=new ClientSideSynchronizeImpl(this, false);
+		return impl;
 	}
 	@Override
 	public void finalize() throws IOException{

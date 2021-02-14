@@ -23,9 +23,9 @@ public class Server implements Closeable {
 		Runtime.getRuntime().removeShutdownHook(hook);
 		server.close();
 	}
-	private Server() {}
 	public Server(ServerSocket server) {
 		this.server=server;
+		thisServer=this;
 	}
 	public Client accept() throws IOException{
 		Client c=new Client(server.accept(),false);
@@ -71,6 +71,13 @@ public class Server implements Closeable {
 					c.msg.mods=cmods;
 					accepted=true;
 					STDOUT.print("A client connected\r\n");
+					if(c.msg.format==TransmissionFormat.OBJECT) {
+						c.in=new ObjectInputStream(c.is);
+						c.out=new ObjectOutputStream(c.os);
+					}else if(c.msg.format==TransmissionFormat.JSON) {
+						c.in=new JSONInputStream(new InputStreamReader(c.is,"UTF-8"));
+						c.out=new JSONOutputStream(new OutputStreamWriter(c.os,"UTF-8"));
+					}
 				}else {
 					c.os.write(IOUtils.intToByte4(-1));
 				}
@@ -80,9 +87,5 @@ public class Server implements Closeable {
 	}
 	public ClientSideSynchronizeImpl.ServertSideSynchronizeImpl getImpl() throws IOException{
 		return new ClientSideSynchronizeImpl(accept(),true).new ServertSideSynchronizeImpl();
-	}
-	protected static void nullServer(Client sucess) {
-		thisServer=new Server();
-		thisServer.clients.add(sucess.msg.id, sucess);
 	}
 }

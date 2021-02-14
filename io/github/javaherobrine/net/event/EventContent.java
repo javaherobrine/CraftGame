@@ -6,7 +6,10 @@ public abstract class EventContent implements Serializable{
 	public int index;
 	public int eid;
 	public Client getSourceClient() {
-		return Server.thisServer.clients.get(index);
+		if(Server.thisServer==null)
+			return ClientManager.currentClient();
+		else
+			return Server.thisServer.clients.get(index);
 	}
 	public abstract void sendExec(Client c);
 	public abstract void recvExec();
