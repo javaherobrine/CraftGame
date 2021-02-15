@@ -7,6 +7,7 @@
 - Mods loader(you can't mix mc mods and craftgame mods)
 
 ### Doing
+- C++
 - Chemistry Engine(making array utils for it now because of chemistry engine's feature)
 - Physics Engine(it's easier to finish physics engine than finish the chemistry engine because I start studying physics when I was in Grade 8) 
 
