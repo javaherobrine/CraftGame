@@ -1,7 +1,7 @@
 # CraftGame
 ## Tasks
 ### Finished
-- Network(release 1.0)
+- ~Network(release 1.0)~(deprecated)
 - Write a document about network(io.github.javaherobrine.net and its sub-packages) to LovelyZeeiam
 - JSON Engine(a simple json engine based on Nashorn JavaScript api,it provides JSON to Map and Object to JSON for many apis)
 - Mods loader(you can't mix mc mods and craftgame mods)
