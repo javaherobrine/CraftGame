@@ -42,26 +42,4 @@ public class JavaScript {
 		sb.append("}");
 		return sb.toString();
 	}
-	public static String jsonWithoutExtends(Object object) {
-		final StringBuilder sb=new StringBuilder("{");
-		Stream.of(object.getClass().getFields()).filter(field->{
-			return !Modifier.isFinal(field.getModifiers())&&(Modifier.isStatic(field.getModifiers())||field.canAccess(object)||Modifier.isTransient(field.getModifiers()));
-		}).forEach(field->{
-			try {
-				sb.append("\""+field.getName()+"\""+":");
-				Object thisFie=field.get(object);
-				if(thisFie instanceof Number) {
-					sb.append(thisFie.toString()+",\n");
-				}else if(thisFie instanceof String) {
-					sb.append("\""+thisFie+",\"");
-				}else {
-					sb.append("\""+json(thisFie)+",\n");
-				}
-			} catch (IllegalArgumentException | IllegalAccessException e) {
-			}
-		});
-		sb.delete(sb.length()-2,sb.length()-2);
-		sb.append("}");
-		return sb.toString();
-	}
 }
