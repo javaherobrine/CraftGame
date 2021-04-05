@@ -1,4 +1,4 @@
 package io.github.javaherobrine.net;
 public enum TransmissionFormat {
-	/*OBJECT,*/JSON,FINISH,RECONNECT
+	OBJECT,JSON,FINISH,RECONNECT
 }
