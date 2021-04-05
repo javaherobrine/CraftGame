@@ -3,33 +3,17 @@ import java.io.*;
 import io.github.javaherobrine.*;
 import javax.script.*;
 public class JSONInputStream implements ObjectInput{
-	private BufferedReader source;
-	public JSONInputStream(Reader source) {
-		this.source=new BufferedReader(source);
+	private InputStream source;
+	public JSONInputStream(InputStream source) {
+		this.source=source;
 	}
 	@Override
 	public Object readObject() throws IOException{
-		StringWriter sw=new StringWriter();
-		String str=source.readLine();
-		if(str.trim().isEmpty()) {
-			return readObject();
-		}
-		if(str.indexOf('}')==str.length()-1) {
-			try {
-				return JavaScript.parse(str);
-			} catch (ScriptException e) {
-				throw new IOException(e);
-			}
-		}
-		sw.write(str+"\n");
-		while(!(str=source.readLine()).equals("}")) {
-			sw.write(str);
-		}
-		sw.write("}");
 		try {
-			return JavaScript.parse(sw.toString());
+			return JavaScript.parse(new String(source.readNBytes(IOUtils.byte4ToInt(source.readNBytes(4), 0)),"UTF-8"));
 		} catch (ScriptException e) {
-			throw new IOException(e);
+			System.out.println(e);
+			return null;
 		}
 	}
 	public void readFully(byte[] b) throws IOException {}

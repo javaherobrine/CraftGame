@@ -2,8 +2,8 @@ package io.github.javaherobrine.ioStream;
 import java.io.*;
 import io.github.javaherobrine.*;
 public class JSONOutputStream implements ObjectOutput{
-	private Writer dest;
-	public JSONOutputStream(Writer dest) {
+	private OutputStream dest;
+	public JSONOutputStream(OutputStream dest) {
 		this.dest=dest;
 	}
 	public void writeBoolean(boolean v) throws IOException {}
@@ -18,7 +18,10 @@ public class JSONOutputStream implements ObjectOutput{
 	public void writeChars(String s) throws IOException {}
 	public void writeUTF(String s) throws IOException {}
 	public void writeObject(Object obj) throws IOException {
-		dest.write(JavaScript.json(obj));
+		byte[] data=JavaScript.json(obj).getBytes("UTF-8");
+		System.out.println(new String(data,"UTF-8"));
+		dest.write(IOUtils.intToByte4(data.length));
+		dest.write(data);
 	}
 	public void write(int b) throws IOException {}
 	public void write(byte[] b) throws IOException {}
