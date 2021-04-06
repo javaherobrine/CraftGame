@@ -113,7 +113,7 @@ public class JavaScript {
 			}else {
 				sb.append("{\n");
 				Stream.of(object.getClass().getFields()).filter(field->{
-					return !Modifier.isFinal(field.getModifiers())&&(Modifier.isStatic(field.getModifiers())||field.canAccess(object)||Modifier.isTransient(field.getModifiers()));
+					return !Modifier.isFinal(field.getModifiers())&&(Modifier.isStatic(field.getModifiers())||field.canAccess(object)&&(!Modifier.isTransient(field.getModifiers())));
 				}).forEach(field->{
 					try {
 						sb.append("\""+field.getName()+"\""+":");

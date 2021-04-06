@@ -17,11 +17,6 @@ public class Events implements ElementAccess<Integer, Class<? extends EventConte
 		list.remove(index.intValue());
 		list.add(index.intValue(), val);
 	}
-	{
-		list.add(0, DisconnectEvent.class);
-		list.add(1, OnlineEvent.class);
-		list.add(2,OfflineEvent.class);
-	}
 	public void reg(Class<? extends EventContent> val) {
 		reg(val,(val.getPackageName()+val.getSimpleName()).hashCode());
 	}

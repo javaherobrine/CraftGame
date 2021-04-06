@@ -1,5 +1,6 @@
 package io.github.javaherobrine.net;
 import java.io.*;
+import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 import java.net.*;
 import io.github.javaherobrine.net.event.*;
@@ -15,7 +16,6 @@ public class Client implements Closeable{
 	boolean client;
 	Thread hook=new Thread(()->{
 		try {
-			if(client) sendEvent(DisconnectEvent.DISCONNECT);
 			soc.close();
 		} catch (IOException e) {}
 	}) ;
@@ -23,9 +23,8 @@ public class Client implements Closeable{
 		Runtime.getRuntime().addShutdownHook(hook);
 	}
 	public ShakeHandsMessage msg=new ShakeHandsMessage();
-	public Client(Socket soc,boolean client) throws IOException{
+	public Client(Socket soc) throws IOException{
 		this.soc=soc;
-		this.client=client;
 		this.is=soc.getInputStream();
 		this.os=soc.getOutputStream();
 	}
@@ -70,11 +69,11 @@ public class Client implements Closeable{
 	}
 	public void sendEvent(EventContent event) throws IOException {
 		event.index=msg.id;
-		event.sendExec(this);
+		event.sendExec();
 		out.writeObject(event);
 	}
 	public static Client reconnectToServer(String host,int port) throws IOException{
-		Client c=new Client(new Socket(host,port),true);
+		Client c=new Client(new Socket(host,port));
 		BufferedWriter bw=new BufferedWriter(new OutputStreamWriter(c.os,"UTF-8"));
 		bw.write(TransmissionFormat.RECONNECT.toString());
 		return c;
@@ -84,11 +83,10 @@ public class Client implements Closeable{
 			EventContent obj=null;
 			if(in instanceof ObjectInputStream) {
 				obj=(EventContent)in.readObject();
+				obj.c=this;
 			}else {
-				System.out.println("prepare to recv event");
 				Map m=(Map)in.readObject();
-				System.out.println("JSON received:"+m==null);
-				obj=Events.EVENTS_BEAN.list.get((int)((Map)m).get("eid")).newInstance();
+				obj=Events.EVENTS_BEAN.list.get((int)((Map)m).get("eid")).getConstructor(Client.class).newInstance(this);
 				if(obj instanceof OtherEvent) {
 					((OtherEvent)obj).content=((OtherEvent)obj).initContent((Map)((Map)m.get("content")));
 				}
@@ -96,12 +94,12 @@ public class Client implements Closeable{
 			}
 			obj.recvExec();
 			return obj;
-		} catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
+		} catch (ClassNotFoundException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException e) {
 			return null;
 		}
 	}
-	public ClientSideSynchronizeImpl getImpl() {
-		return new ClientSideSynchronizeImpl(this, false);
+	public DefaultSynchronizeImpl getImpl() {
+		return new DefaultSynchronizeImpl(this);
 	}
 	@Override
 	public void finalize() throws IOException{
