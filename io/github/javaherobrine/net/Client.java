@@ -43,10 +43,10 @@ public class Client implements Closeable{
 					msg.status=TransmissionStatus.ACCEPTED;
 					msg.id=IOUtils.byte4ToInt(is.readNBytes(4), 0);
 					msg.mods=ModLoader.loader.toString().split(",");
-					/*if(msg.format==TransmissionFormat.OBJECT) {
+					if(msg.format==TransmissionFormat.OBJECT) {
 						out=new ObjectOutputStream(os);
 						in=new ObjectInputStream(is);
-					}else */if(msg.format==TransmissionFormat.JSON){
+					}else if(msg.format==TransmissionFormat.JSON){
 						out=new JSONOutputStream(os);
 						in=new JSONInputStream(is);
 					}
@@ -90,7 +90,6 @@ public class Client implements Closeable{
 				if(obj instanceof OtherEvent) {
 					((OtherEvent)obj).content=((OtherEvent)obj).initContent((Map)((Map)m.get("content")));
 				}
-				System.out.println(obj);
 			}
 			obj.recvExec();
 			return obj;

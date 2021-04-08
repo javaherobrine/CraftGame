@@ -14,8 +14,7 @@ public class DefaultSynchronizeImpl extends SynchronizeImpl implements Runnable{
 	public void run() {
 		while(true) {
 			try {
-				EventContent content=c.receiveEvent();
-				content.recvExec();
+				c.receiveEvent();
 			} catch (IOException e) {
 				//TODO Connection reset or pipe broken and so on.You must do something to process this error
 				break;
