@@ -65,6 +65,7 @@ public class Client implements Closeable{
 	}
 	@Override
 	public void close() throws IOException {
+		//TODO call server someone closes connection
 		soc.close();
 	}
 	public void sendEvent(EventContent event) throws IOException {
@@ -106,6 +107,9 @@ public class Client implements Closeable{
 		soc.close();
 	}
 	public int hashCode() {
-		return soc.hashCode();
+		return msg.id;
+	}
+	public boolean isClosed() {
+		return soc.isClosed();
 	}
 }

@@ -7,4 +7,9 @@ public class ServerSideClient extends Client {
 		super(soc);
 		this.server=s;
 	}
+	@Override
+	public void close() throws IOException{
+		//TODO call client the server is closed
+		soc.close();
+	}
 }

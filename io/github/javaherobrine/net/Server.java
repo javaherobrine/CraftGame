@@ -17,9 +17,18 @@ public class Server implements Closeable {
 	}
 	public LinkedList<ServerSideClient> clients=new LinkedList<>();
 	@Override
-	public void close() throws IOException {
+	public void finalize() throws IOException{
 		Runtime.getRuntime().removeShutdownHook(hook);
+		close();
+	}
+	public void close() throws IOException {
 		server.close();
+		Runtime.getRuntime().removeShutdownHook(hook);
+		clients.stream().forEach(c->{
+			try {
+				c.close();
+			} catch (IOException e) {}
+		});
 	}
 	public Server(ServerSocket i) {
 		this.server=i;
@@ -28,11 +37,19 @@ public class Server implements Closeable {
 		@Override
 		public void run() {
 			while(true) {
+				if(server.isClosed()) {
+					return;
+				}
 				try {
 					new Thread(Server.this.getImpl()).start();;
 				} catch (IOException e) {}
 			}
 		}
+	}
+	public Thread thread() {
+		Thread t=this.new ServerThread();
+		t.start();
+		return t;
 	}
 	public synchronized ServerSideClient accept() throws IOException{
 		ServerSideClient c=new ServerSideClient(server.accept(),this);
