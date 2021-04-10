@@ -7,7 +7,7 @@ import io.github.javaherobrine.net.event.*;
 import io.github.javaherobrine.*;
 import io.github.javaherobrine.net.sync.*;
 import io.github.javaherobrine.ioStream.*;
-public class Client implements Closeable{
+public class Client implements Closeable,AutoCloseable{
 	Socket soc;
 	InputStream is;
 	OutputStream os;
@@ -72,12 +72,6 @@ public class Client implements Closeable{
 		event.index=msg.id;
 		event.sendExec();
 		out.writeObject(event);
-	}
-	public static Client reconnectToServer(String host,int port) throws IOException{
-		Client c=new Client(new Socket(host,port));
-		BufferedWriter bw=new BufferedWriter(new OutputStreamWriter(c.os,"UTF-8"));
-		bw.write(TransmissionFormat.RECONNECT.toString());
-		return c;
 	}
 	public EventContent receiveEvent() throws IOException {
 		try {

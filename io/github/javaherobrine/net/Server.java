@@ -5,7 +5,7 @@ import java.net.*;
 import java.util.*;
 import io.github.javaherobrine.ioStream.*;
 import io.github.javaherobrine.net.sync.*;
-public class Server implements Closeable {
+public class Server implements Closeable,AutoCloseable {
 	ServerSocket server;
 	Thread hook=new Thread(()->{
 		try {
@@ -62,12 +62,6 @@ public class Server implements Closeable {
 			}catch(Exception e) {
 				c.os.write(IOUtils.intToByte4(1));
 				continue;
-			}
-			if(format==TransmissionFormat.RECONNECT) {
-				int id=Integer.parseInt(br.readLine());
-				ServerSideClient oldClient=clients.remove(id);
-				c.msg=oldClient.msg;
-				clients.add(id,c);
 			}
 			if(format==TransmissionFormat.FINISH) {
 				c.os.write(IOUtils.intToByte4(-10));
