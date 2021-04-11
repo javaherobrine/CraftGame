@@ -1,6 +1,6 @@
 package io.github.javaherobrine.net;
 import java.io.*;
-import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.*;
 import java.util.*;
 import java.net.*;
 import io.github.javaherobrine.net.event.*;

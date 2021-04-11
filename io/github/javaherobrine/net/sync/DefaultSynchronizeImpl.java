@@ -1,7 +1,6 @@
 package io.github.javaherobrine.net.sync;
 import java.io.*;
 import io.github.javaherobrine.net.*;
-import io.github.javaherobrine.net.event.*;
 public class DefaultSynchronizeImpl extends SynchronizeImpl implements Runnable{
 	Client c;
 	public DefaultSynchronizeImpl(Client c){

@@ -1,4 +1,4 @@
-   package io.github.javaherobrine;
+package io.github.javaherobrine;
 import javax.script.*;
 import java.util.*;
 import java.util.stream.*;
