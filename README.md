@@ -5,7 +5,7 @@
 - JSON Engine(a simple json engine based on Nashorn JavaScript api,it provides JSON to Map and Object to JSON for many apis)(released)
 - Mod loader(you can't mix mc mods and craftgame mods)
 
-### Current task:null
+### Current task:independing craftgame-tcp library
 
 ### Doing
 - C++
