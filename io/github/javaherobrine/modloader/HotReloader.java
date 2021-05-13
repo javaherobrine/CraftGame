@@ -1,4 +1,4 @@
-package io.github.javaherobrine;
+package io.github.javaherobrine.modloader;
 import java.io.*;
 import java.lang.reflect.*;
 import java.net.*;
