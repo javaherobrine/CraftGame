@@ -36,4 +36,10 @@ public class JarClassLoader extends URLClassLoader {
 			}
 		}
 	}
+	public static JarClassLoader getLoaderFromFile(File f) throws MalformedURLException {
+		return new JarClassLoader(new URL("jar:"+f.toURI().toString()+"!/"));
+	}
+	public Class<?> loadMainClass() throws ClassNotFoundException{
+		return loadClass(getMainClassName());
+	}
 }

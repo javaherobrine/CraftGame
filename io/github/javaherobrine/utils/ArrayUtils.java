@@ -1,5 +1,6 @@
 package io.github.javaherobrine.utils;
 import java.lang.reflect.*;
+import java.util.Arrays;
 public final class ArrayUtils {
 	private ArrayUtils() {}
 	public static <T> T[] merge(T[] arr1,T... arr2){

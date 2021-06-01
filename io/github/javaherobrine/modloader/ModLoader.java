@@ -1,44 +1,28 @@
 package io.github.javaherobrine.modloader;
 import java.io.*;
-import java.lang.reflect.InvocationTargetException;
-import java.net.MalformedURLException;
-import java.util.stream.*;
 import java.util.*;
 public class ModLoader {
-	public HashMap<String,JarClassLoader> MODS_LOADERS=new HashMap<>();
-	public static ModLoader loader=new ModLoader();
-	private String[] args;
-	private File src;
-	public StringBuilder SC_SYNC=new StringBuilder();
-	private ModLoader() {}
-	public ModLoader(File src,String[] args) {
-		this.src=src;
-		this.args=args;
-		File[] mods=src.listFiles(f->{
-			return f.toString().endsWith(".jar");
-		});
-		Stream.of(mods).forEach(f->{
-			try {
-				MODS_LOADERS.put(f.getName(), new JarClassLoader(f.toURI().toURL()));
-			} catch (MalformedURLException e) {}
-		});
-		MODS_LOADERS.values().stream().forEach(loader->{
-			try {
-				Class<?> main=loader.loadClass(loader.getMainClassName());
-				if(loader.getSync()) {
-					SC_SYNC.append(loader.getID());
-					SC_SYNC.append(",");
+	public static ArrayList<JarClassLoader> classLoaders=new ArrayList<>();
+	public static final String[] NO_ARGUMENT=new String[] {};
+	public static void loadModsFrom(File f,String[] args) throws IOException,ModException{
+		if(f.exists()) {
+			if(f.isFile()) {
+				classLoaders.add(JarClassLoader.getLoaderFromFile(f));
+			}else {
+				for(File f0:f.listFiles((f0)->{
+					return f0.toString().endsWith(".jar");
+				})) {
+					classLoaders.add(JarClassLoader.getLoaderFromFile(f0));
 				}
-				main.getMethod("main", String[].class).invoke(null, args);
-			} catch (ClassNotFoundException | NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {}
-		});
-		loader=this;
+			}
+			classLoaders.forEach(loader->{
+				try {
+					loader.loadMainClass().getMethod("main", String[].class);
+				} catch (ClassNotFoundException | NoSuchMethodException e) {}
+			});
+		}
 	}
-	@Override
-	public String toString() {
-		return SC_SYNC.toString();
-	}
-	public void reload() {
-		loader=new ModLoader(src,args);
+	public static void loadModsFrom(File f) throws IOException, ModException {
+		loadModsFrom(f,NO_ARGUMENT);
 	}
 }
