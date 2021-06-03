@@ -1,5 +1,5 @@
 package io.github.javaherobrine.modloader;
 
-public abstract class ModMainClass {
+public class ModChecker {
 
 }
