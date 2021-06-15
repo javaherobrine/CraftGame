@@ -4,7 +4,8 @@ import java.util.*;
 public abstract class ModLoader {
 	public static ArrayList<JarClassLoader> classLoaders=new ArrayList<>();
 	public static final String[] NO_ARGUMENT=new String[] {};
-	public static HashSet<String> libs=new HashSet<>();
+	public static String loaded="";
+	public static String versions="";
 	public static void loadModsFrom(File f,String[] args) throws IOException{
 		if(f.exists()) {
 			if(f.isFile()) {
@@ -15,12 +16,7 @@ public abstract class ModLoader {
 				})) {
 					JarClassLoader loader=JarClassLoader.getLoaderFromFile(f0);
 					classLoaders.add(loader);
-					String str=loader.attr.getValue("libs");
-					if(str!=null&&!str.trim().equals("")) {
-						for(String s:str.split(",")) {
-							
-						}
-					}
+					loaded+=(loader.getID()+",");
 				}
 			}
 			classLoaders.forEach(loader->{
