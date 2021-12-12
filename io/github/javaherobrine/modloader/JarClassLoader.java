@@ -7,7 +7,7 @@ public class JarClassLoader extends URLClassLoader {
 	public JarClassLoader(URL url) {
 		super(new URL[] {url});
 		try {
-			attr=((JarURLConnection)(new URL("jar:"+url+"!/").openConnection())).getAttributes();
+			attr=((JarURLConnection)(new URL("jar:"+url+"!/").openConnection())).getManifest().getMainAttributes();
 		} catch (IOException e) {}
 	}
 	public String getMainClassName(){

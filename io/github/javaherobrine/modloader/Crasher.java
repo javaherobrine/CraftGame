@@ -13,7 +13,7 @@ public class Crasher {
 	public static void addErrorMessage(String msg) {
 		str+=(msg+"\n");
 	}
-	public static void scCheck(String mods) {
+	public static void check(String mods) {
 		String[] strs=mods.split(",");
 		String[] strss=SC_SYNCHRONIZED_MODS.split(";");
 		Arrays.sort(strs);
@@ -22,9 +22,16 @@ public class Crasher {
 			return;
 		}else {
 			mods.replace(",", "\n");
-			SC_SYNCHRONIZED_MODS.replace(",","\n");
-			addErrorMessage("服务器：\n"+mods+"\n客户端：\n"+SC_SYNCHRONIZED_MODS);
+			addErrorMessage("服务器：\n"+mods+"\n客户端：\n"+SC_SYNCHRONIZED_MODS.replace(",","\n"));
 			crash("服务器和客户端的mod不同步");
 		}
+	}
+	public static boolean checkVersion(String version,String[] allowed) {
+		for(int i=0;i<allowed.length;i++) {
+			if(allowed[i].equals(version)) {
+				return true;
+			};
+		}
+		return false;
 	}
 }
