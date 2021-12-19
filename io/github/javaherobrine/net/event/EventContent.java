@@ -10,4 +10,6 @@ public abstract class EventContent implements Serializable{
 	}
 	public abstract void sendExec();
 	public abstract void recvExec();
+	public abstract void serverSendExec();
+	public abstract void serverRecvExec();
 }
