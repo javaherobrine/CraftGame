@@ -2,7 +2,7 @@
 ## Tasks
 ### Finished
 - Network(release 1.1)(view javaherobrine/craftgame-tcp-library)
-### Current task:Develop craftgame independently before LovelyZeeiam pushed a commit
+### Current task:Develop craftgame independently while learning OpenGL
 ### Doing
 - Learning OpenGL
 

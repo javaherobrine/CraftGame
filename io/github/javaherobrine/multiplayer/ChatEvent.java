@@ -1,5 +1,5 @@
 package io.github.javaherobrine.multiplayer;
-import java.util.Map;
+import java.util.*;
 import io.github.javaherobrine.net.*;
 import io.github.javaherobrine.net.event.*;
 import io.github.javaherobrine.render.*;
@@ -26,6 +26,6 @@ public class ChatEvent extends OtherEvent{
 	}
 	@Override
 	public void serverRecvExec() {
-		// TODO 自动生成的方法存根
+		System.out.println("[CHAT]:"+content);
 	}
 }

@@ -6,4 +6,5 @@ public class ShakeHandsMessage {
 	public TransmissionStatus status;
 	public TransmissionFormat format;
 	public boolean connected;
+	public String[] mods;
 }

@@ -7,7 +7,7 @@ import java.util.Map;
 import io.github.javaherobrine.net.event.EventContent;
 import io.github.javaherobrine.net.event.Events;
 import io.github.javaherobrine.net.event.OtherEvent;
-public abstract class ServerSideClient extends Client {
+public class ServerSideClient extends Client {
 	public Server server;
 	public ServerSideClient(Socket soc,Server s) throws IOException {
 		super(soc);

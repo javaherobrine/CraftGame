@@ -13,9 +13,6 @@ public class JarClassLoader extends URLClassLoader {
 	public String getMainClassName(){
 		return attr==null?null:attr.getValue(Attributes.Name.MAIN_CLASS);
 	}
-	public boolean getSync() {
-		return attr==null?true:Boolean.parseBoolean(attr.getValue("resource"));
-	}
 	public String getID() {
 		return attr==null?null:attr.getValue("mod-id");
 	}
