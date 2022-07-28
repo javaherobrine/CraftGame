@@ -10,7 +10,10 @@ public final class Constants {
 	//public static final String FEEDBACK_ADDR_0="lmqhlmx@163.com";
 	//public static final String FEEDBACK_ADDR_1="javaherobrine@qq.com";
 	public static final ArrayList<NetworkEventListener> REGISTERED_NETWORK_EVENT_LISTENER=new ArrayList<>();
-	public static void registerNetworkEventListener(NetworkEventListener e) {
-		
-	}
+	public static final String TITLE="CraftGame FPS=";
+//	public static void registerNetworkEventListener(NetworkEventListener e) {
+//		
+//	}
+	public static final String DEFAULT_PLAYER_0="LovelyZeeiam";
+	public static final String DEFAULT_PLAYER_1="Java_Herobrine";
 }

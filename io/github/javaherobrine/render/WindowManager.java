@@ -16,20 +16,20 @@ public class WindowManager {
 		this.vSync = vSync;
 		projectionMatrix=new Matrix4f();
 	}
-	private int width,height;
+	int width,height;
 	private long window;
-	private boolean resize,vSync;
+	boolean resize,vSync;
 	private final Matrix4f projectionMatrix;
 	public void init() {
-		GLFWErrorCallback.createPrint(System.err);
+		GLFWErrorCallback.createPrint(System.err).set();
 		if(!GLFW.glfwInit()) {
 			throw new IllegalStateException("GLFW isn't initialized");
 		}
 		GLFW.glfwDefaultWindowHints();
 		GLFW.glfwWindowHint(GLFW.GLFW_VISIBLE, GL11.GL_FALSE);
 		GLFW.glfwWindowHint(GLFW.GLFW_RESIZABLE, GL11.GL_TRUE);
-		GLFW.glfwWindowHint(GLFW.GLFW_VERSION_MAJOR, 3);
-		GLFW.glfwWindowHint(GLFW.GLFW_VERSION_MINOR, 2);
+		GLFW.glfwWindowHint(GLFW.GLFW_CONTEXT_VERSION_MAJOR, 3);
+		GLFW.glfwWindowHint(GLFW.GLFW_CONTEXT_VERSION_MINOR, 2);
 		GLFW.glfwWindowHint(GLFW.GLFW_OPENGL_PROFILE, GLFW.GLFW_OPENGL_CORE_PROFILE);
 		GLFW.glfwWindowHint(GLFW.GLFW_OPENGL_FORWARD_COMPAT, GL11.GL_TRUE);
 		boolean maximised=false;

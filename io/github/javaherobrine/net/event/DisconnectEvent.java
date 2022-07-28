@@ -1,8 +1,6 @@
 package io.github.javaherobrine.net.event;
 import io.github.javaherobrine.net.*;
-
-import java.io.IOException;
-
+import java.io.*;
 import io.github.javaherobrine.*;
 public class DisconnectEvent extends EventContent{
 	public DisconnectEvent(Client c) {
