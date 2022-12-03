@@ -86,7 +86,6 @@ public class Client implements Closeable{
 					((OtherEvent)obj).content=((OtherEvent)obj).initContent((Map)((Map)m.get("content")));
 				}
 			}
-			obj.recvExec();
 			return obj;
 		} catch (ClassNotFoundException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException e) {
 			return null;
