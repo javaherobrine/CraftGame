@@ -46,7 +46,7 @@ public class EngineManager {
 				}
 				if(frameCounter>=NANOSECOND) {
 					fps=frames;
-					window.setTitle(Constants.TITLE+fps);
+					window.setTitle(""+fps);
 					frames=0;
 					frameCounter=0;
 				}

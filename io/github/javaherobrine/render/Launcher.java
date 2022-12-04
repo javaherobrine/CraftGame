@@ -4,7 +4,7 @@ public class Launcher {
 	static WindowManager window;
 	static CraftGame game;
 	public static void main(String[] args) {
-		window=new WindowManager(Constants.TITLE,0,0,false);
+		window=new WindowManager("",0,0,false);
 		game=new CraftGame();
 		EngineManager engine=new EngineManager();
 		try {
