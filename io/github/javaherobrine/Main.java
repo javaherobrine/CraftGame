@@ -1,5 +1,5 @@
 package io.github.javaherobrine;
-public class Main {//¿ØÖÆÌ¨°æ±¾
+public class Main {
 	public static void main(String[] args) {
 		
 	}

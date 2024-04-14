@@ -36,7 +36,7 @@ public class CraftGame implements ILogic{
 			1,0
 		};
 		model=loader.loadModel(vertices,textureCoords,indices);
-		model.setTexture(new Texture(loader.loadTexture("textures/grassblock.bmp")));
+		model.setTexture(new Texture(loader.loadTexture("textures/grassblock.png")));
 	}
 	@Override
 	public void input() {
