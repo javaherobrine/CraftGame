@@ -1,12 +1,12 @@
 package io.github.javaherobrine.modloader;
 import java.io.*;
+import static io.github.javaherobrine.modloader.DependenceDAG.GraphNode;
 import java.util.*;
 public abstract class ModLoader {
 	public static ArrayList<JarClassLoader> classLoaders=new ArrayList<>();
-	public static final String[] NO_ARGUMENT=new String[] {};
 	public static String loaded="";
-	public static String versions="";
-	public static void loadModsFrom(File f,String[] args) throws IOException{
+	public static ArrayList<GraphNode> root=new ArrayList<>();
+	public static void loadModsFrom(File f) throws IOException{
 		if(f.exists()) {
 			if(f.isFile()) {
 				classLoaders.add(JarClassLoader.getLoaderFromFile(f));
@@ -15,18 +15,25 @@ public abstract class ModLoader {
 					return f0.toString().endsWith(".jar");
 				})) {
 					JarClassLoader loader=JarClassLoader.getLoaderFromFile(f0);
-					classLoaders.add(loader);
-					loaded+=(loader.getID()+",");
+					if(loader.valid()) {
+						classLoaders.add(loader);
+						loaded+=(loader.getID()+",");
+					}else {
+						loader.close();
+					}
 				}
 			}
-			classLoaders.forEach(loader->{
-				try {
-					loader.loadMainClass().getMethod("main", String[].class);
-				} catch (ClassNotFoundException | NoSuchMethodException e) {}
+			classLoaders.stream().forEach(cl->{
+				String[] libs=cl.getLibraries();
+				GraphNode n=DependenceDAG.getNodeByID(cl.getID());
+				if(libs.length==0) {
+					root.add(n);
+				}else {
+					Arrays.stream(libs).forEach(str->{
+						DependenceDAG.getNodeByID(str).link(n);
+					});
+				}
 			});
 		}
-	}
-	public static void loadModsFrom(File f) throws IOException{
-		loadModsFrom(f,NO_ARGUMENT);
 	}
 }

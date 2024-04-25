@@ -20,7 +20,7 @@ public class Server extends Thread implements Closeable{
 			try {
 				accept();
 			} catch (IOException e) {
-				//Nothing should be processed
+				e.printStackTrace();
 			}
 		}
 	}
