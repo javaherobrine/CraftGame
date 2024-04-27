@@ -2,10 +2,11 @@ package io.github.javaherobrine.modloader;
 import java.io.*;
 import static io.github.javaherobrine.modloader.DependenceDAG.GraphNode;
 import java.util.*;
-public abstract class ModLoader {
+public class ModLoader {
 	public static ArrayList<JarClassLoader> classLoaders=new ArrayList<>();
 	public static String loaded="";
 	public static ArrayList<GraphNode> root=new ArrayList<>();
+	@SuppressWarnings("resource")
 	public static void loadModsFrom(File f) throws IOException{
 		if(f.exists()) {
 			if(f.isFile()) {
@@ -35,5 +36,8 @@ public abstract class ModLoader {
 				}
 			});
 		}
+	}
+	public static void load(int i) {
+		root.get(i).topologicalSort();
 	}
 }

@@ -39,7 +39,7 @@ public class Client extends Thread implements Closeable{
 	}
 	@Override
 	public void close() throws IOException {
-		//Send disconnect event
+		//TODO Send disconnect event
 		client.close();
 	}
 }

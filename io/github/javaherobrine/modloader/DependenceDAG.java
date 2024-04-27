@@ -85,7 +85,9 @@ public class DependenceDAG {
 					}
 				}
 			}
-			//TODO more operations to load mods
+			order.stream().forEach(node->{
+				node.info.getInstance().load();
+			});
 			return true;
 		}
 	}

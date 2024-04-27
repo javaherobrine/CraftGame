@@ -6,12 +6,15 @@ public class WhiteList extends PlayerList{
 		super(content);
 		//TODO init
 	}
+	public WhiteList() {
+		super("");
+	}
 	@Override
 	public void add(String player){
 		list.add(player);
 	}
 	@Override
-	public void remove(S	tring player){
+	public void remove(String player){
 		if(check(player)){
 			list.remove(player);
 		}

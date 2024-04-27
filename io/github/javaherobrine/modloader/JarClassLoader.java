@@ -12,6 +12,9 @@ public class JarClassLoader extends URLClassLoader {
 	public boolean valid() {
 		return mainClass!=null;
 	}
+	protected ModBase getInstance() {
+		return instance;
+	}
 	public JarClassLoader(URL url) {
 		super(new URL[] {url});
 		try {

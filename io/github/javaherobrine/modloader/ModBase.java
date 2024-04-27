@@ -1,5 +1,6 @@
 package io.github.javaherobrine.modloader;
-public interface ModBase {
-	void load();
-	default void unload() {}
+public abstract class ModBase {
+	public abstract void load();
+	public void unload() {}
+	public ModBase() {}
 }
