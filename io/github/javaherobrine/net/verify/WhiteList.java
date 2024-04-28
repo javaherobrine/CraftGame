@@ -4,7 +4,6 @@ public class WhiteList extends PlayerList{
 	private HashSet<String> list=new HashSet<>();
 	public WhiteList(String content){
 		super(content);
-		//TODO init
 	}
 	public WhiteList() {
 		super("");
@@ -25,7 +24,18 @@ public class WhiteList extends PlayerList{
 	}
 	@Override
 	public String toString(){
-		//TODO store the list
-		return "";
+		StringBuilder sb=new StringBuilder();
+		for(String str:list) {
+			sb.append(str);
+			sb.append("\n");
+		}
+		return sb.toString();
+	}
+	@Override
+	public void append(String pl) {
+		String[] a=pl.split("\n");
+		for(String str:a) {
+			list.add(str);
+		}
 	}
 }
