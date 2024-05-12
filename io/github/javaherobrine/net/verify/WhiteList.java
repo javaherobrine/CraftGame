@@ -1,25 +1,25 @@
 package io.github.javaherobrine.net.verify;
 import java.util.*;
-public class WhiteList extends PlayerList{
+public class WhiteList {
 	private HashSet<String> list=new HashSet<>();
+	public boolean enabled=false;
 	public WhiteList(String content){
-		super(content);
+		append(content);
 	}
-	public WhiteList() {
-		super("");
-	}
-	@Override
+	public WhiteList() {}
 	public void add(String player){
+		enabled=true;
 		list.add(player);
 	}
-	@Override
 	public void remove(String player){
-		if(check(player)){
+		if(list.contains(player)){
 			list.remove(player);
 		}
 	}
-	@Override
 	public boolean check(String player){
+		if(!enabled) {
+			return true;
+		}
 		return list.contains(player);
 	}
 	@Override
@@ -31,8 +31,8 @@ public class WhiteList extends PlayerList{
 		}
 		return sb.toString();
 	}
-	@Override
 	public void append(String pl) {
+		enabled=true;
 		String[] a=pl.split("\n");
 		for(String str:a) {
 			list.add(str);

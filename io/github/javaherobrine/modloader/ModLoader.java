@@ -4,40 +4,55 @@ import static io.github.javaherobrine.modloader.DependenceDAG.GraphNode;
 import java.util.*;
 public class ModLoader {
 	public static ArrayList<JarClassLoader> classLoaders=new ArrayList<>();
-	public static String loaded="";
+	public static HashSet<String> loaded=new HashSet<>();
 	public static ArrayList<GraphNode> root=new ArrayList<>();
 	@SuppressWarnings("resource")
 	public static void loadModsFrom(File f) throws IOException{
 		if(f.exists()) {
 			if(f.isFile()) {
-				classLoaders.add(JarClassLoader.getLoaderFromFile(f));
+				JarClassLoader loader=JarClassLoader.getLoaderFromFile(f);
+				if(!loader.valid()) {
+					return;
+				}
+				classLoaders.add(loader);
+				String str=loader.getID();
+				if(loaded.contains(str)) {
+					crush("Duplicated Mods");
+				}
+				loaded.add(str);
 			}else {
-				for(File f0:f.listFiles((f0)->{
-					return f0.toString().endsWith(".jar");
+				for(File f0:f.listFiles(f1->{
+					return f1.isDirectory()||f.toString().endsWith(".jar");
 				})) {
-					JarClassLoader loader=JarClassLoader.getLoaderFromFile(f0);
-					if(loader.valid()) {
-						classLoaders.add(loader);
-						loaded+=(loader.getID()+",");
-					}else {
-						loader.close();
-					}
+					loadModsFrom(f0);
 				}
 			}
-			classLoaders.stream().forEach(cl->{
-				String[] libs=cl.getLibraries();
-				GraphNode n=DependenceDAG.getNodeByID(cl.getID());
-				if(libs.length==0) {
-					root.add(n);
-				}else {
-					Arrays.stream(libs).forEach(str->{
-						DependenceDAG.getNodeByID(str).link(n);
-					});
-				}
-			});
 		}
+	}
+	public static void init() {
+		classLoaders.stream().forEach(cl->{
+			String[] libs=cl.getLibraries();
+			GraphNode n=DependenceDAG.getNodeByID(cl.getID());
+			if(libs.length==0) {
+				root.add(n);
+			}else {
+				Arrays.stream(libs).forEach(str->{
+					DependenceDAG.getNodeByID(str).link(n);
+				});
+			}
+		});
 	}
 	public static void load(int i) {
 		root.get(i).topologicalSort();
+	}
+	public static void crush(final String msg) {
+		System.err.println("[FATAL] the game must terminate because "+msg);
+		Runtime.getRuntime().addShutdownHook(new Thread(){
+			@Override
+			public void run() {
+				//TODO show error message
+			}
+		});
+		System.exit(1);
 	}
 }

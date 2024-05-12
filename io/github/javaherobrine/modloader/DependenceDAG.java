@@ -1,12 +1,13 @@
 package io.github.javaherobrine.modloader;
 import java.util.*;
+import io.github.javaherobrine.net.event.*;
 /**
  * Dependence DAG for mods
  * To load mods in a correct order(the dependence items should be loaded previously)(use topological sort)
  * If dependence items missing dependence relations forming a circle,throw an exception and terminate
  */
 public class DependenceDAG {
-	public static final Map<String,GraphNode> LOADED_MODS=new HashMap<>();
+	private static final Map<String,GraphNode> LOADED_MODS=new HashMap<>();
 	public static GraphNode getNodeByID(String ID) {
 		if(!LOADED_MODS.containsKey(ID)) {
 			LOADED_MODS.put(ID,new GraphNode());
@@ -17,7 +18,7 @@ public class DependenceDAG {
 	 * Node for building DAG
 	 * Each node represents a mod
 	 */
-	public static class GraphNode{
+	protected static class GraphNode{
 		JarClassLoader info;
 		ArrayList<GraphNode> linkto=new ArrayList<GraphNode>();
 		ArrayList<GraphNode> linkfrom=new ArrayList<GraphNode>();
@@ -57,7 +58,7 @@ public class DependenceDAG {
 		 * @return true if mods are loaded properly
 		 * false otherwise
 		 */
-		public boolean topologicalSort() {
+		public void topologicalSort() {
 			Queue<GraphNode> q=new LinkedList<GraphNode>();
 			q.add(this);
 			List<GraphNode> order=new LinkedList<>();
@@ -76,19 +77,24 @@ public class DependenceDAG {
 			Iterator<GraphNode> iter=order.iterator();
 			while(iter.hasNext()) {
 				GraphNode node=iter.next();
+				if(node.info.getSCSync()) {
+					LoginEvent.getInstance().sync.add(node.info.getID());
+				}
 				for(int i=0;i<node.linkto.size();++i) {
 					if(!node.linkto.get(i).enable) {
 						continue;
 					}
 					if(node.linkto.get(i).indegree!=0) {
-						return false;//circle
+						ModLoader.crush("dependency relations formed a circle");//circle
 					}
 				}
 			}
 			order.stream().forEach(node->{
 				node.info.getInstance().load();
 			});
-			return true;
 		}
+	}
+	public static boolean isIncluded(String ID) {
+		return LOADED_MODS.containsKey(ID);
 	}
 }
