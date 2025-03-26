@@ -54,9 +54,7 @@ public class DependenceDAG {
 			});
 		}
 		/**
-		 * Load mods
-		 * @return true if mods are loaded properly
-		 * false otherwise
+		 * Load mods in a correct order
 		 */
 		public void topologicalSort() {
 			Queue<GraphNode> q=new LinkedList<GraphNode>();
@@ -74,6 +72,7 @@ public class DependenceDAG {
 					}
 				});
 			}
+			int num=0;
 			Iterator<GraphNode> iter=order.iterator();
 			while(iter.hasNext()) {
 				GraphNode node=iter.next();
@@ -89,9 +88,11 @@ public class DependenceDAG {
 					}
 				}
 			}
-			order.stream().forEach(node->{
-				node.info.getInstance().load();
-			});
+			iter=order.iterator();
+			while(iter.hasNext()) {
+				iter.next().info.getInstance().load(num);
+				++num;
+			}
 		}
 	}
 	public static boolean isIncluded(String ID) {

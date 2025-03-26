@@ -64,5 +64,9 @@ public class Blacklist {
 		enabled=true;
 		str.trim();
 		String[] strs=str.split("\n");
+		int size=strs.length/2;
+		for(int i=0;i<size;++i) {
+			banned.put(strs[i<<1],new ListItem(strs[(i<<1)|1]));
+		}
 	}
 }

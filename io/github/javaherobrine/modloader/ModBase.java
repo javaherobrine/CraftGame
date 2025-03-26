@@ -1,6 +1,10 @@
 package io.github.javaherobrine.modloader;
 public abstract class ModBase {
-	public abstract void load();
+	/**
+	 * Extensions should implement this function, and loader will call it when loading.
+	 * @param modid the id of the extension, loader will fill in this parameter.
+	 */
+	public abstract void load(int modid);
 	public void unload() {}
 	public ModBase() {}
 }
