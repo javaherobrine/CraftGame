@@ -52,4 +52,17 @@ public class GameUtils {
 	public static int possibilty(double p[]) {
 		return Arrays.binarySearch(p,GENERATOR.nextDouble());
 	}
+	public static int readUint(Reader r) throws IOException{
+		int ch=r.read();
+		int res=0;
+		while((ch<'0'||ch>'9')&&ch!=-1) {
+			ch=r.read();
+		}
+		while(ch>='0'&&ch<='9') {
+			res=(res<<3)+(res<<1);
+			res+=ch^'0';
+			ch=r.read();
+		}
+		return res;
+	}
 }

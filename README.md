@@ -1,5 +1,6 @@
 # CraftGame
 ## Tasks
+- Merge this repository with LovelyZeeiam/CraftGame
 ### Finished
 - ~Network(release 1.1)(view javaherobrine/craftgame-tcp-library)~
 - None
