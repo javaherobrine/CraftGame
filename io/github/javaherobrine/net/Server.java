@@ -9,15 +9,19 @@ public class Server extends Thread implements Closeable{
 	private ServerSocket server;
 	private WhiteList wh=new WhiteList();
 	private Blacklist bl=new Blacklist();
-	private Map<String,ServerSideClient> connected=Collections.synchronizedMap(new HashMap<String,ServerSideClient>());
+	private Map<String,ServerSideClient> connected=new HashMap<String,ServerSideClient>();
 	EventHandler handler=new EventHandler();
 	public Server(int port) throws IOException {
 		server=new ServerSocket(port);
 		start();
 	}
+	public Client removeClient(String name) {
+		synchronized(connected) {
+			return connected.remove(name);
+		}
+	}
 	public void accept() throws IOException {
-		ServerSideClient c=new ServerSideClient(server.accept());
-		c.handler=handler;
+		ServerSideClient c=new ServerSideClient(server.accept(),this,handler);
 		LoginEvent init=(LoginEvent)c.recv();
 		if(!wh.check(init.player)) {
 			c.send(new DisconnectEvent("Not allowed"));
@@ -52,13 +56,15 @@ public class Server extends Thread implements Closeable{
 		kick(player,"You are kicked by the server");
 	}
 	public void kick(String player,String message) throws IOException {
-		Client c=getClient(player);
+		Client c=removeClient(player);
 		c.send(new DisconnectEvent(message));
 		c.close();
 		System.out.println("[INFO]Player "+player+" is kicked");
 	}
 	public Client getClient(String player) {
-		return connected.get(player);
+		synchronized(connected) {
+			return connected.get(player);
+		}
 	}
 	public void ban(String player) throws IOException{
 		ban(player,Long.MAX_VALUE);
@@ -86,6 +92,26 @@ public class Server extends Thread implements Closeable{
 		bl.append(GameUtils.ofFile(path));
 	}
 	public int connected() {
-		return connected.size();
+		synchronized(connected) {
+			return connected.size();
+		}
+	}
+	private class ServerOutputStream extends OutputStream {//send to all
+		@Override
+		public void write(int b) throws IOException {//because they are SocketOutputStreams
+			write(new byte[] {(byte)b},0,1);
+		}
+		@Override
+		public void write(byte[] data,int off,int len) {
+			synchronized(connected) {
+				connected.values().stream().forEach(n->{
+					try {
+						n.client.getOutputStream().write(data,off,len);
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				});
+			}
+		}
 	}
 }

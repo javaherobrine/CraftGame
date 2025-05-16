@@ -1,11 +1,14 @@
 package io.github.javaherobrine.net;
 import java.net.*;
 import java.io.*;
-class ServerSideClient extends Client{
-	EventHandler handler;
+public class ServerSideClient extends Client{
+	private EventHandler handler;
 	public String player;
-	protected ServerSideClient(Socket sc) throws IOException {
+	private Server s;
+	protected ServerSideClient(Socket sc,Server server,EventHandler handle) throws IOException {
 		super(sc);
+		s=server;
+		handler=handle;
 	}
 	@Override
 	public void run() {
@@ -17,6 +20,7 @@ class ServerSideClient extends Client{
 				break;
 			}
 		}
+		s.removeClient(player);
 	}
 	@Override
 	public void close() throws IOException{
