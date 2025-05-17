@@ -16,7 +16,6 @@ public class JSONReader extends FilterReader {
 			unread=in.read();
 		}
 		int ch=unread;
-		System.err.println("read character: "+(char) ch);
 		unread=' ';
 		return ch;
 	}
@@ -44,12 +43,10 @@ public class JSONReader extends FilterReader {
 		return value;
 	}
 	public synchronized String nextString(char end) throws IOException{
-		System.err.println("end="+end);
 		StringBuilder sb=new StringBuilder();
 		boolean n=false;
 		char ch=(char)in.read();
 		while(ch!=end||n) {
-			System.err.println("current character: "+ch);
 			n=false;
 			if(ch=='\\') {
 				n=true;
@@ -77,7 +74,6 @@ public class JSONReader extends FilterReader {
 			boolean decimal=false;
 			StringBuilder input=new StringBuilder();
 			while(Character.isDigit(first)||first=='E'||first=='+'||first=='-'||first=='.') {
-				System.err.println("current character: "+first);
 				if(first=='E'||first=='.') {
 					decimal=true;
 				}
@@ -122,7 +118,6 @@ public class JSONReader extends FilterReader {
 				value=null;
 				in.skip(3);
 			}else if(ch=='\''||ch=='\"') {
-				System.err.println("String");
 				value=nextString(ch);
 			}
 			arr.add(value);
@@ -133,7 +128,6 @@ public class JSONReader extends FilterReader {
 		HashMap<String,Object> res=new HashMap<>();
 		char ch=(char)read();
 		while(ch!='}') {
-			System.err.println("current character: "+ch);
 			if(ch==',') {
 				ch=(char)read();
 				continue;

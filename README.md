@@ -1,19 +1,27 @@
-# CraftGame
+# CraftGame, a free software, published under GNU AGPL v3.0 license
 ## Tasks
 - Merge this repository with LovelyZeeiam/CraftGame
+
 ### Finished
-- ~Network(release 1.1)(view javaherobrine/craftgame-tcp-library)~
-- None
-### Current task:Rebuild craftgame-tcp
+- Network(C/S Framework, based on craftgame-tcp library and Java Object Stream)
+- Mods Loader(Needed to be debugged)
+
+### Current task:Merging code
+
 ### Doing
-- better mods loader
+- Network(JSON Implementation)
 - Learning LWJGL
 
 ### Plan to do
 - Develop GUI with LWJGL
 - release it
 
-## Libraries which I used for this project
-LWJGL 3
-### How to build it
-First,download LWJGL 3 zip bundle,then extract the jar files,and use them as libraries.Second,download this project and compile the code(use IDE or javac with LWJGL 3),then execute it.
+## Libraries
+- [LWJGL 3]("https://www.lwjgl.org")
+- [CraftGame]("https://github.com/LovelyZeeiam/CraftGame")
+- [CraftGame TCP Library]("https://github.com/javaherobrine/craftgame-tcp-library")
+- LovelyZeeiam/CraftGame's dependencies
+
+# See also
+- [CraftGame from LovelyZeeiam]("https://github.com/LovelyZeeiam/CraftGame")
+- [CraftGame from Java_Herobrine, with LovelyZeeiam's modifications]("https://github.com/LovelyZeeiam/JaroSideCraftGame")
