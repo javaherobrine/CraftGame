@@ -2,7 +2,7 @@ package io.github.javaherobrine;
 import java.io.*;
 import java.util.Random;
 import java.util.Arrays;
-public class GameUtils {
+public final class GameUtils {
 	public static final Random GENERATOR=new Random();
 	private GameUtils() {}
 	/**
@@ -11,7 +11,7 @@ public class GameUtils {
 	 * @return content
 	 * @throws IOException
 	 */
-	public static String ofFile(String file) throws IOException {
+	public static String ofFile(File file) throws IOException {
 		return ofFile(file,"UTF-8");
 	}
 	/**
@@ -21,7 +21,7 @@ public class GameUtils {
 	 * @return content
 	 * @throws IOException
 	 */
-	public static String ofFile(String file,String charset) throws IOException {
+	public static String ofFile(File file,String charset) throws IOException {
 		InputStream in=new BufferedInputStream(new FileInputStream(file));
 		String str=new String(in.readAllBytes(),charset);
 		in.close();

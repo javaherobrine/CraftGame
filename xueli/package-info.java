@@ -1,5 +1,9 @@
 /**
  * code from LovelyZeeiam is put in xueli.(*)
+ * <br />
+ * however, it's sometimes accompanied with modifications & additions from Java_Herobrine
+ * <br />
+ * I'll place an annotation in case of addition or modification, to mark them
   <br />
    Copyright (C) <2019-2025>  <LovelyZeeiam>
 

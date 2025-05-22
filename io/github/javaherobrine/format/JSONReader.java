@@ -2,7 +2,12 @@ package io.github.javaherobrine.format;
 import java.io.*;
 import java.util.*;
 import java.math.*;
-public class JSONReader extends FilterReader {
+/**
+ * A reader that can deserialize JSON
+ * <br />
+ * please don't call deprecated functions, their implementations are wrong
+ */
+public class JSONReader extends FilterReader implements ObjectInput{
 	private int unread=' ';
 	public JSONReader(Reader in) {
 		super(in);
@@ -19,6 +24,7 @@ public class JSONReader extends FilterReader {
 		unread=' ';
 		return ch;
 	}
+	@Override
 	public synchronized Object readObject() throws IOException{
 		char ch=(char) read();
 		Object value=null;
@@ -158,5 +164,92 @@ public class JSONReader extends FilterReader {
 			ch=(char) read();
 		}
 		return res;
+	}
+	@Deprecated
+	@Override
+	public void readFully(byte[] b) throws IOException {}
+	@Override
+	@Deprecated
+	public void readFully(byte[] b, int off, int len) throws IOException {}
+	@Override
+	@Deprecated
+	public int skipBytes(int n) throws IOException {
+		in.skip(n);
+		return 0;
+	}
+	@Override
+	@Deprecated
+	public boolean readBoolean() throws IOException {
+		return (Boolean)readObject();
+	}
+	@Override
+	@Deprecated
+	public byte readByte() throws IOException {
+		return ((Number)readObject()).byteValue();
+	}
+	@Override
+	@Deprecated
+	public int readUnsignedByte() throws IOException {
+		return ((Number)readObject()).intValue();
+	}
+	@Override
+	@Deprecated
+	public short readShort() throws IOException {
+		return ((Number)readObject()).shortValue();
+	}
+	@Override
+	@Deprecated
+	public int readUnsignedShort() throws IOException {
+		return ((Number)readObject()).intValue();
+	}
+	@Override
+	@Deprecated
+	public char readChar() throws IOException {
+		return ((String)readObject()).charAt(0);
+	}
+	@Override
+	@Deprecated
+	public int readInt() throws IOException {
+		return ((Number)readObject()).intValue();
+	}
+	@Override
+	@Deprecated
+	public long readLong() throws IOException {
+		return ((Number)readObject()).longValue();
+	}
+	@Override
+	@Deprecated
+	public float readFloat() throws IOException {
+		return ((Number)readObject()).floatValue();
+	}
+	@Override
+	@Deprecated
+	public double readDouble() throws IOException {
+		return ((Number)readObject()).doubleValue();
+	}
+	@Override
+	@Deprecated
+	public String readLine() throws IOException {
+		return (String)readObject();
+	}
+	@Override
+	@Deprecated
+	public String readUTF() throws IOException {
+		return (String)readObject();
+	}
+	@Override
+	@Deprecated
+	public int read(byte[] b) throws IOException {
+		return -1;
+	}
+	@Override
+	@Deprecated
+	public int read(byte[] b, int off, int len) throws IOException {
+		return -1;
+	}
+	@Override
+	@Deprecated
+	public int available() throws IOException {
+		return -1;
 	}
 }

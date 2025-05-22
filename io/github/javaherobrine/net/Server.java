@@ -51,6 +51,14 @@ public class Server extends Thread implements Closeable{
 	public void close() throws IOException{
 		server.close();
 		handler.close();
+		synchronized(connected) {
+			connected.values().forEach(n->{
+				try {
+					n.send(new DisconnectEvent("server closed"));
+				} catch (IOException e) {}
+			});
+			connected.clear();
+		}
 	}
 	public void kick(String player) throws IOException {
 		kick(player,"You are kicked by the server");
@@ -86,32 +94,23 @@ public class Server extends Thread implements Closeable{
 		bl.enabled=enable;
 	}
 	public void appendWL(String path) throws IOException{
-		wh.append(GameUtils.ofFile(path));
+		wh.append(GameUtils.ofFile(new File(path)));
 	}
 	public void appendBL(String path) throws IOException{
-		bl.append(GameUtils.ofFile(path));
+		bl.append(GameUtils.ofFile(new File(path)));
 	}
 	public int connected() {
 		synchronized(connected) {
 			return connected.size();
 		}
 	}
-	private class ServerOutputStream extends OutputStream {//send to all
-		@Override
-		public void write(int b) throws IOException {//because they are SocketOutputStreams
-			write(new byte[] {(byte)b},0,1);
-		}
-		@Override
-		public void write(byte[] data,int off,int len) {
-			synchronized(connected) {
-				connected.values().stream().forEach(n->{
-					try {
-						n.client.getOutputStream().write(data,off,len);
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
-				});
-			}
+	public void sendAll(EventContent ec) throws IOException{
+		synchronized(connected) {
+			connected.values().forEach(n->{
+				try {
+					n.send(ec);
+				} catch (IOException e) {}
+			});
 		}
 	}
 }

@@ -5,6 +5,9 @@ public abstract class ModBase {
 	 * @param modid the id of the extension, loader will fill in this parameter.
 	 */
 	public abstract void load(int modid);
+	/**
+	 * Implement this function to allow unload
+	 */
 	public void unload() {}
 	public ModBase() {}
 }

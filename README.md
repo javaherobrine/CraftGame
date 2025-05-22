@@ -17,11 +17,11 @@
 - release it
 
 ## Libraries
-- [LWJGL 3]("https://www.lwjgl.org")
-- [CraftGame]("https://github.com/LovelyZeeiam/CraftGame")
-- [CraftGame TCP Library]("https://github.com/javaherobrine/craftgame-tcp-library")
+- <a href="https://www.lwjgl.org">LWJGL 3</a>
+- <a href="https://github.com/LovelyZeeiam/CraftGame">CraftGame</a>
+- <a href="https://github.com/javaherobrine/craftgame-tcp-library"> CraftGame TCP Library</a>
 - LovelyZeeiam/CraftGame's dependencies
 
 # See also
-- [CraftGame from LovelyZeeiam]("https://github.com/LovelyZeeiam/CraftGame")
-- [CraftGame from Java_Herobrine, with LovelyZeeiam's modifications]("https://github.com/LovelyZeeiam/JaroSideCraftGame")
+- <a href="https://github.com/LovelyZeeiam/CraftGame">CraftGame from LovelyZeeiam</a>
+- <a href="https://github.com/LovelyZeeiam/JaroSideCraftGame">CraftGame from Java_Herobrine, with LovelyZeeiam's modifications</a>

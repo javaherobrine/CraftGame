@@ -60,7 +60,7 @@ public class JarClassLoader extends URLClassLoader {
 		if(!valid()) {
 			return new String[0];
 		}
-		if(attr.containsKey("libraries")) {
+		if(!attr.containsKey("libraries")) {
 			return new String[0];
 		}else {
 			String str=attr.getValue("libraries");
@@ -77,7 +77,7 @@ public class JarClassLoader extends URLClassLoader {
 		}
 	}
 	public static JarClassLoader getLoaderFromFile(File f) throws MalformedURLException {
-		return new JarClassLoader(new URL("jar:"+f.toURI().toString()+"!/"));
+		return new JarClassLoader(f.toURI().toURL());
 	}
 	@SuppressWarnings("unchecked")
 	private Class<? extends ModBase> loadMainClass() {
