@@ -3,13 +3,13 @@
 - Merge this repository with LovelyZeeiam/CraftGame
 
 ### Finished
-- Network(C/S Framework, based on craftgame-tcp library and Java Object Stream)
+- Network(C/S Framework, based on craftgame-tcp library, needed to be debugged)
 - Mods Loader(Needed to be debugged)
 
 ### Current task:Merging code
 
 ### Doing
-- Network(JSON Implementation)
+- Merging code
 - Learning LWJGL
 
 ### Plan to do

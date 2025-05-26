@@ -17,6 +17,9 @@ public class EventHandler extends Thread implements Closeable{
 		}
 	}
 	public void push(EventContent c) throws InterruptedException{
+		if(c==null) {
+			return;
+		}
 		if(disconnected) {
 			throw new IllegalStateException("");
 		}

@@ -37,6 +37,7 @@ public class ServerSideClient extends Client{
 		client.getOutputStream().write((protocol.getName()+'\n').getBytes());
 		return client.getInputStream().read()==1;
 	}
+	@SuppressWarnings("resource")
 	@Override
 	public void run() {
 		while(!disconnected) {
