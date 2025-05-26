@@ -1,7 +1,13 @@
 package io.github.javaherobrine.net.event;
 import io.github.javaherobrine.net.*;
+import io.github.javaherobrine.*;
 import java.io.*;
-public class DisconnectEvent extends EventContent{
+import java.util.AbstractMap.SimpleEntry;
+import java.util.Map;
+public class DisconnectEvent extends EventContent{;
+	static {
+		TrieNode.REGISTRY.put(DisconnectEvent.class.getName(), new DisconnectEvent(""));
+	}
 	private static final long serialVersionUID = 1;
 	String message;
 	/**
@@ -25,5 +31,18 @@ public class DisconnectEvent extends EventContent{
 	}
 	public DisconnectEvent(String msg) {
 		message=msg;
+	}
+	@SuppressWarnings("unchecked")
+	@Override
+	public SimpleEntry<String, Object>[] values() {
+		return new SimpleEntry[] {new SimpleEntry<String,Object>("message",message)};
+	}
+	@Override
+	public void valueOf(Map<String, Object> input) {
+		message=(String)input.get("message");
+	}
+	@Override
+	public EventContent clone() {
+		return new DisconnectEvent("");
 	}
 }

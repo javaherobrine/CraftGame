@@ -1,7 +1,9 @@
 package io.github.javaherobrine;
+import java.io.*;
 public class TrieNode {
 	private TrieNode[] linkto=new TrieNode[256];
 	private Object obj=null;
+	public static final TrieNode REGISTRY=new TrieNode();
 	public Object access(String str) {
 		char[] ch=str.toCharArray();
 		TrieNode current=this;
@@ -23,5 +25,26 @@ public class TrieNode {
 			current=current.linkto[ch[i]];
 		}
 		current.obj=o;
+	}
+	public Object access(InputStream in,int split) throws IOException{
+		boolean end=true;
+		TrieNode node=this;
+		Object res=null;
+		int ch=in.read();
+		while(ch!=split) {
+			node=node.linkto[ch];
+			if(node==null) {
+				end=false;
+				break;
+			}
+			ch=in.read();
+		}
+		if(end) {
+			res=node.obj;
+		}
+		while(ch!=split) {
+			ch=in.read();
+		}
+		return res;
 	}
 }

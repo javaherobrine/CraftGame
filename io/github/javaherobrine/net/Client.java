@@ -1,23 +1,32 @@
 package io.github.javaherobrine.net;
 import java.net.*;
+import io.github.javaherobrine.*;
 import io.github.javaherobrine.net.event.*;
 import java.io.*;
 public class Client extends Thread implements Closeable{
 	protected Socket client;
-	private ObjectInputStream in;
-	private ObjectOutputStream out;
+	protected Protocol protocol;
 	protected boolean disconnected=false;
+	@SuppressWarnings("resource")
 	public Client(String host,int port) throws IOException {
 		client=new Socket(host,port);
-		in=new ObjectInputStream(client.getInputStream());
-		out=new ObjectOutputStream(client.getOutputStream());
+		//switch protocol
+		boolean unaccepted=true;
+		while(unaccepted) {
+			Protocol p=(Protocol) TrieNode.REGISTRY.access(client.getInputStream(),'\n');
+			if(p!=null) {
+				client.getOutputStream().write(1);
+				protocol=p;
+				break;
+			}
+			client.getOutputStream().write(0);
+		}
+		//handshake
 		send(LoginEvent.getInstance());
 		start();
 	}
 	protected Client(Socket ac) throws IOException {//used in server
 		client=ac;
-		in=new ObjectInputStream(client.getInputStream());
-		out=new ObjectOutputStream(client.getOutputStream());
 	}
 	@Override
 	public void run() {
@@ -38,17 +47,14 @@ public class Client extends Thread implements Closeable{
 		}
 	}
 	public void send(EventContent c) throws IOException {
-		out.writeObject(c);
+		protocol.send(c);
 	}
 	protected EventContent recv() throws IOException{
-		try {
-			return (EventContent)in.readObject();
-		} catch (ClassNotFoundException e) {
-			throw new IOException(e);
-		}
+		return protocol.next();
 	}
 	@Override
 	public void close() throws IOException {
+		disconnected=true;
 		send(new DisconnectEvent("disconnect"));
 		client.close();
 	}
