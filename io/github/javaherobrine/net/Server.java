@@ -20,20 +20,32 @@ public class Server extends Thread implements Closeable{
 			return connected.remove(name);
 		}
 	}
+	@SuppressWarnings("resource")
 	public void accept() throws IOException {
 		ServerSideClient c=new ServerSideClient(server.accept(),this,handler);
+		if(c.protocol instanceof Protocol.NullProtocol) {
+			c.close();//bad protocol
+			return;
+		}
+		//verification
 		LoginEvent init=(LoginEvent)c.recv();
 		if(!wh.check(init.player)) {
 			c.send(new DisconnectEvent("Not allowed"));
 			c.close();
+			return;
 		}
 		if(!bl.check(init.player)) {
 			c.send(new DisconnectEvent("Banned"));
 			c.close();
+			return;
 		}
 		if(!init.sync.equals(LoginEvent.getInstance().sync)) {
 			c.send(new DisconnectEvent("Some loaded mods are different from the server"));
 			c.close();
+			return;
+		}
+		synchronized(connected) {
+			connected.put(init.player, c);
 		}
 		c.start();
 	}

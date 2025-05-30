@@ -8,7 +8,7 @@ public class DisconnectEvent extends EventContent{;
 	static {
 		TrieNode.REGISTRY.put(DisconnectEvent.class.getName(), new DisconnectEvent(""));
 	}
-	private static final long serialVersionUID = 1;
+	private static final long serialVersionUID = 1L;
 	String message;
 	/**
 	 * to disconnect correctly

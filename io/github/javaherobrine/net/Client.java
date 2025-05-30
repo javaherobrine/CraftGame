@@ -21,6 +21,9 @@ public class Client extends Thread implements Closeable{
 			}
 			client.getOutputStream().write(0);
 		}
+		if(protocol instanceof Protocol.NullProtocol) {
+			throw new SocketException("Protocol not supported");
+		}
 		//handshake
 		send(LoginEvent.getInstance());
 		start();

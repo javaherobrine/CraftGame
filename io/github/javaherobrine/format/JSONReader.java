@@ -7,7 +7,7 @@ import java.math.*;
  * <br />
  * please don't call deprecated functions, their implementations are wrong
  */
-public class JSONReader extends FilterReader implements ObjectInput{
+public class JSONReader extends BufferedReader implements ObjectInput{
 	private int unread=' ';
 	public JSONReader(Reader in) {
 		super(in);
@@ -16,17 +16,24 @@ public class JSONReader extends FilterReader implements ObjectInput{
 		this(new BufferedReader(new InputStreamReader(in)));
 	}
 	@Override
-	public synchronized int read() throws IOException {
-		while(unread!=-1&&Character.isWhitespace(unread)) {
-			unread=in.read();
+	public int read() throws IOException{
+		if(unread!=-2) {
+			int r=unread;
+			unread=-2;
+			return r;
 		}
-		int ch=unread;
-		unread=' ';
-		return ch;
+		return super.read();
+	}
+	public synchronized int read0() throws IOException {
+		char c=' ';
+		while(c!=-1&&Character.isWhitespace(c)) {
+			c=(char)read();
+		}
+		return c;
 	}
 	@Override
 	public synchronized Object readObject() throws IOException{
-		char ch=(char) read();
+		char ch=(char) read0();
 		Object value=null;
 		if(Character.isDigit(ch)||ch=='.'||ch=='+'||ch=='-') {
 			value=nextNumber(ch);
@@ -35,14 +42,14 @@ public class JSONReader extends FilterReader implements ObjectInput{
 		}else if(ch=='[') {
 			value=nextArray();
 		}else if(ch=='t') {
-			in.skip(3);
+			skip(3);
 			value=true;
 		}else if(ch=='f') {
-			in.skip(4);
+			skip(4);
 			value=false;
 		}else if(ch=='n') {
 			value=null;
-			in.skip(3);
+			skip(3);
 		}else if(ch=='\''||ch=='\"') {
 			value=nextString(ch);
 		}
@@ -51,14 +58,14 @@ public class JSONReader extends FilterReader implements ObjectInput{
 	public synchronized String nextString(char end) throws IOException{
 		StringBuilder sb=new StringBuilder();
 		boolean n=false;
-		char ch=(char)in.read();
+		char ch=(char)read();
 		while(ch!=end||n) {
 			n=false;
 			if(ch=='\\') {
 				n=true;
 			}
 			sb.append(ch);
-			ch=(char)in.read();
+			ch=(char)read();
 		}
 		return sb.toString().translateEscapes();
 	}
@@ -66,15 +73,15 @@ public class JSONReader extends FilterReader implements ObjectInput{
 		int factor=1;
 		if(first=='-'){
 			factor=-1;
-			first=(char)in.read();
+			first=(char)read();
 		}else if(first=='+') {
-			first=(char)in.read();
+			first=(char)read();
 		}
 		if(first=='N') {
-			in.skip(2);
+			skip(2);
 			return factor*Double.NaN;
 		}else if(first=='I') {
-			in.skip(7);
+			skip(7);
 			return factor*Double.POSITIVE_INFINITY;
 		}else {
 			boolean decimal=false;
@@ -84,7 +91,7 @@ public class JSONReader extends FilterReader implements ObjectInput{
 					decimal=true;
 				}
 				input.append(first);
-				first=(char)in.read();
+				first=(char)read();
 			}
 			unread=first;
 			if(decimal) {
@@ -99,10 +106,10 @@ public class JSONReader extends FilterReader implements ObjectInput{
 		char ch=' ';
 		while(true) {
 			if(ch==',') {
-				ch=(char)read();
+				ch=(char)read0();
 				continue;
 			}
-			ch=(char) read();
+			ch=(char) read0();
 			if(ch==']') {
 				break;
 			}
@@ -115,14 +122,14 @@ public class JSONReader extends FilterReader implements ObjectInput{
 			}else if(ch=='[') {
 				value=nextArray();
 			}else if(ch=='t') {
-				in.skip(3);
+				skip(3);
 				value=true;
 			}else if(ch=='f') {
-				in.skip(4);
+				skip(4);
 				value=false;
 			}else if(ch=='n') {
 				value=null;
-				in.skip(3);
+				skip(3);
 			}else if(ch=='\''||ch=='\"') {
 				value=nextString(ch);
 			}
@@ -132,15 +139,15 @@ public class JSONReader extends FilterReader implements ObjectInput{
 	}
 	public synchronized HashMap<String,Object> nextObject() throws IOException{
 		HashMap<String,Object> res=new HashMap<>();
-		char ch=(char)read();
+		char ch=(char)read0();
 		while(ch!='}') {
 			if(ch==',') {
-				ch=(char)read();
+				ch=(char)read0();
 				continue;
 			}
 			String str=nextString(ch);//key
-			read();//:
-			ch=(char) read();
+			read0();//:
+			ch=(char) read0();
 			Object value=null;
 			if(Character.isDigit(ch)||ch=='.'||ch=='+'||ch=='-') {
 				value=nextNumber(ch);
@@ -149,19 +156,19 @@ public class JSONReader extends FilterReader implements ObjectInput{
 			}else if(ch=='[') {
 				value=nextArray();
 			}else if(ch=='t') {
-				in.skip(3);
+				skip(3);
 				value=true;
 			}else if(ch=='f') {
-				in.skip(4);
+				skip(4);
 				value=false;
 			}else if(ch=='n') {
 				value=null;
-				in.skip(3);
+				skip(3);
 			}else if(ch=='\''||ch=='\"') {
 				value=nextString(ch);
 			}
 			res.put(str, value);
-			ch=(char) read();
+			ch=(char) read0();
 		}
 		return res;
 	}
@@ -174,7 +181,7 @@ public class JSONReader extends FilterReader implements ObjectInput{
 	@Override
 	@Deprecated
 	public int skipBytes(int n) throws IOException {
-		in.skip(n);
+		skip(n);
 		return 0;
 	}
 	@Override

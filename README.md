@@ -9,6 +9,7 @@
 ### Current task:Merging code
 
 ### Doing
+- Some specific network implementations
 - Merging code
 - Learning LWJGL
 

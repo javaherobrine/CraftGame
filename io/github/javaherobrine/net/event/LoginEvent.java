@@ -8,7 +8,7 @@ public class LoginEvent extends EventContent{
 	static {
 		TrieNode.REGISTRY.put(LoginEvent.class.getName(), new LoginEvent());
 	}
-	private static final long serialVersionUID=1;
+	private static final long serialVersionUID=1L;
 	private static LoginEvent instance=null;
 	public String player;
 	public HashSet<String> sync=new HashSet<>();

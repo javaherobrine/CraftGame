@@ -3,6 +3,7 @@ import java.util.ArrayList;
 public class Dimension {
 	public static final ArrayList<Dimension> ALL_DIMENSIONS=new ArrayList<>();
 	public static final int INDEX=0;
+	public static int current=-1;
 	private int id;
 	private Dimension() {}
 	public static Dimension createDimension() {
