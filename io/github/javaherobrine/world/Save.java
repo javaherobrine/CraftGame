@@ -9,6 +9,9 @@ public class Save {
 	}
 	public Chunk readChunk(int dimension,int x,int y) throws IOException{
 		File f=new File(saveFolder+"/chunks/"+dimension+"-"+x+","+y+".dat");
+		if(!f.exists()) {
+			return null;
+		}
 		BufferedReader reader=new BufferedReader(new FileReader(f));
 		Chunk chk=new Chunk();
 		int ch=reader.read();

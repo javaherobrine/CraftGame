@@ -30,9 +30,10 @@ public class ChunkLoadEvent extends EventContent{
 	@Override
 	public void recvExec(boolean serverside) throws Exception {
 		if(serverside) {
-			chk=ChunkManager.manager.getChunk(dimension, x, y);
+			chk=ChunkManager.manager.getChunk(x, y);
 			recver.send(this);
 		}else {
+			ChunkManager.manager.changeDimension(dimension);
 			ChunkManager.manager.loadChunk(x,y,chk);
 		}
 	}
