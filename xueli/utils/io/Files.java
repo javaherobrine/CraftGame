@@ -22,8 +22,8 @@ import javax.imageio.ImageIO;
 
 import org.lwjgl.BufferUtils;
 
-import io.github.javaherobrine.LinkedListSplicer;
 import io.github.javaherobrine.GameUtils;
+import io.github.javaherobrine.experimental.LinkedListSplicer;
 
 public final class Files {//modification: make this class final in hope of more inlining (efficiency)
 
