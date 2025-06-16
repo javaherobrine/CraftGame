@@ -24,6 +24,8 @@ public class DisconnectEvent extends EventContent{;
 			//do nothing,because the client is closed
 		}
 		if(serverside) {
+			//do some finalization
+			
 			System.out.println("[INFO] A Player Disconnected");
 		}else {
 			System.err.println("[INFO] "+message);

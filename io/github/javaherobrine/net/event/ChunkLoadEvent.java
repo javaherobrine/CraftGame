@@ -7,6 +7,7 @@ import io.github.javaherobrine.net.*;
 public class ChunkLoadEvent extends EventContent{
 	private static final long serialVersionUID = 1L;
 	public Chunk chk=null;
+	public boolean unload=false;
 	public int dimension;
 	public int x;
 	public int y;

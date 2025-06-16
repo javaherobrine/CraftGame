@@ -4,6 +4,7 @@ import io.github.javaherobrine.*;
 public sealed abstract class ChunkManager permits LocalChunkManager, NetworkChunkManager{
 	protected HashMap<Int2Pair,Chunk> loaded;
 	protected int dimension=-1;
+	
 	public Chunk unload(int x,int y) {
 		return loaded.remove(new Int2Pair(x,y));
 	}

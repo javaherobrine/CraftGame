@@ -1,21 +1,16 @@
 # CraftGame, a free software, published under GNU AGPL v3.0 license
-## Tasks
+## Current Tasks
 - Merge this repository with LovelyZeeiam/CraftGame
 
-### Finished
-- Network(C/S Framework, based on craftgame-tcp library, needed to be debugged)
-- Mods Loader(Needed to be debugged)
-
-### Current task:Merging code
-
-### Doing
-- Some specific network implementations
-- Merging code
-- Learning LWJGL
-
-### Plan to do
-- Develop GUI with LWJGL
-- release it
+## Progress: 
+- [x] Network: C/S Framework, based on craftgame-tcp
+- [x] Mods: Loader
+- [x] Chunks: local chunks management
+- [ ] Network: Specific implementations
+- [ ] Data Structure: linked list splicer (LovelyZeeiam/CraftGame/pull/2)
+- [ ] Merge code(LovelyZeeiam/CraftGame/pull/2)
+- [ ] Mods: Interface
+- [ ] Chunks: network chunks management
 
 ## Libraries
 - <a href="https://www.lwjgl.org">LWJGL 3</a>

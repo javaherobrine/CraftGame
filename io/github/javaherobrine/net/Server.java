@@ -4,14 +4,14 @@ import java.net.*;
 import java.util.*;
 import io.github.javaherobrine.net.verify.*;
 import io.github.javaherobrine.net.event.*;
-import io.github.javaherobrine.*;
+import io.github.javaherobrine.world.*;
 public class Server extends Thread implements Closeable{
 	private ServerSocket server;
-	private WhiteList wh=new WhiteList();
-	private Blacklist bl=new Blacklist();
 	private Map<String,ServerSideClient> connected=new HashMap<String,ServerSideClient>();
+	public static final ArrayList<PlayerChecker> CHECKERS=new ArrayList<>();
 	EventHandler handler=new EventHandler();
 	public Server(int port) throws IOException {
+		ChunkManager.manager=new ServerChunkManager((LocalChunkManager)ChunkManager.manager,this);
 		server=new ServerSocket(port);
 		start();
 	}
@@ -29,15 +29,11 @@ public class Server extends Thread implements Closeable{
 		}
 		//verification
 		LoginEvent init=(LoginEvent)c.recv();
-		if(!wh.check(init.player)) {
-			c.send(new DisconnectEvent("Not allowed"));
-			c.close();
-			return;
-		}
-		if(!bl.check(init.player)) {
-			c.send(new DisconnectEvent("Banned"));
-			c.close();
-			return;
+		for(PlayerChecker checker:CHECKERS) {
+			if(checker.enabled&&checker.check(init.player)) {
+				c.send(new DisconnectEvent("Refused"));
+				return;
+			}
 		}
 		if(!init.sync.equals(LoginEvent.getInstance().sync)) {
 			c.send(new DisconnectEvent("Some loaded mods are different from the server"));
@@ -85,31 +81,6 @@ public class Server extends Thread implements Closeable{
 		synchronized(connected) {
 			return connected.get(player);
 		}
-	}
-	public void ban(String player) throws IOException{
-		ban(player,Long.MAX_VALUE);
-	}
-	public void ban(String player,long time) throws IOException {
-		bl.ban(player,time);
-		kick(player,"You are banned for "+time+" seconds");
-	}
-	public void permit(String player) {
-		wh.add(player);
-	}
-	public void unban(String player) {
-		bl.unban(player);
-	}
-	public void setWhiteList(boolean enable) {
-		wh.enabled=enable;
-	}
-	public void setBlackList(boolean enable) {
-		bl.enabled=enable;
-	}
-	public void appendWL(String path) throws IOException{
-		wh.append(GameUtils.ofFile(new File(path)));
-	}
-	public void appendBL(String path) throws IOException{
-		bl.append(GameUtils.ofFile(new File(path)));
 	}
 	public int connected() {
 		synchronized(connected) {
