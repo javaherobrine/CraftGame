@@ -3,6 +3,9 @@ package io.github.javaherobrine.experimental;
 import java.util.LinkedList;
 import sun.misc.Unsafe;
 import java.lang.reflect.Field;
+import java.lang.invoke.MethodHandles;
+import java.lang.invoke.VarHandle;
+import static java.lang.invoke.MethodHandles.Lookup;
 
 /**
  * Oops, java.util.LinkedList doesn't support splice() <br />
@@ -15,11 +18,11 @@ import java.lang.reflect.Field;
  */
 public final class LinkedListSplicer {
 	/**
-	 * JNI Implementation
+	 * JNI implementation
 	 * @param l1
 	 * @param l2
 	 */
-	public static void splice0(LinkedList<?> l1,LinkedList<?> l2) {
+	public static <T> void splice0(LinkedList<T> l1,LinkedList<T> l2) {
 		if(l2==null) {
 			return;
 		}
@@ -78,7 +81,8 @@ public final class LinkedListSplicer {
 
 	/**
 	 * equivalent to l1.splice(l2) if LinkedList supports splice <br />
-	 * and l2 will be cleared
+	 * and l2 will be cleared <br />
+	 * Unsafe implementation
 	 * 
 	 * @param <T> type
 	 * @param l1  the first linked list
@@ -103,5 +107,57 @@ public final class LinkedListSplicer {
 		UNSAFE.getAndSetObject(l2, LINKEDLIST_TAIL, null);
 		UNSAFE.getAndSetInt(l1, LINKEDLIST_SIZE,
 				UNSAFE.getInt(l1, LINKEDLIST_SIZE) + UNSAFE.getAndSetInt(l2, LINKEDLIST_SIZE, 0));
+	}
+	/**
+	 * discard this optimization
+	 * @param <T>
+	 * @param l1
+	 * @param l2
+	 */
+	public static <T> void splice1(LinkedList<T> l1,LinkedList<T> l2) {
+		l1.addAll(l2);
+		l2.clear();
+	}
+	/**
+	 * your implementation
+	 * @param <T>
+	 * @param l1
+	 * @param l2
+	 */
+	public static <T> void splice2(LinkedList<T> l1,LinkedList<T> l2) {
+		//TODO let LovelyZeeiam implement this method
+	}
+	/**
+	 * VarHandle implementation(reflection)
+	 * @param <T>
+	 * @param l1
+	 * @param l2
+	 * @throws IllegalAccessException where parameter <code>--add-opens</code> works
+	 * @throws NoSuchFieldException
+	 */
+	public static <T> void splice3(LinkedList<T> l1,LinkedList<T> l2) throws IllegalAccessException, NoSuchFieldException {
+		if(l2==null||l2.isEmpty()) {
+			return;
+		}
+		if(l1==null||l1.isEmpty()) {
+			l1=l2;
+			return;
+		}
+		Lookup lookup=MethodHandles.lookup();
+		Lookup priv=MethodHandles.privateLookupIn(LIST, lookup);
+		VarHandle head=priv.findVarHandle(LIST, "first", NODE);
+		VarHandle tail=priv.findVarHandle(LIST, "last", NODE);
+		VarHandle size=priv.findVarHandle(LIST, "size", int.class);
+		Lookup priv0=MethodHandles.privateLookupIn(NODE, lookup);
+		VarHandle prev=priv0.findVarHandle(NODE, "prev", NODE);
+		VarHandle next=priv0.findVarHandle(NODE, "next", NODE);
+		Object h=head.get(l2);
+		Object t=tail.get(l1);
+		prev.set(h,t);
+		next.set(t,h);
+		head.set(l2,null);
+		tail.set(l2,null);
+		size.set(l1,(int)size.get(l1)+(int)size.get(l2));
+		size.set(l2,0);
 	}
 }
