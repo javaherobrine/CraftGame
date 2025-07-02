@@ -9,12 +9,12 @@ public final class NetworkChunkManager extends ChunkManager{
 		connection=c;
 	}
 	@Override
-	public Chunk getUnloadedChunk(int x, int y) {
+	public Chunk getUnloadedChunk(int dimension,int x, int y) {
 		ChunkLoadEvent e=new ChunkLoadEvent();
 		e.dimension=dimension;
 		e.x=x;
 		e.y=y;
-		Int2Pair pair=new Int2Pair(x,y);
+		Int3Pair pair=new Int3Pair(dimension,x,y);
 		try {
 			connection.send(e);
 			while((!Thread.interrupted())&&loaded.get(pair)==null) {}

@@ -2,11 +2,13 @@ package io.github.javaherobrine.net;
 import java.net.*;
 import java.util.*;
 import io.github.javaherobrine.*;
+import io.github.javaherobrine.world.*;
 import java.io.*;
 public final class ServerSideClient extends Client{
 	private EventHandler handler;
 	public String player;
 	protected Server s;
+	public HashSet<Int3Pair> loaded=new HashSet<>();
 	protected ServerSideClient(Socket sc,Server server,EventHandler handle) throws IOException {
 		super(sc);
 		s=server;
@@ -54,5 +56,10 @@ public final class ServerSideClient extends Client{
 	public void close() throws IOException{
 		disconnected=true;
 		client.close();
+		ServerChunkManager scm=(ServerChunkManager) ChunkManager.manager;
+		loaded.stream().forEach(pair->{
+			scm.unload(pair.x(),pair.y(),pair.z());
+		});
+		loaded.clear();
 	}
 }

@@ -4,6 +4,7 @@ import java.util.*;
 import java.math.*;
 import io.github.javaherobrine.world.*;
 import io.github.javaherobrine.net.*;
+import io.github.javaherobrine.*;
 public class ChunkLoadEvent extends EventContent{
 	private static final long serialVersionUID = 1L;
 	public Chunk chk=null;
@@ -31,8 +32,16 @@ public class ChunkLoadEvent extends EventContent{
 	@Override
 	public void recvExec(boolean serverside) throws Exception {
 		if(serverside) {
-			chk=ChunkManager.manager.getChunk(x, y);
-			recver.send(this);
+			ServerChunkManager scm=(ServerChunkManager) ChunkManager.manager;
+			ServerSideClient recv=(ServerSideClient) recver;
+			if(unload) {
+				scm.unload(dimension, x, y);
+				recv.loaded.remove(new Int3Pair(dimension,x,y));
+				return;
+			}
+			recv.loaded.add(new Int3Pair(dimension,x,y));
+			chk=scm.load(dimension, x, y);
+			recv.send(this);
 		}else {
 			ChunkManager.manager.changeDimension(dimension);
 			ChunkManager.manager.loadChunk(x,y,chk);

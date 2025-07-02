@@ -166,6 +166,9 @@ public final class JSONFormatter {
 		return sb.deleteCharAt(sb.length()-1).append(']').toString();
 	}
 	static String format(Object obj) {
+		if(obj==null) {
+			return "null";
+		}
 		if(obj instanceof JSONSerializable) {
 			return format((JSONSerializable) obj);
 		}else if(obj instanceof Number) {
@@ -197,11 +200,14 @@ public final class JSONFormatter {
 		}
 	}
 	public static String format(JSONSerializable obj) {
-		StringBuilder sb=new StringBuilder("{");
+		if(obj==null) {
+			return "{}";
+		}
 		AbstractMap.SimpleEntry<String,Object>[] values=obj.values();
 		if(values.length==0) {
 			return "{}";
 		}
+		StringBuilder sb=new StringBuilder("{");
 		for(int i=0;i<values.length;i++) {
 			AbstractMap.SimpleEntry<String,Object> current=values[i];
 			sb.append(format(current.getKey())).append(':').append(format(current.getValue())).append(',');

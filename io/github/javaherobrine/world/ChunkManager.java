@@ -2,21 +2,15 @@ package io.github.javaherobrine.world;
 import java.util.*;
 import io.github.javaherobrine.*;
 public sealed abstract class ChunkManager permits LocalChunkManager, NetworkChunkManager{
-	protected HashMap<Int2Pair,Chunk> loaded;
+	public HashMap<Int3Pair,Chunk> loaded;
 	protected int dimension=-1;
-	
 	public Chunk unload(int x,int y) {
-		return loaded.remove(new Int2Pair(x,y));
+		return loaded.remove(new Int3Pair(dimension,x,y));
 	}
 	public Chunk getChunk(int x,int y) {
-		Chunk c=loaded.get(new Int2Pair(x,y));
-		if(c==null) {
-			c=getUnloadedChunk(x,y);
-			loadChunk(x,y,c);
-		}
-		return c;
+		return loaded.computeIfAbsent(new Int3Pair(dimension,x,y), k->getUnloadedChunk(dimension,x,y));
 	}
-	public abstract Chunk getUnloadedChunk(int x,int y);
+	public abstract Chunk getUnloadedChunk(int dimension,int x,int y);
 	public void changeDimension(int d) {
 		if(d==dimension) {
 			return;
@@ -26,7 +20,7 @@ public sealed abstract class ChunkManager permits LocalChunkManager, NetworkChun
 	}
 	public void loadChunk(int x,int y,Chunk chk) {
 		if(chk!=null) {
-			loaded.put(new Int2Pair(x,y), chk);
+			loaded.put(new Int3Pair(dimension,x,y), chk);
 		}
 	}
 	public static ChunkManager manager;
