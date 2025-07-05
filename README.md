@@ -5,12 +5,12 @@
 ## Progress: 
 - [x] Network: C/S Framework, based on craftgame-tcp
 - [x] Mods: Loader
-- [x] Chunks: local chunks management
+- [x] Chunks: Chunks management
+- [ ] Chunks: Chunks generator
 - [ ] Network: Specific implementations
 - [ ] Data Structure: linked list splicer (LovelyZeeiam/CraftGame/pull/2)
 - [ ] Merge code(LovelyZeeiam/CraftGame/pull/2)
 - [ ] Mods: Interface
-- [ ] Chunks: network chunks management
 
 ## Libraries
 - <a href="https://www.lwjgl.org">LWJGL 3</a>

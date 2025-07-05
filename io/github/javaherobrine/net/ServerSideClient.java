@@ -7,7 +7,7 @@ import java.io.*;
 public final class ServerSideClient extends Client{
 	private EventHandler handler;
 	public String player;
-	protected Server s;
+	public Server s;
 	public HashSet<Int3Pair> loaded=new HashSet<>();
 	protected ServerSideClient(Socket sc,Server server,EventHandler handle) throws IOException {
 		super(sc);
