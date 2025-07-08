@@ -1,5 +1,6 @@
 package io.github.javaherobrine;
 import java.io.*;
+import xueli.registry.*;
 public class TrieNode {
 	private TrieNode[] linkto=new TrieNode[256];
 	private Object obj=null;
@@ -46,5 +47,11 @@ public class TrieNode {
 			ch=in.read();
 		}
 		return res;
+	}
+	public void put(Identifier i,Object o) {
+	    put(i.toString(),o);
+	}
+	public Object access(Identifier i) {
+	    return access(i.toString());
 	}
 }

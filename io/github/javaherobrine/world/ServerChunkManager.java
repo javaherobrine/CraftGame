@@ -1,6 +1,7 @@
 package io.github.javaherobrine.world;
 import io.github.javaherobrine.net.*;
 import io.github.javaherobrine.*;
+import java.io.IOException;
 import java.util.*;
 public final class ServerChunkManager extends LocalChunkManager{
 	public final Server server;
@@ -12,6 +13,9 @@ public final class ServerChunkManager extends LocalChunkManager{
 	public ServerChunkManager(LocalChunkManager localChunkManager, Server server2) {
 		this(localChunkManager.sav,server2);
 		loaded=localChunkManager.loaded;
+		loaded.keySet().forEach(key->{
+		    count.put(key, 1);
+		});
 	}
 	public void unload(int dimension,int x,int y) {
 		Int3Pair pair=new Int3Pair(dimension,x,y);
@@ -21,7 +25,11 @@ public final class ServerChunkManager extends LocalChunkManager{
 			}
 			--v;
 			if(v==0) {
-				loaded.remove(pair);
+				try {
+				    sav.writeChunk(loaded.remove(pair),dimension,x,y);
+				} catch (IOException e) {
+				    throw new Error(e);
+				}
 				return null;
 			}
 			return v;

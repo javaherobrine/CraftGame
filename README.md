@@ -15,7 +15,7 @@
 ## Libraries
 - <a href="https://www.lwjgl.org">LWJGL 3</a>
 - <a href="https://github.com/LovelyZeeiam/CraftGame">CraftGame</a>
-- <a href="https://github.com/javaherobrine/craftgame-tcp-library"> CraftGame TCP Library</a>
+- <a href="https://github.com/javaherobrine/craftgame-tcp-library">CraftGame TCP Library</a>
 - LovelyZeeiam/CraftGame's dependencies
 
 # See also

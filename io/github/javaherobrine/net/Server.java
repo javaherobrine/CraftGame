@@ -63,6 +63,7 @@ public class Server extends Thread implements Closeable{
 			connected.values().forEach(n->{
 				try {
 					n.send(new DisconnectEvent("server closed"));
+					n.close();
 				} catch (IOException e) {}
 			});
 			connected.clear();
