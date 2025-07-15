@@ -9,17 +9,16 @@ import io.github.javaherobrine.net.event.*;
 public class DependenceDAG {
 	private static final Map<String,GraphNode> LOADED_MODS=new HashMap<>();
 	public static GraphNode getNodeByID(String ID) {
-		if(!LOADED_MODS.containsKey(ID)) {
-			LOADED_MODS.put(ID,new GraphNode());
-		}
-		return LOADED_MODS.get(ID);
+		return LOADED_MODS.computeIfAbsent(ID, N->{
+		    return new GraphNode();
+		});
 	}
 	/**
 	 * Node for building DAG
 	 * Each node represents a mod
 	 */
-	protected static class GraphNode{
-		JarClassLoader info;
+	public static class GraphNode{
+		JarClassLoader info=null;
 		ArrayList<GraphNode> linkto=new ArrayList<GraphNode>();
 		ArrayList<GraphNode> linkfrom=new ArrayList<GraphNode>();
 		int indegree=0;
@@ -76,6 +75,12 @@ public class DependenceDAG {
 			Iterator<GraphNode> iter=order.iterator();
 			while(iter.hasNext()) {
 				GraphNode node=iter.next();
+				if(node.info==null) {
+				    ModLoader.crush("Some dependencies are missing");
+				}
+				if(!node.info.valid()) {
+				    ModLoader.crush("Some mods are corrupted");
+				}
 				if(node.info.getSCSync()) {
 					LoginEvent.getInstance().sync.add(node.info.getID());
 				}
@@ -84,7 +89,7 @@ public class DependenceDAG {
 						continue;
 					}
 					if(node.linkto.get(i).indegree!=0) {
-						ModLoader.crush("dependency relations formed a circle");//circle
+						ModLoader.crush("Not a DAG");//circle
 					}
 				}
 			}

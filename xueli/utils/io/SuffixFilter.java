@@ -13,7 +13,10 @@ public class SuffixFilter implements FileFilter {//modification: preprocess the 
 	 * @author LovelyZeeiam
 	 */
 	public SuffixFilter(String suffix) {
-		this.suffix = "." + suffix;
+	   if(suffix.equals(""))
+	      this.suffix = "";
+	   else
+			this.suffix = "." + suffix;
 	}
 
 	@Override

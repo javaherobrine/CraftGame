@@ -2,10 +2,44 @@ package io.github.javaherobrine.world;
 import java.io.*;
 import io.github.javaherobrine.blocks.*;
 import io.github.javaherobrine.*;
+import io.github.javaherobrine.net.event.*;
+import io.github.javaherobrine.modloader.*;
+import java.util.*;
 public class Save {
 	private String saveFolder;
-	public Save(File input) {
+	public Save(File input) throws IOException {
 		saveFolder=input.getAbsolutePath();
+		File mods=new File(saveFolder+"/loaded_mods.list");
+		if(mods.exists()) {
+			BufferedReader br=new BufferedReader(new FileReader(mods));
+			ArrayList<String> notLoaded=new ArrayList<>();
+			String str=null;
+			while((str=br.readLine())!=null) {
+			   if(str.equals("")) {
+					continue;
+			   }
+				if(!ModLoader.loaded.contains(str)) {
+        			notLoaded.add(str);
+				}
+			}
+			br.close();
+			if(!notLoaded.isEmpty()) {
+			    StringBuilder sb=new StringBuilder();
+			    notLoaded.forEach(s->{
+					sb.append(s);
+					sb.append('\n');
+			    });
+			    String res=sb.toString();
+			    System.err.println("[WARNING] missing mods:"+res);
+			    //TODO show warnings
+			}
+		}
+		BufferedWriter bw=new BufferedWriter(new FileWriter(mods));
+		for(String str:LoginEvent.getInstance().sync) {
+		    bw.write(str);
+		    bw.newLine();
+		}
+		bw.close();
 	}
 	public Chunk readChunk(int dimension,int x,int y) throws IOException{
 		File f=new File(saveFolder+"/chunks/"+dimension+"-"+x+","+y+".dat");

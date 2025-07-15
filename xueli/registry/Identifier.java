@@ -6,7 +6,7 @@ public record Identifier(String namespace, String location) {
 		this("default", location);
 	}
 
-	public static Identifier serialize(String str) {
+	public static Identifier serialize(String str) {//actually deserialize
 		str = str.trim();
 		int separatorIndex = str.indexOf(':');
 		if (separatorIndex < 0) {

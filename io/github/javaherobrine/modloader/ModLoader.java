@@ -22,7 +22,7 @@ public class ModLoader {
 				loaded.add(str);
 			}else {
 				for(File f0:f.listFiles(f1->{
-					return f1.isDirectory()||f.toString().endsWith(".jar");
+					return f1.isDirectory()||f1.toString().endsWith(".jar");
 				})) {
 					loadModsFrom(f0);
 				}

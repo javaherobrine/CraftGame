@@ -9,7 +9,7 @@
 - [ ] Chunks: Chunks generator
 - [ ] Network: Specific implementations
 - [ ] Data Structure: linked list splicer (LovelyZeeiam/CraftGame/pull/2)
-- [ ] Merge code(LovelyZeeiam/CraftGame/pull/2)
+- [ ] Merge code
 - [ ] Mods: Interface
 
 ## Libraries
