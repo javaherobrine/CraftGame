@@ -2,6 +2,7 @@ package io.github.javaherobrine.render;
 import org.lwjgl.glfw.*;
 import org.lwjgl.opengl.GL11;
 import io.github.javaherobrine.render.entity.*;
+import xueli.utils.io.*;
 public class CraftGame implements ILogic{
 	private int direction=0;
 	private float color=0;
@@ -36,7 +37,7 @@ public class CraftGame implements ILogic{
 			1,0
 		};
 		model=loader.loadModel(vertices,textureCoords,indices);
-		model.setTexture(new Texture(loader.loadTexture("textures/grassblock.png")));
+		model.setTexture(new Texture(loader.loadTexture("/textures/grassblock.png")));
 	}
 	@Override
 	public void input() {

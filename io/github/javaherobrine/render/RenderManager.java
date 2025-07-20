@@ -1,6 +1,7 @@
 package io.github.javaherobrine.render;
 import org.lwjgl.opengl.*;
 import io.github.javaherobrine.render.entity.*;
+import xueli.utils.io.*;
 public class RenderManager {
 	private final WindowManager window;
 	private ShaderManager shader;
@@ -9,8 +10,8 @@ public class RenderManager {
 	}
 	public void init() throws Exception{
 		shader=new ShaderManager();
-		shader.createVertexShader(GUIUtils.loadResource("/shaders/vertex.vs"));
-		shader.createFragmentShader(GUIUtils.loadResource("/shaders/fragment.fs"));
+		shader.createVertexShader(Files.readResourcePackedInJarAndPackedToString("/shaders/vertex.vs"));
+		shader.createFragmentShader(Files.readResourcePackedInJarAndPackedToString("/shaders/fragment.fs"));
 		shader.link();
 		shader.createUniform("javaherobrine");
 	}

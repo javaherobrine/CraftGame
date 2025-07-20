@@ -25,6 +25,10 @@ import org.lwjgl.BufferUtils;
 import io.github.javaherobrine.GameUtils;
 import io.github.javaherobrine.experimental.LinkedListSplicer;
 
+/**
+ * Must be noted that resources packed in jar must be included in --class-path
+ */
+
 public final class Files {//modification: make this class final in hope of more inlining (efficiency)
 
 	private Files() {}//addition: avoid users to create object of this class
@@ -145,11 +149,7 @@ public final class Files {//modification: make this class final in hope of more 
 		image.getRGB(0, 0, image.getWidth(), image.getHeight(), data, 0, image.getWidth());
 		return data;
 	}
-	public static File getResourcePackedInJar(String path) {
-		return new File(URLDecoder.decode(Thread.currentThread().getContextClassLoader().getResource(path).getPath(),
-				StandardCharsets.UTF_8));
-	}
-
+	//deletion: an incorrect implementation
 	public static InputStream getResourcePackedInJarStream(String path) {
 		return Files.class.getResourceAsStream(path);
 	}

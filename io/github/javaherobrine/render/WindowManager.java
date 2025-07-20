@@ -4,7 +4,7 @@ import org.lwjgl.glfw.*;
 import org.lwjgl.opengl.*;
 import org.lwjgl.system.*;
 public class WindowManager {
-	public static final float FOV=60;
+	public static final float FOV=(float) java.lang.Math.toRadians(60);
 	public static final float Z_NEAR=0.01f;
 	public static final float Z_FAR=1000f;
 	private final String title;
@@ -65,7 +65,7 @@ public class WindowManager {
 		}
 		GLFW.glfwShowWindow(window);
 		GL.createCapabilities();
-		GL11.glClearColor(0, 0, 127, 0);
+		GL11.glClearColor(0, 0, 0, 0);
 		GL11.glEnable(GL11.GL_DEPTH_TEST);
 		GL11.glEnable(GL11.GL_STENCIL_TEST);
 		GL11.glEnable(GL11.GL_CULL_FACE);
@@ -97,7 +97,7 @@ public class WindowManager {
 		return projectionMatrix;
 	}
 	public Matrix4f updateProjectionMatrix() {
-		float aspectRatio=width/height;
+		float aspectRatio=(float)width/height;
 		return projectionMatrix.setPerspective(FOV, aspectRatio, Z_NEAR, Z_FAR);
 	}
 	public Matrix4f updateProjectionMatrix(int width,int height,Matrix4f matrix) {

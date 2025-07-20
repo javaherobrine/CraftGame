@@ -2,6 +2,8 @@ package io.github.javaherobrine;
 import java.io.*;
 import java.util.Random;
 import java.util.Arrays;
+import java.nio.ByteBuffer;
+import org.lwjgl.system.MemoryUtil;
 public final class GameUtils {
 	public static final Random GENERATOR=new Random();
 	private GameUtils() {}
@@ -64,5 +66,17 @@ public final class GameUtils {
 			ch=r.read();
 		}
 		return res;
+	}
+	public static ByteBuffer store(byte[] b) {
+	    ByteBuffer res=ByteBuffer.allocate(b.length);
+	    res.put(b);
+	    res.flip();
+	    return res;
+	}
+	public static ByteBuffer storeLWJGL(byte[] b) {
+	    ByteBuffer res=MemoryUtil.memAlloc(b.length);
+	    res.put(b);
+	    res.flip();
+	    return res;
 	}
 }

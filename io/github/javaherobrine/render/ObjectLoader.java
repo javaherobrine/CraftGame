@@ -5,6 +5,8 @@ import org.lwjgl.stb.STBImage;
 import org.lwjgl.system.*;
 import java.nio.*;
 import io.github.javaherobrine.render.entity.*;
+import xueli.utils.io.Files;
+import io.github.javaherobrine.GameUtils;
 public class ObjectLoader {
 	private ArrayList<Integer> vaos=new ArrayList<>();
 	private ArrayList<Integer> vbos=new ArrayList<>();
@@ -17,6 +19,12 @@ public class ObjectLoader {
 		unbind();
 		return new Model(id,vertices.length/3);
 	}
+	public Model loadModel(float[] vertices) {
+		int id=createVAO();
+		storeDataInAttributeList(0,3,vertices);
+		unbind();
+		return new Model(id,vertices.length/3);
+	}
 	public int loadTexture(String filename) throws Exception{
 		int width,height;
 		ByteBuffer buffer;
@@ -24,7 +32,7 @@ public class ObjectLoader {
 		IntBuffer w=stack.mallocInt(1);
 		IntBuffer h=stack.mallocInt(1);
 		IntBuffer c=stack.mallocInt(1);
-		buffer=STBImage.stbi_load(filename, w, h, c, 4);
+		buffer=STBImage.stbi_load_from_memory(GameUtils.storeLWJGL(Files.readResourcePackedInJar(filename)), w, h, c, 4);
 		if(buffer==null) {
 			stack.close();
 			throw new Exception("Image file "+filename+" not loaded "+STBImage.stbi_failure_reason());

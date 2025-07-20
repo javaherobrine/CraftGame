@@ -11,8 +11,4 @@ public class GUIUtils {
 		IntBuffer buffer=MemoryUtil.memAllocInt(data.length);
 		return buffer.put(data).flip();
 	}
-	public static String loadResource(String name) throws IOException {
-		InputStream is=GUIUtils.class.getResourceAsStream(name);
-		return new String(is.readAllBytes());
-	}
 }
