@@ -160,4 +160,7 @@ public final class LinkedListSplicer {
 		size.set(l1,(int)size.get(l1)+(int)size.get(l2));
 		size.set(l2,0);
 	}
+	public static <T> void splice4(LinkedList<T> l1,LinkedList<T> l2) {
+		//TODO Implement it with FFM
+	}
 }

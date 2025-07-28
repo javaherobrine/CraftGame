@@ -33,7 +33,7 @@ public class ChunkLoadEvent extends EventContent{
 	public void recvExec(boolean serverside) throws Exception {
 		if(serverside) {
 			ServerChunkManager scm=(ServerChunkManager) ChunkManager.manager;
-			ServerSideClient recv=(ServerSideClient) recver;
+			ServerSideClientImpl recv=(ServerSideClientImpl) recver;
 			if(unload) {
 				scm.unload(dimension, x, y);
 				recv.loaded.remove(new Int3Pair(dimension,x,y));

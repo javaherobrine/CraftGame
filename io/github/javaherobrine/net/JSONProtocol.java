@@ -16,7 +16,7 @@ public class JSONProtocol extends Protocol{
 		if(hasNext()) {
 			try {
 				HashMap<String,Object> map=(HashMap<String,Object>)reader.nextObject();
-				EventContent ec=((EventContent)TrieNode.REGISTRY.access((String)map.get("type"))).clone();
+				EventContent ec=(EventContent) ((EventContent)TrieNode.REGISTRY.access((String)map.get("type"))).clone();
 				ec.valueOf((HashMap<String,Object>)map.get("content"));
 				return ec;
 			} catch (Throwable e) {
