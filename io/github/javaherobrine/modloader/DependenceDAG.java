@@ -76,10 +76,10 @@ public class DependenceDAG {
 			while(iter.hasNext()) {
 				GraphNode node=iter.next();
 				if(node.info==null) {
-				    ModLoader.crush("Some dependencies are missing");
+				    ModLoader.crash("Some dependencies are missing");
 				}
 				if(!node.info.valid()) {
-				    ModLoader.crush("Some mods are corrupted");
+				    ModLoader.crash("Some mods are corrupted");
 				}
 				if(node.info.getSCSync()) {
 					LoginEvent.getInstance().sync.add(node.info.getID());
@@ -89,7 +89,7 @@ public class DependenceDAG {
 						continue;
 					}
 					if(node.linkto.get(i).indegree!=0) {
-						ModLoader.crush("Not a DAG");//circle
+						ModLoader.crash("Not a DAG");//circle
 					}
 				}
 			}

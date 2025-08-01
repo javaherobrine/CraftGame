@@ -9,7 +9,7 @@ public class ChunkLoadEvent extends EventContent{
 	private static final long serialVersionUID = 1L;
 	public Chunk chk=null;
 	public boolean unload=false;
-	public int dimension;
+	public String dimension;
 	public int x;
 	public int y;
 	@SuppressWarnings("unchecked")
@@ -26,7 +26,7 @@ public class ChunkLoadEvent extends EventContent{
 	public void valueOf(Map<String, Object> input) {
 		x=((BigInteger)input.get("x")).intValue();
 		y=((BigInteger)input.get("y")).intValue();
-		dimension=((BigInteger)input.get("dimension")).intValue();
+		dimension=((String)input.get("dimension"));
 		chk=(Chunk)input.get("chunk");
 	}
 	@Override
@@ -36,10 +36,10 @@ public class ChunkLoadEvent extends EventContent{
 			ServerSideClientImpl recv=(ServerSideClientImpl) recver;
 			if(unload) {
 				scm.unload(dimension, x, y);
-				recv.loaded.remove(new Int3Pair(dimension,x,y));
+				recv.loaded.remove(new SIITuple(dimension,x,y));
 				return;
 			}
-			recv.loaded.add(new Int3Pair(dimension,x,y));
+			recv.loaded.add(new SIITuple(dimension,x,y));
 			chk=scm.load(dimension, x, y);
 			recv.send(this);
 		}else {

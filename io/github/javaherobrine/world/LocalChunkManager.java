@@ -16,7 +16,7 @@ public sealed class LocalChunkManager extends ChunkManager permits ServerChunkMa
 		return chk;
 	}
 	@Override
-	public Chunk getUnloadedChunk(int dimension,int x,int y) {
+	public Chunk getUnloadedChunk(String dimension,int x,int y) {
 		Chunk c=null;
 		try {
 			c=sav.readChunk(dimension,x,y);

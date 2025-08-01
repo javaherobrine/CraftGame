@@ -5,7 +5,7 @@ import java.io.IOException;
 import java.util.*;
 public final class ServerChunkManager extends LocalChunkManager{
 	public final Server server;
-	public HashMap<Int3Pair,Integer> count;
+	public HashMap<SIITuple,Integer> count;
 	public ServerChunkManager(Save s,Server server) {
 		super(s);
 		this.server=server;
@@ -17,8 +17,8 @@ public final class ServerChunkManager extends LocalChunkManager{
 		    count.put(key, 1);
 		});
 	}
-	public void unload(int dimension,int x,int y) {
-		Int3Pair pair=new Int3Pair(dimension,x,y);
+	public void unload(String dimension,int x,int y) {
+		SIITuple pair=new SIITuple(dimension,x,y);
 		count.compute(pair, (k,v)->{
 			if(v==null) {
 				throw new Error("panic");
@@ -35,8 +35,8 @@ public final class ServerChunkManager extends LocalChunkManager{
 			return v;
 		});
 	}
-	public Chunk load(int dimension,int x,int y) {
-		Int3Pair pair=new Int3Pair(dimension,x,y);
+	public Chunk load(String dimension,int x,int y) {
+		SIITuple pair=new SIITuple(dimension,x,y);
 		count.compute(pair, (k,v)->{
 			if(v==null) {
 				loaded.put(pair,getUnloadedChunk(dimension,x,y));

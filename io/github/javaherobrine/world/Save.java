@@ -41,7 +41,7 @@ public class Save {
 		}
 		bw.close();
 	}
-	public Chunk readChunk(int dimension,int x,int y) throws IOException{
+	public Chunk readChunk(String dimension,int x,int y) throws IOException{
 		File f=new File(saveFolder+"/chunks/"+dimension+"-"+x+","+y+".dat");
 		if(!f.exists()) {
 			return null;
@@ -58,7 +58,7 @@ public class Save {
 		reader.close();
 		return chk;
 	}
-	public void writeChunk(Chunk chk,int dimension,int x,int y) throws IOException{
+	public void writeChunk(Chunk chk,String dimension,int x,int y) throws IOException{
 		PrintWriter pw=new PrintWriter(new BufferedWriter(new FileWriter(saveFolder+"/chunks/"+dimension+"-"+x+","+y+".dat")));
 		for(int p=0;p<16;p++) {
 			for(int q=0;q<16;q++) {
@@ -74,5 +74,27 @@ public class Save {
 		if(pw.checkError()) {
 			throw new IOException("2333");
 		}
+	}
+	public void writeWorldType(String[] worldTypes) throws IOException{
+	    BufferedWriter bw=new BufferedWriter(new FileWriter(saveFolder+"/world.type"));
+	    for(String entry:worldTypes) {
+			bw.write(entry);
+			bw.newLine();
+	    }
+	    bw.close();
+	}
+	public WorldType[] readWorldType() throws IOException{
+	    try {
+			FileInputStream in=new FileInputStream(saveFolder+"/world.type");
+			String[] res=new String(in.readAllBytes()).split("\n");
+			in.close();
+			WorldType[] types=new WorldType[res.length];
+			for(int i=0;i<res.length;++i) {
+			    types[i]=WorldType.WORLD_TYPES.get(res[i]);
+			}
+			return types;
+	    } catch (FileNotFoundException e) {
+			return null;
+	    }
 	}
 }

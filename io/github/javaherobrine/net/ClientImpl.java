@@ -13,6 +13,10 @@ public class ClientImpl extends Client {
     }
    	  @Override
     public void handshake() throws IOException {
-   	protocol.send(LoginEvent.getInstance());
+   	if(protocol instanceof HandshakeModifier modifier) {
+   	    modifier.handshakeClient();
+   	}else {
+   	    protocol.send(LoginEvent.getInstance());
+   	}
     }
 }

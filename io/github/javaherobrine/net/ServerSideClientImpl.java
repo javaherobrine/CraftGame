@@ -5,7 +5,7 @@ import java.util.*;
 import io.github.javaherobrine.*;
 import io.github.javaherobrine.world.*;
 public class ServerSideClientImpl extends ServerSideClient{
-    public HashSet<Int3Pair> loaded=new HashSet<>();
+    public HashSet<SIITuple> loaded=new HashSet<>();
     protected ServerSideClientImpl(Socket sc, Server server, EventHandler handle) throws IOException {
 		super(sc, server, handle);
     }
@@ -15,7 +15,9 @@ public class ServerSideClientImpl extends ServerSideClient{
     }
     	   @Override
     public void handshake() throws IOException {
-		//Nothing
+    	   if(protocol instanceof HandshakeModifier modifier) {
+    	   	modifier.handshakeServer();
+    	   }
     }
     	   @Override
     public void close() throws IOException{

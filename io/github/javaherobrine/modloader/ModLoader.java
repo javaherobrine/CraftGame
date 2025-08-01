@@ -1,6 +1,7 @@
 package io.github.javaherobrine.modloader;
 import java.io.*;
 import static io.github.javaherobrine.modloader.DependenceDAG.GraphNode;
+import xueli.utils.exception.*;
 import java.util.*;
 public class ModLoader {
 	public static ArrayList<JarClassLoader> classLoaders=new ArrayList<>();
@@ -17,7 +18,7 @@ public class ModLoader {
 				classLoaders.add(loader);
 				String str=loader.getID();
 				if(loaded.contains(str)) {
-					crush("Duplicated Mods");
+				    	  crash("Duplicated Mods");
 				}
 				loaded.add(str);
 			}else {
@@ -45,12 +46,12 @@ public class ModLoader {
 	public static void load(int i) {
 		root.get(i).topologicalSort();
 	}
-	public static void crush(final String msg) {
+	public static void crash(final String msg) {
 		System.err.println("[FATAL] the game must terminate because "+msg);
 		Runtime.getRuntime().addShutdownHook(new Thread(){
 			@Override
 			public void run() {
-				//TODO show error message
+			    new CrashReport(msg ,new Error()).showCrashReport();
 			}
 		});
 		System.exit(1);
