@@ -2,8 +2,10 @@ package io.github.javaherobrine.render;
 import org.lwjgl.glfw.*;
 import org.lwjgl.opengl.*;
 import xueli.game2.lifecycle.*;
+import java.util.*;
 public class Window implements LifeCycle{
     public final long window;
+    public final ArrayList<KeyBinding> bindings=new ArrayList<>();
     public Window() {
     	GLFW.glfwInit();
 		GLFW.glfwDefaultWindowHints();
@@ -15,10 +17,11 @@ public class Window implements LifeCycle{
 		GLFW.glfwSetWindowSizeCallback(window,(win,width,height)->{
 		    GL45.glViewport(0, 0, width, height);
 		});
+		GLFW.glfwMakeContextCurrent(window);
+		GL.createCapabilities();
     }
     	   @Override
     public void init() {
-    	GLFW.glfwMakeContextCurrent(window);
     	GL45.glViewport(0, 0, 1920, 1080);
     }
     	   @Override
@@ -30,5 +33,14 @@ public class Window implements LifeCycle{
     public void release() {
     	GLFW.glfwDestroyWindow(window);
     	GLFW.glfwTerminate();
+    }
+    public void input() {
+		Iterator<KeyBinding> iter=bindings.iterator();
+		while(iter.hasNext()) {
+		    KeyBinding binding=iter.next();
+		    if(GLFW.glfwGetKey(window,binding.key())==(binding.click()?GLFW.GLFW_PRESS:GLFW.GLFW_RELEASE)){
+				binding.callback().run();
+		    }
+		}
     }
 }

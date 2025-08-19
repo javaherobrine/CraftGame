@@ -67,9 +67,7 @@ public final class Files {//modification: make this class final in hope of more 
 
 	}
 	
-	public static String readAllString(File file) throws IOException {//modification use an existing implementation
-		return GameUtils.ofFile(file);
-	}
+	//removed: duplicated implementation
 
 	public static byte[] readAllByte(File file) throws IOException {//modification: use readAllBytes() function to replace available()
 		BufferedInputStream in = new BufferedInputStream(new FileInputStream(file));

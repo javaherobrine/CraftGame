@@ -67,13 +67,12 @@ public final class GameUtils {
 		}
 		return res;
 	}
-	public static ByteBuffer store(byte[] b) {
-	    ByteBuffer res=ByteBuffer.allocate(b.length);
-	    res.put(b);
-	    res.flip();
-	    return res;
-	}
-	public static ByteBuffer storeLWJGL(byte[] b) {
+	/**
+	 * A strange implementation of memcpy in stdlib.h, but new memory is automatically allocated
+	 * @param b memory to copy
+	 * @return allocated new memory
+	 */
+	public static ByteBuffer memcpy(byte[] b) {
 	    ByteBuffer res=MemoryUtil.memAlloc(b.length);
 	    res.put(b);
 	    res.flip();
