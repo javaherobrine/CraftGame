@@ -2,7 +2,7 @@ package io.github.javaherobrine.render;
 import xueli.game2.lifecycle.*;
 import java.io.*;
 import static org.lwjgl.glfw.GLFW.*;
-import static  org.lwjgl.opengl.GL45.*;
+import static org.lwjgl.opengl.GL45.*;
 import xueli.utils.io.*;
 public class Renderer implements RunnableLifeCycle{
     private Window win;

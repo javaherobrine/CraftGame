@@ -5,7 +5,6 @@ import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.DataOutputStream;
 import java.io.File;
-import java.io.FileFilter;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -15,14 +14,12 @@ import java.io.ObjectOutputStream;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.LinkedList;
+import java.util.List;
 
 import javax.imageio.ImageIO;
 
 import org.lwjgl.BufferUtils;
 
-import io.github.javaherobrine.GameUtils;
-import io.github.javaherobrine.experimental.LinkedListSplicer;
 
 /**
  * Must be noted that resources packed in jar must be included in --class-path
@@ -76,62 +73,28 @@ public final class Files {//modification: make this class final in hope of more 
 		return data;
 	}
 	
-	public static LinkedList<File> getAllFiles(File file,FileFilter filter){//addition: allow filters
-		LinkedList<File> files = new LinkedList<>();
-		
-		if(file.isDirectory()) {
-			File[] allFiles = file.listFiles(filter);
-			for(int i = 0; i < allFiles.length; i++) {
-				File f=allFiles[i];
-				if(f.isFile()) {
-					files.add(f);
-					continue;
-					
-				}
-				
-				LinkedListSplicer.splice(files, getAllFiles(f,filter));
-				
-			}
-			
-		}else if(file.isFile()) {
-			if(filter.accept(file)) {
-				files.add(file);
-			}
-			
-		}
-		
-		return files;
-	}
-	
-	public static LinkedList<File> getAllFiles(String path,FileFilter filter) {//addition: allow filters
-		return getAllFiles(new File(path),filter);
-	}
-	
-	public static LinkedList<File> getAllFiles(File file) {
-		LinkedList<File> files = new LinkedList<>();
-
-		if (file.isDirectory()) {
+	private static void getAllFiles(File file, List<File> list) {
+	    
+	    if(file.isDirectory()) {
 			File[] allFiles = file.listFiles();
-			for (int i = 0; i < allFiles.length; i++) {
-				File f = allFiles[i];
-				if(f.isFile()) {
-					files.add(f);
-					continue;
-				}
-				
-				LinkedListSplicer.splice(files, getAllFiles(f));
-
+			for(int i = 0; i < allFiles.length; ++i) {
+			    getAllFiles(file, list);
 			}
-
-		} else if (file.isFile()) {
-			files.add(file);
-
-		}
-
-		return files;
+			
+	    }
+	    
+	    else
+			list.add(file);
+	    
 	}
 
-	public static LinkedList<File> getAllFiles(String path) {
+	public static ArrayList<File> getAllFiles(File file) {
+		ArrayList<File> list=new ArrayList<>();
+		getAllFiles(file,list);
+		return list;
+	}
+
+	public static ArrayList<File> getAllFiles(String path) {
 		return getAllFiles(new File(path));
 	}
 
