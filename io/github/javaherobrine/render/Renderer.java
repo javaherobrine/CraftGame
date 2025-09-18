@@ -4,6 +4,8 @@ import java.io.*;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL45.*;
 import xueli.utils.io.*;
+import io.github.javaherobrine.math.*;
+import org.joml.*;
 public class Renderer implements RunnableLifeCycle{
     private Window win;
     private long frame=-1;
@@ -34,10 +36,10 @@ public class Renderer implements RunnableLifeCycle{
 	   		0,0,
 	   		0,1,
 	   		1,0,
-	   		1,1},Files.getResourcePackedInJarStream("/textures/grassblock.png").readAllBytes());
+	   		1,1},Files.getResourcePackedInJarStream("/textures/grassblock.png"));
 	    	shader=new Shader(new String(Files.getResourcePackedInJarStream("/shaders/vertex.vs").readAllBytes()),
 	    	    new String(Files.getResourcePackedInJarStream("/shaders/fragment.fs").readAllBytes()));
-	    	glUniform1i(glGetAttribLocation(shader.program, "tex"), GL_TEXTURE0);
+	    		glUniform1i(1, GL_TEXTURE0);
 	 	 } catch (IOException e) {
 	    // TODO Auto-generated catch block
 	 	     e.printStackTrace();
@@ -58,6 +60,8 @@ public class Renderer implements RunnableLifeCycle{
 		vao.apply();
 		text.activate();
 		shader.exec();
+		shader.uniform(0,MatrixHelper.rotate(MatrixHelper.Z, (float)java.lang.Math.toRadians((float)glfwGetTime())));
+		//shader.uniform("transform",new Matrix4f());
 		//process events and swap buffers
 		win.tick();
     }
