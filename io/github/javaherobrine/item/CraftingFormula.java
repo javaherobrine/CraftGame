@@ -1,14 +1,17 @@
-package io.github.javaherobrine.item;
-import io.github.javaherobrine.*;
-import java.util.*;
-@Modification("Register your formula here")
+package io.github.javaherobrine.item; 
 public class CraftingFormula {
-    public static final HashMap<Class<? extends CraftingDevice>,ArrayList<CraftingFormula>> FORMULAS=new HashMap<>();
-    public boolean ordered;
-    public CraftingSlot[] requirements;
-    public CraftingSlot[] products;
-    public static class CraftingSlot{
-		public boolean allowAlternatives;
-		public Item value;
-    }
+	public static class CraftingSlot{
+		Item item;
+		boolean allowAlternatives;
+		public boolean checkName(Item input) {
+			if(allowAlternatives) {
+				return input.identifier().location().equals(item.identifier().location());
+			}else {
+				return input.identifier().equals(item.identifier());
+			}
+		}
+	}
+	public boolean ordered;
+	public CraftingSlot input[];
+	public Item output[];
 }

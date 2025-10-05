@@ -8,93 +8,94 @@ import java.util.*;
 public class Save {
 	private String saveFolder;
 	public Save(File input) throws IOException {
-		saveFolder=input.getAbsolutePath();
-		File mods=new File(saveFolder+"/loaded_mods.list");
-		if(mods.exists()) {
-			BufferedReader br=new BufferedReader(new FileReader(mods));
-			ArrayList<String> notLoaded=new ArrayList<>();
-			String str=null;
-			while((str=br.readLine())!=null) {
-			   if(str.equals("")) {
+		saveFolder = input.getAbsolutePath();
+		File mods = new File(saveFolder + "/loaded_mods.list");
+		if (mods.exists()) {
+			BufferedReader br = new BufferedReader(new FileReader(mods));
+			ArrayList<String> notLoaded = new ArrayList<>();
+			String str = null;
+			while ((str = br.readLine()) != null) {
+				if (str.equals("")) {
 					continue;
-			   }
-				if(!ModLoader.loaded.contains(str)) {
-        			notLoaded.add(str);
+				}
+				if (!ModLoader.loaded.contains(str)) {
+					notLoaded.add(str);
 				}
 			}
 			br.close();
-			if(!notLoaded.isEmpty()) {
-			    StringBuilder sb=new StringBuilder();
-			    notLoaded.forEach(s->{
+			if (!notLoaded.isEmpty()) {
+				StringBuilder sb = new StringBuilder();
+				notLoaded.forEach(s -> {
 					sb.append(s);
 					sb.append('\n');
-			    });
-			    String res=sb.toString();
-			    System.err.println("[WARNING] missing mods:"+res);
-			    //TODO show warnings
+				});
+				String res = sb.toString();
+				System.err.println("[WARNING] missing mods:" + res);
+				// TODO show warnings
 			}
 		}
-		BufferedWriter bw=new BufferedWriter(new FileWriter(mods));
-		for(String str:LoginEvent.getInstance().sync) {
-		    bw.write(str);
-		    bw.newLine();
+		BufferedWriter bw = new BufferedWriter(new FileWriter(mods));
+		for (String str : LoginEvent.getInstance().sync) {
+			bw.write(str);
+			bw.newLine();
 		}
 		bw.close();
 	}
-	public Chunk readChunk(String dimension,int x,int y) throws IOException{
-		File f=new File(saveFolder+"/chunks/"+dimension+"-"+x+","+y+".dat");
-		if(!f.exists()) {
+	public Chunk readChunk(String dimension, int x, int y) throws IOException {
+		File f = new File(saveFolder + "/chunks/" + dimension + "-" + x + "," + y + ".dat");
+		if (!f.exists()) {
 			return null;
 		}
-		BufferedReader reader=new BufferedReader(new FileReader(f));
-		Chunk chk=new Chunk();
-		int ch=reader.read();
-		while(ch!=-1) {
-			int p=GameUtils.readUint(reader);
-			int q=GameUtils.readUint(reader);
-			int r=GameUtils.readUint(reader);
-			chk.chunk[p][q][r]=Block.load(reader.readLine());
+		BufferedReader reader = new BufferedReader(new FileReader(f));
+		Chunk chk = new Chunk();
+		int ch = reader.read();
+		while (ch != -1) {
+			int p = GameUtils.readUint(reader);
+			int q = GameUtils.readUint(reader);
+			int r = GameUtils.readUint(reader);
+			chk.chunk[p][q][r] = Block.load(reader.readLine());
 		}
 		reader.close();
 		return chk;
 	}
-	public void writeChunk(Chunk chk,String dimension,int x,int y) throws IOException{
-		PrintWriter pw=new PrintWriter(new BufferedWriter(new FileWriter(saveFolder+"/chunks/"+dimension+"-"+x+","+y+".dat")));
-		for(int p=0;p<16;p++) {
-			for(int q=0;q<16;q++) {
-				for(int r=0;r<256;r++) {
-					Block b=chk.chunk[p][q][r];
-					if(b!=null) {
-						pw.printf("(%d,%d,%d) %s %s\n", p,q,r,b.getClass().getName(),b.toString());
+	public void writeChunk(Chunk chk, String dimension, int x, int y) throws IOException {
+		PrintWriter pw = new PrintWriter(
+				new BufferedWriter(new FileWriter(saveFolder + "/chunks/" + dimension + "-" + x + "," + y + ".dat")));
+		for (int p = 0; p < 16; p++) {
+			for (int q = 0; q < 16; q++) {
+				for (int r = 0; r < 256; r++) {
+					Block b = chk.chunk[p][q][r];
+					if (b != null) {
+						pw.printf("(%d,%d,%d) %s %s\n", p, q, r, b.getClass().getName(), b.toString());
 					}
 				}
 			}
 		}
 		pw.close();
-		if(pw.checkError()) {
+		if (pw.checkError()) {
 			throw new IOException("2333");
 		}
 	}
-	public void writeWorldType(String[] worldTypes) throws IOException{
-	    BufferedWriter bw=new BufferedWriter(new FileWriter(saveFolder+"/world.type"));
-	    for(String entry:worldTypes) {
+	public void writeWorldType(String[] worldTypes) throws IOException {
+		BufferedWriter bw = new BufferedWriter(new FileWriter(saveFolder + "/world.type"));
+		for (String entry : worldTypes) {
 			bw.write(entry);
 			bw.newLine();
-	    }
-	    bw.close();
+		}
+		bw.close();
 	}
-	public WorldType[] readWorldType() throws IOException{
-	    try {
-			FileInputStream in=new FileInputStream(saveFolder+"/world.type");
-			String[] res=new String(in.readAllBytes()).split("\n");
+	public WorldType[] readWorldType() throws IOException {
+		try {
+			FileInputStream in = new FileInputStream(saveFolder + "/world.type");
+			String[] res = new String(in.readAllBytes()).split("\n");
 			in.close();
-			WorldType[] types=new WorldType[res.length];
-			for(int i=0;i<res.length;++i) {
-			    types[i]=WorldType.WORLD_TYPES.get(res[i]);
+			WorldType[] types = new WorldType[res.length];
+			for (int i = 0; i < res.length; ++i) {
+				types[i] = WorldType.WORLD_TYPES.get(res[i]);
 			}
 			return types;
-	    } catch (FileNotFoundException e) {
+		} catch (FileNotFoundException e) {
 			return null;
-	    }
+		}
 	}
 }

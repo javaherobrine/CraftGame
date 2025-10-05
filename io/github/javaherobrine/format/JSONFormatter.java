@@ -3,12 +3,13 @@ import java.util.AbstractMap;
 import java.util.Collection;
 import java.util.Map;
 public final class JSONFormatter {
-	private JSONFormatter() {}
+	private JSONFormatter() {
+	}
 	public static String format(String raw) {
-		final StringBuilder sb=new StringBuilder(raw.length()<<1+2);
+		final StringBuilder sb = new StringBuilder(raw.length() << 1 + 2);
 		sb.append('\"');
-		raw.chars().forEach(ch->{
-			switch(ch) {
+		raw.chars().forEach(ch -> {
+			switch (ch) {
 			case '\n':
 				sb.append("\\n");
 				break;
@@ -37,7 +38,7 @@ public final class JSONFormatter {
 				sb.append("\\f");
 				break;
 			default:
-				sb.append((char)ch);
+				sb.append((char) ch);
 			}
 		});
 		return sb.append('\"').toString();
@@ -70,167 +71,167 @@ public final class JSONFormatter {
 		return Character.toString(d);
 	}
 	public static String format(boolean[] obj) {
-		if(obj.length==0) {
+		if (obj.length == 0) {
 			return "[]";
 		}
-		StringBuilder sb=new StringBuilder("[");
-		for(int i=0;i<obj.length;++i) {
+		StringBuilder sb = new StringBuilder("[");
+		for (int i = 0; i < obj.length; ++i) {
 			sb.append(obj[i]);
 			sb.append(',');
 		}
-		return sb.deleteCharAt(sb.length()-1).append(']').toString();
+		return sb.deleteCharAt(sb.length() - 1).append(']').toString();
 	}
 	public static String format(byte[] obj) {
-		if(obj.length==0) {
+		if (obj.length == 0) {
 			return "[]";
 		}
-		StringBuilder sb=new StringBuilder("[");
-		for(int i=0;i<obj.length;++i) {
+		StringBuilder sb = new StringBuilder("[");
+		for (int i = 0; i < obj.length; ++i) {
 			sb.append(obj[i]);
 			sb.append(',');
 		}
-		return sb.deleteCharAt(sb.length()-1).append(']').toString();
+		return sb.deleteCharAt(sb.length() - 1).append(']').toString();
 	}
 	public static String format(short[] obj) {
-		if(obj.length==0) {
+		if (obj.length == 0) {
 			return "[]";
 		}
-		StringBuilder sb=new StringBuilder("[");
-		for(int i=0;i<obj.length;++i) {
+		StringBuilder sb = new StringBuilder("[");
+		for (int i = 0; i < obj.length; ++i) {
 			sb.append(obj[i]);
 			sb.append(',');
 		}
-		return sb.deleteCharAt(sb.length()-1).append(']').toString();
+		return sb.deleteCharAt(sb.length() - 1).append(']').toString();
 	}
 	public static String format(int[] obj) {
-		StringBuilder sb=new StringBuilder("[");
-		for(int i=0;i<obj.length;++i) {
+		StringBuilder sb = new StringBuilder("[");
+		for (int i = 0; i < obj.length; ++i) {
 			sb.append(obj[i]);
 			sb.append(',');
 		}
-		return sb.deleteCharAt(sb.length()-1).append(']').toString();
+		return sb.deleteCharAt(sb.length() - 1).append(']').toString();
 	}
 	public static String format(long[] obj) {
-		if(obj.length==0) {
+		if (obj.length == 0) {
 			return "[]";
 		}
-		StringBuilder sb=new StringBuilder("[");
-		for(int i=0;i<obj.length;++i) {
+		StringBuilder sb = new StringBuilder("[");
+		for (int i = 0; i < obj.length; ++i) {
 			sb.append(obj[i]);
 			sb.append(',');
 		}
-		return sb.deleteCharAt(sb.length()-1).append(']').toString();
+		return sb.deleteCharAt(sb.length() - 1).append(']').toString();
 	}
 	public static String format(float[] obj) {
-		if(obj.length==0) {
+		if (obj.length == 0) {
 			return "[]";
 		}
-		StringBuilder sb=new StringBuilder("[");
-		for(int i=0;i<obj.length;++i) {
+		StringBuilder sb = new StringBuilder("[");
+		for (int i = 0; i < obj.length; ++i) {
 			sb.append(obj[i]);
 			sb.append(',');
 		}
-		return sb.deleteCharAt(sb.length()-1).append(']').toString();
+		return sb.deleteCharAt(sb.length() - 1).append(']').toString();
 	}
 	public static String format(double[] obj) {
-		if(obj.length==0) {
+		if (obj.length == 0) {
 			return "[]";
 		}
-		StringBuilder sb=new StringBuilder("[");
-		for(int i=0;i<obj.length;++i) {
+		StringBuilder sb = new StringBuilder("[");
+		for (int i = 0; i < obj.length; ++i) {
 			sb.append(obj[i]);
 			sb.append(',');
 		}
-		return sb.deleteCharAt(sb.length()-1).append(']').toString();
+		return sb.deleteCharAt(sb.length() - 1).append(']').toString();
 	}
 	public static String format(char[] obj) {
-		if(obj.length==0) {
+		if (obj.length == 0) {
 			return "[]";
 		}
-		StringBuilder sb=new StringBuilder("[");
-		for(int i=0;i<obj.length;++i) {
+		StringBuilder sb = new StringBuilder("[");
+		for (int i = 0; i < obj.length; ++i) {
 			sb.append(obj[i]);
 			sb.append(',');
 		}
-		return sb.deleteCharAt(sb.length()-1).append(']').toString();
+		return sb.deleteCharAt(sb.length() - 1).append(']').toString();
 	}
 	public static String format(Object[] obj) {
-		if(obj.length==0) {
+		if (obj.length == 0) {
 			return "[]";
 		}
-		StringBuilder sb=new StringBuilder("[");
-		for(int i=0;i<obj.length;++i) {
+		StringBuilder sb = new StringBuilder("[");
+		for (int i = 0; i < obj.length; ++i) {
 			sb.append(format(obj[i]));
 			sb.append(',');
 		}
-		return sb.deleteCharAt(sb.length()-1).append(']').toString();
+		return sb.deleteCharAt(sb.length() - 1).append(']').toString();
 	}
 	static String format(Object obj) {
-		if(obj==null) {
+		if (obj == null) {
 			return "null";
 		}
-		if(obj instanceof JSONSerializable) {
+		if (obj instanceof JSONSerializable) {
 			return format((JSONSerializable) obj);
-		}else if(obj instanceof Number) {
+		} else if (obj instanceof Number) {
 			return format((Number) obj);
-		}else if(obj instanceof String) {
+		} else if (obj instanceof String) {
 			return format((String) obj);
-		}else if(obj instanceof boolean[]) {
+		} else if (obj instanceof boolean[]) {
 			return format((boolean[]) obj);
-		}else if(obj instanceof short[]) {
+		} else if (obj instanceof short[]) {
 			return format((short[]) obj);
-		}else if(obj instanceof int[]) {
+		} else if (obj instanceof int[]) {
 			return format((int[]) obj);
-		}else if(obj instanceof long[]) {
+		} else if (obj instanceof long[]) {
 			return format((long[]) obj);
-		}else if(obj instanceof float[]) {
+		} else if (obj instanceof float[]) {
 			return format((float[]) obj);
-		}else if(obj instanceof double[]) {
+		} else if (obj instanceof double[]) {
 			return format((double[]) obj);
-		}else if(obj instanceof char[]) {
+		} else if (obj instanceof char[]) {
 			return format((char[]) obj);
-		}else if(obj instanceof Object[]) {
+		} else if (obj instanceof Object[]) {
 			return format((Object[]) obj);
-		}else if(obj instanceof Map) {
-			return format((Map<?,?>)obj);
-		}else if(obj instanceof Collection) {
+		} else if (obj instanceof Map) {
+			return format((Map<?, ?>) obj);
+		} else if (obj instanceof Collection) {
 			return format((Collection<?>) obj);
-		}else {
-			throw new IllegalArgumentException("Can't serialize this object"+obj);
+		} else {
+			throw new IllegalArgumentException("Can't serialize this object" + obj);
 		}
 	}
 	public static String format(JSONSerializable obj) {
-		if(obj==null) {
+		if (obj == null) {
 			return "{}";
 		}
-		AbstractMap.SimpleEntry<String,Object>[] values=obj.values();
-		if(values.length==0) {
+		AbstractMap.SimpleEntry<String, Object>[] values = obj.values();
+		if (values.length == 0) {
 			return "{}";
 		}
-		StringBuilder sb=new StringBuilder("{");
-		for(int i=0;i<values.length;i++) {
-			AbstractMap.SimpleEntry<String,Object> current=values[i];
+		StringBuilder sb = new StringBuilder("{");
+		for (int i = 0; i < values.length; i++) {
+			AbstractMap.SimpleEntry<String, Object> current = values[i];
 			sb.append(format(current.getKey())).append(':').append(format(current.getValue())).append(',');
 		}
-		return sb.deleteCharAt(sb.length()-1).append('}').toString();
+		return sb.deleteCharAt(sb.length() - 1).append('}').toString();
 	}
 	public static String format(Collection<? extends Object> obj) {
-		if(obj.isEmpty()) {
+		if (obj.isEmpty()) {
 			return "[]";
 		}
 		return format(obj.toArray());
 	}
-	public static String format(Map<String,? extends Object> pair) {
-		if(pair.isEmpty()) {
+	public static String format(Map<String, ? extends Object> pair) {
+		if (pair.isEmpty()) {
 			return "{}";
 		}
-		StringBuilder sb=new StringBuilder("{");
-		pair.entrySet().stream().forEach(n->{
+		StringBuilder sb = new StringBuilder("{");
+		pair.entrySet().stream().forEach(n -> {
 			sb.append(format(n.getKey()));
 			sb.append(':');
 			sb.append(format(n.getValue()));
 			sb.append(',');
 		});
-		return sb.deleteCharAt(sb.length()-1).append('}').toString();
+		return sb.deleteCharAt(sb.length() - 1).append('}').toString();
 	}
 }

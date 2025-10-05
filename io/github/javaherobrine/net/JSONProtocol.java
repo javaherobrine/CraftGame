@@ -4,7 +4,7 @@ import io.github.javaherobrine.*;
 import java.io.*;
 import java.net.*;
 import java.util.*;
-public class JSONProtocol extends Protocol{
+public class JSONProtocol extends Protocol {
 	static {
 		TrieNode.REGISTRY.put(JSONProtocol.class.getName(), new JSONProtocol());
 	}
@@ -13,14 +13,15 @@ public class JSONProtocol extends Protocol{
 	@SuppressWarnings("unchecked")
 	@Override
 	public EventContent next() {
-		if(hasNext()) {
+		if (hasNext()) {
 			try {
-				HashMap<String,Object> map=(HashMap<String,Object>)reader.nextObject();
-				EventContent ec=(EventContent) ((EventContent)TrieNode.REGISTRY.access((String)map.get("type"))).clone();
-				ec.valueOf((HashMap<String,Object>)map.get("content"));
+				HashMap<String, Object> map = (HashMap<String, Object>) reader.nextObject();
+				EventContent ec = (EventContent) ((EventContent) TrieNode.REGISTRY.access((String) map.get("type")))
+						.clone();
+				ec.valueOf((HashMap<String, Object>) map.get("content"));
 				return ec;
 			} catch (Throwable e) {
-				exception=e;
+				exception = e;
 			}
 		}
 		return null;
@@ -33,15 +34,16 @@ public class JSONProtocol extends Protocol{
 	public Protocol clone() {
 		return new JSONProtocol();
 	}
-	private JSONProtocol() {}
-	public JSONProtocol(Socket soc) throws IOException{
+	private JSONProtocol() {
+	}
+	public JSONProtocol(Socket soc) throws IOException {
 		super(soc);
 		setSocket(soc);
 	}
 	@SuppressWarnings("resource")
 	@Override
 	public void setSocket(Socket soc) throws IOException {
-		reader=new JSONReader(soc.getInputStream());
-		writer=new JSONWriter(soc.getOutputStream());
+		reader = new JSONReader(soc.getInputStream());
+		writer = new JSONWriter(soc.getOutputStream());
 	}
 }

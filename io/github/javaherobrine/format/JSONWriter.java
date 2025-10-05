@@ -1,6 +1,6 @@
 package io.github.javaherobrine.format;
 import java.io.*;
-public class JSONWriter extends FilterWriter implements ObjectOutput{
+public class JSONWriter extends FilterWriter implements ObjectOutput {
 	public JSONWriter(Writer out) {
 		super(out);
 	}
@@ -61,5 +61,6 @@ public class JSONWriter extends FilterWriter implements ObjectOutput{
 	}
 	@Override
 	@Deprecated
-	public void write(byte[] b, int off, int len) throws IOException {}
+	public void write(byte[] b, int off, int len) throws IOException {
+	}
 }

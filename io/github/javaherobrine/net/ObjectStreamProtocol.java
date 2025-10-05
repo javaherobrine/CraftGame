@@ -2,7 +2,7 @@ package io.github.javaherobrine.net;
 import java.io.*;
 import java.net.*;
 import io.github.javaherobrine.*;
-public class ObjectStreamProtocol extends Protocol{
+public class ObjectStreamProtocol extends Protocol {
 	static {
 		TrieNode.REGISTRY.put(ObjectStreamProtocol.class.getName(), new ObjectStreamProtocol());
 	}
@@ -10,21 +10,22 @@ public class ObjectStreamProtocol extends Protocol{
 		super();
 		setSocket(soc);
 	}
-	private ObjectStreamProtocol() {}
+	private ObjectStreamProtocol() {
+	}
 	@Override
 	public EventContent next() {
-		if(hasNext()) {
+		if (hasNext()) {
 			try {
-				return (EventContent)((ObjectInputStream)in).readObject();
+				return (EventContent) ((ObjectInputStream) in).readObject();
 			} catch (Throwable e) {
-				exception=e;
+				exception = e;
 			}
 		}
 		return null;
 	}
 	@Override
-	public void send(EventContent ec) throws IOException{
-		((ObjectOutputStream)out).writeObject(ec);
+	public void send(EventContent ec) throws IOException {
+		((ObjectOutputStream) out).writeObject(ec);
 	}
 	@Override
 	public Protocol clone() {
@@ -32,7 +33,7 @@ public class ObjectStreamProtocol extends Protocol{
 	}
 	@Override
 	public void setSocket(Socket soc) throws IOException {
-		out=new ObjectOutputStream(soc.getOutputStream());
-		in=new ObjectInputStream(soc.getInputStream());
+		out = new ObjectOutputStream(soc.getOutputStream());
+		in = new ObjectInputStream(soc.getInputStream());
 	}
 }

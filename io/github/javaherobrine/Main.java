@@ -4,7 +4,7 @@ package io.github.javaherobrine;
 import org.lwjgl.opengl.*;
 import io.github.javaherobrine.render.*;
 public class Main {
-	public static void main(String[] args) throws Exception{
+	public static void main(String[] args) throws Exception {
 //		System.load("D:/java/awa/Debug/libawa.dll");
 //		LinkedList<String> l1=new LinkedList<>();
 //		LinkedList<String> l2=new LinkedList<>();
@@ -16,8 +16,8 @@ public class Main {
 //		LinkedListSplicer.splice0(l1, l2);
 //		System.err.println(l1);
 //		System.err.println(l2);
-	    Window win=new Window();
-	    Renderer render=new Renderer(win);
-	    render.run();
+		Window win = new Window();
+		Renderer render = new Renderer(win);
+		render.run();
 	}
 }
