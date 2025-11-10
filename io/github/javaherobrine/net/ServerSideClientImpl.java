@@ -6,7 +6,7 @@ import io.github.javaherobrine.*;
 import io.github.javaherobrine.world.*;
 public class ServerSideClientImpl extends ServerSideClient {
 	public HashSet<SIITuple> loaded = new HashSet<>();
-	protected ServerSideClientImpl(Socket sc, Server server, EventHandler handle) throws IOException {
+	protected ServerSideClientImpl(Socket sc, Server server, EventDispatchThread handle) throws IOException {
 		super(sc, server, handle);
 	}
 	@Override
