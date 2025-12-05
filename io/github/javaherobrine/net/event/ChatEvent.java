@@ -20,7 +20,7 @@ public class ChatEvent extends EventContent {
 	@Override
 	public void recvExec(boolean serverside) throws Exception {
 		if (serverside) {
-			ServerSideClient c = (ServerSideClient) recver;
+			ServerSideClientImpl c = (ServerSideClientImpl) recver;
 			System.out.println(c.player + ": " + content);
 			// TODO command process
 			if (destination == null) {
