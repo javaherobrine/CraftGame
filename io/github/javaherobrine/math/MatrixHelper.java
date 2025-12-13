@@ -28,7 +28,7 @@ public class MatrixHelper {
 	}
 	/**
 	 * Code from LovelyZeeiam, but use JOML Library
-	 * 
+	 * @author LovelyZeeiam
 	 * @param fov fovX
 	 */
 	public static Matrix4f perspective(float width, float height, float fov, float near, float far) {
