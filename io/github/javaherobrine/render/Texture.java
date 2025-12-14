@@ -7,12 +7,10 @@ import java.awt.image.*;
 import static org.lwjgl.stb.STBImage.*;
 import static org.lwjgl.opengl.GL45.*;
 public class Texture {
-	public final float[] coords;
 	public final int textureID;
 	@Deprecated
-	public Texture(float[] coords, byte[] data) {
+	public Texture(byte[] data) {
 		textureID = glGenTextures();
-		this.coords = coords;
 		int height[] = new int[1], width[] = new int[1], alpha[] = new int[1];
 		ByteBuffer buf = stbi_load_from_memory(GameUtils.memcpy(data), height, width, alpha, 0);
 		glBindTexture(GL_TEXTURE_2D, textureID);
@@ -24,8 +22,7 @@ public class Texture {
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 		stbi_image_free(buf);
 	}
-	public Texture(float[] coords, InputStream in) throws IOException {
-		this.coords = coords;
+	public Texture(InputStream in) throws IOException {
 		textureID = glGenTextures();
 		glBindTexture(GL_TEXTURE_2D, textureID);
 		/*

@@ -5,30 +5,66 @@ import io.github.javaherobrine.math.MatrixHelper;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL45.*;
 import xueli.utils.io.*;
+import org.joml.*;
 public class Renderer implements RunnableLifeCycle {
 	private Window win;
 	private long frame = -1;
 	private Shader shader;
 	private Texture text;
 	private VAO vao;
+	private Matrix4f f=MatrixHelper.perspective(1920, 1080, 90,0.1f,100);
 	public Renderer(Window window) {
 		win = window;
-		vao = new VAO(new float[] { -0.5f, -0.5f, 0, 1, 0, 0, 1, 1, -0.5f, 0.5f, 0, 0, 0, 1, 0, 1, 0.5f, -0.5f, 0, 0, 1,
-				0, 1, 0, 0.5f, 0.5f, 0, 1, 0, 0, 0, 0 }, 8);
+		vao=new VAO(new float[] {
+			    -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
+			     0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
+			     0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+			     0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+			    -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
+			    -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
+			    -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+			     0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+			     0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
+			     0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
+			    -0.5f,  0.5f,  0.5f,  0.0f, 1.0f,
+			    -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+			    -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+			    -0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+			    -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+			    -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+			    -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+			    -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+			     0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+			     0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+			     0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+			     0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+			     0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+			     0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+			    -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+			     0.5f, -0.5f, -0.5f,  1.0f, 1.0f,
+			     0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+			     0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+			    -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+			    -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+			    -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
+			     0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+			     0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+			     0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+			    -0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
+			    -0.5f,  0.5f, -0.5f,  0.0f, 1.0f
+		},5);
 		vao.bindVBO(GL_STATIC_DRAW);
-		vao.bindIBO(new int[] { 0, 1, 3, 0, 2, 3 }, GL_STATIC_DRAW);
 		vao.attribute(0, 3);
-		vao.attribute(1, 3, 3);
-		vao.attribute(2, 2, 6);
+		vao.attribute(1, 2, 3);
 	}
 	@Override
 	public void init() {
+		System.err.println(f);
 		try {
-			text = new Texture(new float[] { 0, 0, 0, 1, 1, 0, 1, 1 },
-					Files.getResourcePackedInJarStream("/textures/grassblock.png"));
+			text = new Texture(Files.getResourcePackedInJarStream("/textures/grassblock.png"));
 			shader = new Shader(new String(Files.getResourcePackedInJarStream("/shaders/vertex.vs").readAllBytes()),
 					new String(Files.getResourcePackedInJarStream("/shaders/fragment.fs").readAllBytes()));
-			glUniform1i(1, GL_TEXTURE0);
+			glUniform1i(3, GL_TEXTURE0);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -43,14 +79,15 @@ public class Renderer implements RunnableLifeCycle {
 		long deltaTime = current - frame;
 		frame = current;
 		// process input
-		win.input();
+		win.input(deltaTime);
 		// render
-		glClear(GL_COLOR_BUFFER_BIT);
-		vao.apply();
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		text.activate();
+		shader.uniform(0, new Matrix4f());
+		shader.uniform(1,win.camera.lookAt());
+		shader.uniform(2, f);
 		shader.exec();
-		shader.uniform(0, MatrixHelper.rotate(MatrixHelper.Z, (float) java.lang.Math.toRadians((float) glfwGetTime())));
-		// shader.uniform("transform",new Matrix4f());
+		vao.apply0();
 		// process events and swap buffers
 		win.tick();
 	}

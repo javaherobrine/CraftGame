@@ -36,4 +36,7 @@ public class VAO {// compact data
 	public void apply() {
 		glDrawElements(GL_TRIANGLES, elements, GL_UNSIGNED_INT, 0);
 	}
+	public void apply0() {
+		glDrawArrays(GL_TRIANGLES,0,data.length/size);
+	}
 }

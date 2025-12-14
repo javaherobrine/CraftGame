@@ -33,16 +33,19 @@ public class MatrixHelper {
 	 */
 	public static Matrix4f perspective(float width, float height, float fov, float near, float far) {
 		Matrix4f projectionMatrix = new Matrix4f();
+
 		float ratio = width / height;
-		float x_scale = (float) ((1f / Math.tan(Math.toRadians(fov / 2F))));
-		float y_scale = x_scale * ratio;
+		float y_scale = (float) ((1f / Math.tan(Math.toRadians(fov / 2F))) * ratio);
+		float x_scale = y_scale / ratio;
 		float frustum_length = far - near;
+
 		projectionMatrix.m00(x_scale);
 		projectionMatrix.m11(y_scale);
 		projectionMatrix.m22(-(far + near) / frustum_length);
 		projectionMatrix.m23(-1);
-		projectionMatrix.m32(((2 * far * near) / frustum_length));
+		projectionMatrix.m32(-((2 * far * near) / frustum_length));
 		projectionMatrix.m33(0);
+
 		return projectionMatrix;
 	}
 	public static Matrix4f translate(float x, float y, float z) {

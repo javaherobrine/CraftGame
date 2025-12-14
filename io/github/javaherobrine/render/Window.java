@@ -4,8 +4,11 @@ import static org.lwjgl.opengl.GL45.*;
 import org.lwjgl.opengl.GL;
 import xueli.game2.lifecycle.*;
 import java.util.*;
+import org.joml.Math;
 public class Window implements LifeCycle {
 	public final long window;
+	private double lPosX[]=new double[1],lPosY[]=new double[1],cPosX[]=new double[1],cPosY[]=new double[1];
+	public Camera camera=new Camera();
 	public final ArrayList<KeyBinding> bindings = new ArrayList<>();
 	public Window() {
 		glfwInit();
@@ -18,8 +21,17 @@ public class Window implements LifeCycle {
 		glfwSetWindowSizeCallback(window, (win, width, height) -> {
 			glViewport(0, 0, width, height);
 		});
+		glfwSetCursor(window, 0);
 		glfwMakeContextCurrent(window);
+		glfwSetInputMode(window,GLFW_CURSOR,GLFW_CURSOR_DISABLED);
 		GL.createCapabilities();
+		glEnable(GL_DEPTH_TEST);
+		bindings.add(new KeyBinding(GLFW_KEY_W,-1,true,"",l->camera.moveForward(-l*Camera.speed)));
+		bindings.add(new KeyBinding(GLFW_KEY_S,-1,true,"",l->camera.moveBackward(-l*Camera.speed)));
+		bindings.add(new KeyBinding(GLFW_KEY_A,-1,true,"",l->camera.moveLeft(-l*Camera.speed)));
+		bindings.add(new KeyBinding(GLFW_KEY_D,-1,true,"",l->camera.moveRight(-l*Camera.speed)));
+		bindings.add(new KeyBinding(GLFW_KEY_SPACE,-1,true,"",l->camera.y+=Camera.speed*l));
+		bindings.add(new KeyBinding(GLFW_KEY_LEFT_SHIFT,-1,true,"",l->camera.y-=Camera.speed*l));
 	}
 	@Override
 	public void init() {
@@ -35,13 +47,29 @@ public class Window implements LifeCycle {
 		glfwDestroyWindow(window);
 		glfwTerminate();
 	}
-	public void input() {
+	public void input(long delta) {
 		Iterator<KeyBinding> iter = bindings.iterator();
 		while (iter.hasNext()) {
 			KeyBinding binding = iter.next();
 			if (glfwGetKey(window, binding.key()) == (binding.click() ? GLFW_PRESS : GLFW_RELEASE)) {
-				binding.callback().run();
+				binding.callback().accept(delta);
 			}
+		}
+		glfwGetCursorPos(window, cPosX, cPosY);
+		camera.pitch+=Camera.omega*Camera.pitchDirection*(cPosY[0]-lPosY[0]);
+		camera.yaw+=Camera.omega*Camera.yawDirection*(cPosX[0]-lPosX[0]);
+		lPosY[0]=cPosY[0];
+		lPosX[0]=cPosX[0];
+		if(camera.pitch>Math.PI_OVER_2_f) {
+			camera.pitch=Math.PI_OVER_2_f;
+		}else if(camera.pitch<-Math.PI_OVER_2_f) {
+			camera.pitch=-Math.PI_OVER_2_f;
+		}
+		while(camera.yaw<0) {
+			camera.yaw+=Math.PI_TIMES_2_f;
+		}
+		while(camera.yaw>=Math.PI_TIMES_2_f) {
+			camera.yaw-=Math.PI_TIMES_2_f;
 		}
 	}
 }
