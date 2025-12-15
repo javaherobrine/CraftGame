@@ -4,12 +4,14 @@ import static org.lwjgl.opengl.GL45.*;
 import org.lwjgl.opengl.GL;
 import xueli.game2.lifecycle.*;
 import java.util.*;
+import java.util.function.*;
 import org.joml.Math;
 public class Window implements LifeCycle {
 	public final long window;
 	private double lPosX[]=new double[1],lPosY[]=new double[1],cPosX[]=new double[1],cPosY[]=new double[1];
 	public Camera camera=new Camera();
 	public final ArrayList<KeyBinding> bindings = new ArrayList<>();
+	public boolean paused=false;
 	public Window() {
 		glfwInit();
 		glfwDefaultWindowHints();
@@ -18,6 +20,7 @@ public class Window implements LifeCycle {
 		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 		glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GLFW_TRUE);
 		window = glfwCreateWindow(1920, 1080, "CraftGame", 0, 0);
+		System.err.println(window);
 		glfwSetWindowSizeCallback(window, (win, width, height) -> {
 			glViewport(0, 0, width, height);
 		});
@@ -32,6 +35,14 @@ public class Window implements LifeCycle {
 		bindings.add(new KeyBinding(GLFW_KEY_D,-1,true,"",l->camera.moveRight(-l*Camera.speed)));
 		bindings.add(new KeyBinding(GLFW_KEY_SPACE,-1,true,"",l->camera.y+=Camera.speed*l));
 		bindings.add(new KeyBinding(GLFW_KEY_LEFT_SHIFT,-1,true,"",l->camera.y-=Camera.speed*l));
+		bindings.add(new KeyBinding(GLFW_KEY_ESCAPE,-1,true,"",new LongConsumer() {
+			@Override
+			public void accept(long value) {
+				if(paused) {
+					paused=true;
+				}
+			}
+		}));
 	}
 	@Override
 	public void init() {

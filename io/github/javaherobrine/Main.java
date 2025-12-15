@@ -1,7 +1,6 @@
 package io.github.javaherobrine;
 //import io.github.javaherobrine.experimental.*;
 //import java.util.*;
-import org.lwjgl.opengl.*;
 import io.github.javaherobrine.render.*;
 public class Main {
 	public static void main(String[] args) throws Exception {

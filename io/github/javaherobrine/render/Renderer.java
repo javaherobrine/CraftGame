@@ -15,44 +15,7 @@ public class Renderer implements RunnableLifeCycle {
 	private Matrix4f f=MatrixHelper.perspective(1920, 1080, 90,0.1f,100);
 	public Renderer(Window window) {
 		win = window;
-		vao=new VAO(new float[] {
-			    -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
-			     0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
-			     0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-			     0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-			    -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
-			    -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
-			    -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-			     0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-			     0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
-			     0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
-			    -0.5f,  0.5f,  0.5f,  0.0f, 1.0f,
-			    -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-			    -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-			    -0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-			    -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-			    -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-			    -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-			    -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-			     0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-			     0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-			     0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-			     0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-			     0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-			     0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-			    -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-			     0.5f, -0.5f, -0.5f,  1.0f, 1.0f,
-			     0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-			     0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-			    -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-			    -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-			    -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
-			     0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-			     0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-			     0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-			    -0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
-			    -0.5f,  0.5f, -0.5f,  0.0f, 1.0f
-		},5);
+		vao=VAO.blockVAO(new Vector2f(0,1), new Vector2f(0,0),new Vector2f(1,1), new Vector2f(1,0),GL_STATIC_DRAW);
 		vao.bindVBO(GL_STATIC_DRAW);
 		vao.attribute(0, 3);
 		vao.attribute(1, 2, 3);
@@ -87,7 +50,7 @@ public class Renderer implements RunnableLifeCycle {
 		shader.uniform(1,win.camera.lookAt());
 		shader.uniform(2, f);
 		shader.exec();
-		vao.apply0();
+		vao.apply();
 		// process events and swap buffers
 		win.tick();
 	}
