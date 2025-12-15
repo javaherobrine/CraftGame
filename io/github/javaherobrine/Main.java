@@ -16,9 +16,7 @@ public class Main {
 //		LinkedListSplicer.splice0(l1, l2);
 //		System.err.println(l1);
 //		System.err.println(l2);
-		System.err.println("Begin");
 		Window win = new Window();
-		System.err.println("Window");
 		Renderer render = new Renderer(win);
 		render.run();
 	}

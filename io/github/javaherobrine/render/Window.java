@@ -55,6 +55,7 @@ public class Window implements LifeCycle {
 				binding.callback().accept(delta);
 			}
 		}
+		glfwSetWindowTitle(window,"CraftGame Position="+"("+(long)camera.x+","+(long)camera.y+","+(long)camera.z+")");
 		glfwGetCursorPos(window, cPosX, cPosY);
 		camera.pitch+=Camera.omega*Camera.pitchDirection*(cPosY[0]-lPosY[0]);
 		camera.yaw+=Camera.omega*Camera.yawDirection*(cPosX[0]-lPosX[0]);
