@@ -2,6 +2,7 @@ package io.github.javaherobrine.render;
 import xueli.game2.lifecycle.*;
 import java.io.*;
 import io.github.javaherobrine.math.MatrixHelper;
+import io.github.javaherobrine.*;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL45.*;
 import xueli.utils.io.*;
@@ -11,6 +12,7 @@ public class Renderer implements RunnableLifeCycle {
 	private long frame = -1;
 	private Shader shader;
 	private Texture text;
+	private Texture text0;
 	private VAO vao;
 	private Matrix4f f=MatrixHelper.perspective(1920, 1080, 90,0.1f,100);
 	public Renderer(Window window) {
@@ -24,10 +26,13 @@ public class Renderer implements RunnableLifeCycle {
 	public void init() {
 		System.err.println(f);
 		try {
-			text = new Texture(Files.getResourcePackedInJarStream("/textures/grassblock.png"));
+			text = new Texture(Files.getResourcePackedInJarStream("/textures/error.png"));
+			text0 = new Texture(Files.getResourcePackedInJarStream("/textures/grassblock.png"));
 			shader = new Shader(new String(Files.getResourcePackedInJarStream("/shaders/vertex.vs").readAllBytes()),
 					new String(Files.getResourcePackedInJarStream("/shaders/fragment.fs").readAllBytes()));
-			glUniform1i(3, GL_TEXTURE0);
+			shader.exec();
+			glUniform1i(3, 0);
+			glUniform1i(4, 1);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -45,7 +50,9 @@ public class Renderer implements RunnableLifeCycle {
 		win.input(deltaTime);
 		// render
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		text.activate();
+		text0.activate(1);
+		//text.activate(0);
+		Constant.INVALID_TEXTURE_HARD_CODING.activate(0);
 		shader.uniform(0, new Matrix4f());
 		shader.uniform(1,win.camera.lookAt());
 		shader.uniform(2, f);

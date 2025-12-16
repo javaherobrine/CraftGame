@@ -2,10 +2,13 @@ package io.github.javaherobrine.render;
 import static org.lwjgl.opengl.GL45.*;
 import org.joml.*;
 import io.github.javaherobrine.*;
+import java.nio.*;
+import org.lwjgl.system.*;
 public class VAO {// compact data
 	public final float[] data;
 	public final int size;
 	private final int VAO;
+	private int VBO;
 	private int elements,datatype;
 	public VAO(float[] data, int size) {
 		this.data = data;
@@ -15,7 +18,7 @@ public class VAO {// compact data
 		elements = data.length / size;
 	}
 	public int bindVBO(int mode) {// return: VBO ID
-		int VBO = glGenBuffers();
+		VBO = glGenBuffers();
 		glBindBuffer(GL_ARRAY_BUFFER, VBO);
 		glBufferData(GL_ARRAY_BUFFER, data, mode);
 		return VBO;
@@ -40,7 +43,9 @@ public class VAO {// compact data
 		int IBO = glGenBuffers();
 		datatype=GL_UNSIGNED_BYTE;
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IBO);
-		glBufferData(GL_ELEMENT_ARRAY_BUFFER, GameUtils.memcpy(indices), mode);
+		ByteBuffer buf=GameUtils.memcpy(indices);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, buf, mode);
+		MemoryUtil.memFree(buf);
 		elements = indices.length;
 		return IBO;
 	}
@@ -53,6 +58,7 @@ public class VAO {// compact data
 		glEnableVertexAttribArray(location);
 	}
 	public void apply() {
+		glBindBuffer(GL_ARRAY_BUFFER, VBO);
 		if(elements!=-1)
 			glDrawElements(GL_TRIANGLES, elements, datatype, 0);
 		else
@@ -66,22 +72,22 @@ public class VAO {// compact data
 	 */
 	public static VAO blockVAO(Vector2f LU,Vector2f LD,Vector2f RU,Vector2f RD,int mode) {
 		VAO vao=new VAO(new float[] {
-                -0.5f, -0.5f, -0.5f,  LD.x, LD.y,//
-                0.5f, -0.5f, -0.5f,  RD.x, RD.y,//
-                0.5f,  0.5f, -0.5f,  RU.x, RU.y,//
-               -0.5f,  0.5f, -0.5f,  LU.x, LU.y,//
-               -0.5f, -0.5f,  0.5f,  LD.x, LD.y,//
-                0.5f, -0.5f,  0.5f,  RD.x, RD.y,//
-                0.5f,  0.5f,  0.5f,  RU.x, RU.y,//
-               -0.5f,  0.5f,  0.5f,  LU.x, LU.y,//
-               -0.5f,  0.5f,  0.5f,  RD.x, RD.y,//
-               -0.5f,  0.5f, -0.5f,  RU.x, RU.y,//
-               -0.5f, -0.5f, -0.5f,  LU.x, LU.y,//
-                0.5f,  0.5f,  0.5f,  RD.x, RD.y,//
-                0.5f, -0.5f, -0.5f,  LU.x, LU.y,//
-                0.5f, -0.5f,  0.5f,  LD.x, LD.y,//
-                0.5f, -0.5f, -0.5f,  RU.x, RU.y,//
-               -0.5f,  0.5f,  0.5f,  LD.x, LD.y,//
+                -0.5f, -0.5f, -0.5f,  LD.x, LD.y,
+                0.5f, -0.5f, -0.5f,  RD.x, RD.y,
+                0.5f,  0.5f, -0.5f,  RU.x, RU.y,
+               -0.5f,  0.5f, -0.5f,  LU.x, LU.y,
+               -0.5f, -0.5f,  0.5f,  LD.x, LD.y,
+                0.5f, -0.5f,  0.5f,  RD.x, RD.y,
+                0.5f,  0.5f,  0.5f,  RU.x, RU.y,
+               -0.5f,  0.5f,  0.5f,  LU.x, LU.y,
+               -0.5f,  0.5f,  0.5f,  RD.x, RD.y,
+               -0.5f,  0.5f, -0.5f,  RU.x, RU.y,
+               -0.5f, -0.5f, -0.5f,  LU.x, LU.y,
+                0.5f,  0.5f,  0.5f,  RD.x, RD.y,
+                0.5f, -0.5f, -0.5f,  LU.x, LU.y,
+                0.5f, -0.5f,  0.5f,  LD.x, LD.y,
+                0.5f, -0.5f, -0.5f,  RU.x, RU.y,
+               -0.5f,  0.5f,  0.5f,  LD.x, LD.y,
 },5);
 		vao.bindIBO(new byte[] {
 				0,1,2,
