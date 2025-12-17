@@ -4,7 +4,22 @@ import java.util.Random;
 import java.util.Arrays;
 import java.nio.ByteBuffer;
 import org.lwjgl.system.MemoryUtil;
+import java.lang.invoke.*;
 public final class GameUtils {
+	private static final MethodHandle handle;
+	static {
+		MethodHandle h;
+		try {
+			MethodHandles.Lookup l=MethodHandles.privateLookupIn(MemoryUtil.class, MethodHandles.lookup());
+			MethodType t=MethodType.methodType(ByteBuffer.class,long.class,int.class);
+			h=l.findStatic(MemoryUtil.class, "wrapBufferByte", t);
+		} catch (IllegalAccessException | NoSuchMethodException e) {
+			h=null;
+			e.printStackTrace();
+		}
+		handle=h;
+		System.load("/home/javaherobrine/libJNI.so");
+	}
 	public static final Random GENERATOR = new Random();
 	private GameUtils() {
 	}
@@ -85,5 +100,26 @@ public final class GameUtils {
 		res.put(b);
 		res.flip();
 		return res;
+	}
+	/*
+	 * Manipulate the memory directly to increase the performance
+	 */
+	public static native long address(byte[] b);
+	public static native void allowGC(long addr,byte[] b);
+	public static ByteBuffer wrapBuffer(byte[] b) {
+		long addr=address(b);
+		try {
+			if(addr==0) {
+				return memcpy(b);
+			}else {
+				try {
+					return (ByteBuffer)handle.invoke(addr,b.length);
+				} catch (Throwable e) {
+					return memcpy(b);
+				}
+			}
+		}finally {
+			allowGC(addr,b);
+		}
 	}
 }

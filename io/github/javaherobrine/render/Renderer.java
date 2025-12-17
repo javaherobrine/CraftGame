@@ -50,7 +50,7 @@ public class Renderer implements RunnableLifeCycle {
 		win.input(deltaTime);
 		// render
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		text0.activate(1);
+		//text0.activate(1);
 		//text.activate(0);
 		Constant.INVALID_TEXTURE_HARD_CODING.activate(0);
 		shader.uniform(0, new Matrix4f());

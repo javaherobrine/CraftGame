@@ -43,9 +43,7 @@ public class VAO {// compact data
 		int IBO = glGenBuffers();
 		datatype=GL_UNSIGNED_BYTE;
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IBO);
-		ByteBuffer buf=GameUtils.memcpy(indices);
-		glBufferData(GL_ELEMENT_ARRAY_BUFFER, buf, mode);
-		MemoryUtil.memFree(buf);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, GameUtils.wrapBuffer(indices), mode);
 		elements = indices.length;
 		return IBO;
 	}
@@ -72,22 +70,22 @@ public class VAO {// compact data
 	 */
 	public static VAO blockVAO(Vector2f LU,Vector2f LD,Vector2f RU,Vector2f RD,int mode) {
 		VAO vao=new VAO(new float[] {
-                -0.5f, -0.5f, -0.5f,  LD.x, LD.y,
-                0.5f, -0.5f, -0.5f,  RD.x, RD.y,
-                0.5f,  0.5f, -0.5f,  RU.x, RU.y,
-               -0.5f,  0.5f, -0.5f,  LU.x, LU.y,
-               -0.5f, -0.5f,  0.5f,  LD.x, LD.y,
-                0.5f, -0.5f,  0.5f,  RD.x, RD.y,
-                0.5f,  0.5f,  0.5f,  RU.x, RU.y,
-               -0.5f,  0.5f,  0.5f,  LU.x, LU.y,
-               -0.5f,  0.5f,  0.5f,  RD.x, RD.y,
-               -0.5f,  0.5f, -0.5f,  RU.x, RU.y,
-               -0.5f, -0.5f, -0.5f,  LU.x, LU.y,
-                0.5f,  0.5f,  0.5f,  RD.x, RD.y,
-                0.5f, -0.5f, -0.5f,  LU.x, LU.y,
-                0.5f, -0.5f,  0.5f,  LD.x, LD.y,
-                0.5f, -0.5f, -0.5f,  RU.x, RU.y,
-               -0.5f,  0.5f,  0.5f,  LD.x, LD.y,
+                0, 0, 0,  LD.x, LD.y,
+                1, 0, 0,  RD.x, RD.y,
+                1, 1, 0,  RU.x, RU.y,
+                0, 1, 0,  LU.x, LU.y,
+                0, 0, 1,  LD.x, LD.y,
+                1, 0, 1,  RD.x, RD.y,
+                1, 1, 1,  RU.x, RU.y,
+                0, 1, 1,  LU.x, LU.y,
+                0, 1, 1,  RD.x, RD.y,
+                0, 1, 0,  RU.x, RU.y,
+                0, 0, 0,  LU.x, LU.y,
+                1, 1, 1,  RD.x, RD.y,
+                1, 0, 0,  LU.x, LU.y,
+                1, 0, 1,  LD.x, LD.y,
+                1, 0, 0,  RU.x, RU.y,
+                0, 1, 1,  LD.x, LD.y,
 },5);
 		vao.bindIBO(new byte[] {
 				0,1,2,
