@@ -4,6 +4,7 @@ import java.util.Random;
 import java.util.Arrays;
 import java.nio.ByteBuffer;
 import org.lwjgl.system.MemoryUtil;
+import org.lwjgl.system.NativeType;
 import java.lang.invoke.*;
 public final class GameUtils {
 	private static final MethodHandle handle;
@@ -101,25 +102,13 @@ public final class GameUtils {
 		res.flip();
 		return res;
 	}
-	/*
+	/**
 	 * Manipulate the memory directly to increase the performance
+	 * It will block GC
 	 */
 	public static native long address(byte[] b);
-	public static native void allowGC(long addr,byte[] b);
-	public static ByteBuffer wrapBuffer(byte[] b) {
-		long addr=address(b);
-		try {
-			if(addr==0) {
-				return memcpy(b);
-			}else {
-				try {
-					return (ByteBuffer)handle.invoke(addr,b.length);
-				} catch (Throwable e) {
-					return memcpy(b);
-				}
-			}
-		}finally {
-			allowGC(addr,b);
-		}
-	}
+	/**
+	 * Tell JVM that the memory can be freed
+	 */
+	public static native void allowGC(@NativeType("void*") long addr,byte[] b);
 }

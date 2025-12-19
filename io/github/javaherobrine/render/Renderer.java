@@ -11,8 +11,10 @@ public class Renderer implements RunnableLifeCycle {
 	private Window win;
 	private long frame = -1;
 	private Shader shader;
-	private Texture text;
-	private Texture text0;
+	private Texture[] loaded= {
+			Texture.create(Files.getResourcePackedInJarStream("/textures/andesite.png")),
+			Texture.create(Files.getResourcePackedInJarStream("/textures/grassblock.png")),
+			Constant.INVALID_TEXTURE_HARD_CODING};
 	private VAO vao;
 	private Matrix4f f=MatrixHelper.perspective(1920, 1080, 90,0.1f,100);
 	public Renderer(Window window) {
@@ -26,8 +28,6 @@ public class Renderer implements RunnableLifeCycle {
 	public void init() {
 		System.err.println(f);
 		try {
-			text = new Texture(Files.getResourcePackedInJarStream("/textures/error.png"));
-			text0 = new Texture(Files.getResourcePackedInJarStream("/textures/grassblock.png"));
 			shader = new Shader(new String(Files.getResourcePackedInJarStream("/shaders/vertex.vs").readAllBytes()),
 					new String(Files.getResourcePackedInJarStream("/shaders/fragment.fs").readAllBytes()));
 			shader.exec();
@@ -50,14 +50,19 @@ public class Renderer implements RunnableLifeCycle {
 		win.input(deltaTime);
 		// render
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		//text0.activate(1);
-		//text.activate(0);
 		Constant.INVALID_TEXTURE_HARD_CODING.activate(0);
-		shader.uniform(0, new Matrix4f());
+		shader.exec();
 		shader.uniform(1,win.camera.lookAt());
 		shader.uniform(2, f);
-		shader.exec();
-		vao.apply();
+		for(int i=0;i<3;++i) {
+			shader.exec();
+			loaded[i].activate(0);
+			for(int j=0;j<10;++j) {
+				shader.uniform(0,new Matrix4f().translate(i, 0, j));
+				Constant.BREAKING_BLOCKS[j].activate(1);
+				vao.apply();
+			}
+		}
 		// process events and swap buffers
 		win.tick();
 	}

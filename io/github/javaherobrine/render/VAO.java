@@ -43,7 +43,9 @@ public class VAO {// compact data
 		int IBO = glGenBuffers();
 		datatype=GL_UNSIGNED_BYTE;
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IBO);
-		glBufferData(GL_ELEMENT_ARRAY_BUFFER, GameUtils.wrapBuffer(indices), mode);
+		long addr=GameUtils.address(indices);
+		nglBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.length,addr, mode);
+		GameUtils.allowGC(addr, indices);
 		elements = indices.length;
 		return IBO;
 	}
