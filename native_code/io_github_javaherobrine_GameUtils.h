@@ -14,7 +14,16 @@ extern "C" {
  */
 JNIEXPORT jlong JNICALL Java_io_github_javaherobrine_GameUtils_address
   (JNIEnv *, jclass, jbyteArray);
-
+JNIEXPORT void JNICALL Java_io_github_javaherobrine_GameUtils_allowGC
+  (JNIEnv *, jclass, jlong, jbyteArray);
+JNIEXPORT void JNICALL Java_io_github_javaherobrine_GameUtils_supportsNIOAccess
+  (JNIEnv *, jclass, jobject);
+JNIEXPORT void JNICALL Java_io_github_javaherobrine_GameUtils_to3x3
+  (JNIEnv *, jclass, jobject);
+JNIEXPORT jlong JNICALL Java_io_github_javaherobrine_GameUtils_pointerOfPointer
+  (JNIEnv *, jclass, jlongArray);
+JNIEXPORT void JNICALL Java_io_github_javaherobrine_GameUtils_freePointerOfPointer
+  (JNIEnv *, jclass, jlong, jlongArray);
 #ifdef __cplusplus
 }
 #endif

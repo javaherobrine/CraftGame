@@ -3,6 +3,7 @@ import java.io.*;
 import java.util.Random;
 import java.util.Arrays;
 import java.nio.ByteBuffer;
+import java.nio.FloatBuffer;
 import org.lwjgl.system.MemoryUtil;
 import org.lwjgl.system.NativeType;
 import java.lang.invoke.*;
@@ -20,6 +21,7 @@ public final class GameUtils {
 		}
 		handle=h;
 		System.load("/home/javaherobrine/libJNI.so");
+		supportsNIOAccess(ByteBuffer.allocateDirect(0));
 	}
 	public static final Random GENERATOR = new Random();
 	private GameUtils() {
@@ -111,4 +113,8 @@ public final class GameUtils {
 	 * Tell JVM that the memory can be freed
 	 */
 	public static native void allowGC(@NativeType("void*") long addr,byte[] b);
+	private static native void supportsNIOAccess(ByteBuffer buf);
+	public static native void to3x3(FloatBuffer buf);
+	public static native long pointerOfPointer(long[] pointer);
+	public static native void freePointerOfPointer(long addr,long[] pointer);
 }

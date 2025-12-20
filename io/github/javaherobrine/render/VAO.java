@@ -8,7 +8,7 @@ public class VAO {// compact data
 	public final float[] data;
 	public final int size;
 	private final int VAO;
-	private int VBO;
+	private int VBO,IBO;
 	private int elements,datatype;
 	public VAO(float[] data, int size) {
 		this.data = data;
@@ -24,7 +24,7 @@ public class VAO {// compact data
 		return VBO;
 	}
 	public int bindIBO(int[] indices, int mode) {// return: IBO ID
-		int IBO = glGenBuffers();
+		IBO = glGenBuffers();
 		datatype=GL_UNSIGNED_INT;
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IBO);
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices, mode);
@@ -32,7 +32,7 @@ public class VAO {// compact data
 		return IBO;
 	}
 	public int bindIBO(short[] indices, int mode) {// return: IBO ID
-		int IBO = glGenBuffers();
+		IBO = glGenBuffers();
 		datatype=GL_UNSIGNED_SHORT;
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IBO);
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices, mode);
@@ -40,7 +40,7 @@ public class VAO {// compact data
 		return IBO;
 	}
 	public int bindIBO(byte[] indices, int mode) {// return: IBO ID
-		int IBO = glGenBuffers();
+		IBO = glGenBuffers();
 		datatype=GL_UNSIGNED_BYTE;
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IBO);
 		long addr=GameUtils.address(indices);
@@ -59,13 +59,17 @@ public class VAO {// compact data
 	}
 	public void apply() {
 		glBindBuffer(GL_ARRAY_BUFFER, VBO);
-		if(elements!=-1)
+		if(elements!=-1) {
+			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IBO);
 			glDrawElements(GL_TRIANGLES, elements, datatype, 0);
-		else
+		}else
 			apply0();
 	}
 	private void apply0() {
 		glDrawArrays(GL_TRIANGLES,0,data.length/size);
+	}
+	public void bind() {
+		glBindBuffer(GL_ARRAY_BUFFER, VBO);
 	}
 	/**
 	 * Create a VAO of a block with 6 same planes
@@ -88,7 +92,7 @@ public class VAO {// compact data
                 1, 0, 1,  LD.x, LD.y,
                 1, 0, 0,  RU.x, RU.y,
                 0, 1, 1,  LD.x, LD.y,
-},5);
+   },5);
 		vao.bindIBO(new byte[] {
 				0,1,2,
 				2,3,0,
@@ -105,4 +109,31 @@ public class VAO {// compact data
 		}, mode);
 		return vao;
 	}
+	public static VAO skyVAO() {
+		VAO vao=new VAO(new float[] {
+			    -1.0f,  1.0f, -1.0f,
+			    -1.0f, -1.0f, -1.0f,
+			     1.0f, -1.0f, -1.0f,
+			     1.0f,  1.0f, -1.0f,
+			    -1.0f, -1.0f,  1.0f,
+			    -1.0f,  1.0f,  1.0f,
+			     1.0f, -1.0f,  1.0f,
+			     1.0f,  1.0f,  1.0f,
+		},3);
+		vao.bindIBO(new byte[] {
+				0,1,2,
+				2,3,0,
+				4,1,0,
+				0,5,4,
+				2,6,7,
+				7,3,2,
+				4,5,7,
+				7,6,4,
+				0,3,7,
+				7,5,0,
+				1,4,2,
+				2,4,6,
+		},GL_STATIC_DRAW);
+		return vao;
+	} 
 }

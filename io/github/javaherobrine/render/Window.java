@@ -29,6 +29,7 @@ public class Window implements LifeCycle {
 		glfwSetInputMode(window,GLFW_CURSOR,GLFW_CURSOR_DISABLED);
 		GL.createCapabilities();
 		glEnable(GL_DEPTH_TEST);
+		glDepthFunc(GL_LEQUAL);
 		bindings.add(new KeyBinding(GLFW_KEY_W,-1,true,"",l->camera.moveForward(-l*Camera.speed)));
 		bindings.add(new KeyBinding(GLFW_KEY_S,-1,true,"",l->camera.moveBackward(-l*Camera.speed)));
 		bindings.add(new KeyBinding(GLFW_KEY_A,-1,true,"",l->camera.moveLeft(-l*Camera.speed)));

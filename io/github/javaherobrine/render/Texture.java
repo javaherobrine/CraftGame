@@ -54,18 +54,18 @@ public class Texture {
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, img.getWidth(), img.getHeight(), 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
 	}
-	private Texture() {
-		width=16;
-		height=16;
+	private Texture(int target,int w,int h) {
+		width=w;
+		height=h;
 		textureID = glGenTextures();
-		glBindTexture(GL_TEXTURE_2D, textureID);
+		glBindTexture(target, textureID);
 	}
 	public void activate(int text) {
 		glActiveTexture(GL_TEXTURE0 + text);
 		glBindTexture(GL_TEXTURE_2D, textureID);
 	}
 	public static Texture error() {
-		Texture text = new Texture();
+		Texture text = new Texture(GL_TEXTURE_2D,16,16);
 		int data[] = { -16777216, -16777216, -16777216, -16777216, -16777216, -16777216, -16777216, -16777216,
 				-16777216, -16777216, -16777216, -16777216, -16777216, -16777216, -16777216, -16777216, -16777216, -1,
 				-16776961, -16776961, -16776961, -16776961, -16776961, -16776961, -16776961, -16776961, -16776961,
@@ -94,6 +94,7 @@ public class Texture {
 				-16777216, -16777216, -16777216, -16777216, -16777216, -16777216, -16777216, -16777216, -16777216,
 				-16777216, -16777216 };//Hard coding
 		glGenerateMipmap(GL_TEXTURE_2D);
+	//	int data[] = {0xFFF800F8,0xFF000000,0xFF000000,0xFFF800F8};//Hard coding
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
@@ -101,11 +102,28 @@ public class Texture {
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 16, 16, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
 		return text;
 	}
+	public static Texture sky() {
+		Texture text = new Texture(GL_TEXTURE_CUBE_MAP,2,2);
+		int data[] = {0xFFF800F8,0xFF000000,0xFF000000,0xFFF800F8};//Hard coding
+		glGenerateMipmap(GL_TEXTURE_2D);
+		glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X, 0, GL_RGBA, 2, 2, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+		glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X+1, 0, GL_RGBA, 2, 2, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+		glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X+2, 0, GL_RGBA, 2, 2, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+		glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X+3, 0, GL_RGBA, 2, 2, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+		glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X+4, 0, GL_RGBA, 2, 2, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+		glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X+5, 0, GL_RGBA, 2, 2, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+	    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
+	    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+	    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_BORDER);
+   return text;
+	}
 	public static Texture create(InputStream in) {
 		Texture text;
 		try {
 			text=new Texture(in);
-		} catch (IOException e) {
+		} catch (Exception e) {
 			text=Constant.INVALID_TEXTURE_HARD_CODING;
 		}
 		return text;
@@ -114,7 +132,7 @@ public class Texture {
 		Texture text;
 		try {
 			text=new Texture(data);
-		}catch(IOException e) {
+		}catch(Exception e) {
 			text=Constant.INVALID_TEXTURE_HARD_CODING;
 		}
 		return text;
